@@ -3,7 +3,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MyAPKapp.VistaUIFramework {
+
+    /// <summary>
+    /// NativeMethods is an internal class that contains all unmanaged native classes, interfaces, enums, structs, methods, macros, etc.
+    /// </summary>
     internal class NativeMethods {
+
+        #region Native constants
 
         public const int SC_CLOSE = 0xF060;
         public const int MF_BYCOMMAND = 0x0000;
@@ -17,6 +23,7 @@ namespace MyAPKapp.VistaUIFramework {
         /* WM AND WS VARIABLES */
         public const int WM_USER = 0x0400;
         public const int WM_PAINT = 0x000F;
+        public const int WM_COMMAND = 0x0111;
         public const int WS_VISIBLE = 0x10000000;
         public const int WS_CHILD = 0x40000000;
         public const int WS_EX_CLIENTEDGE = 0x00000200;
@@ -75,14 +82,9 @@ namespace MyAPKapp.VistaUIFramework {
         public const int MNS_CHECKORBMP = 0x04000000;
         public const int MIIM_BITMAP = 0x00000080;
 
+        #endregion
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MARGINS {
-            public int leftWidth;
-            public int rightWidth;
-            public int topHeight;
-            public int bottomHeight;
-        }
+        #region Native enums
 
         public enum THUMBBUTTONFLAGS {
             THBF_ENABLED = 0,
@@ -100,16 +102,30 @@ namespace MyAPKapp.VistaUIFramework {
             THB_FLAGS = 0x8
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 8, CharSet = CharSet.Unicode)]
+        #endregion
+
+        #region Containers
+
+        /* STRUCTURES, CLASSES AND INTERFACES */
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MARGINS {
+            public int leftWidth;
+            public int rightWidth;
+            public int topHeight;
+            public int bottomHeight;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 8, CharSet = CharSet.Auto)]
         public struct THUMBBUTTON {
+            public const int Clicked = 0x1800;
+            [MarshalAs(UnmanagedType.U4)]
             public THUMBBUTTONMASK dwMask;
             public int iId;
             public int iBitmap;
             public IntPtr hIcon;
-
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 259)]
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
             public string szTip;
-
             public THUMBBUTTONFLAGS dwFlags;
         }
 
@@ -290,6 +306,12 @@ namespace MyAPKapp.VistaUIFramework {
             void SetThumbnailClip(IntPtr hWnd, IntPtr prcClip);
         }
 
+        #endregion
+
+        #region Methods
+
+        /* METHODS */
+
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, StringBuilder lParam);
 
@@ -325,5 +347,22 @@ namespace MyAPKapp.VistaUIFramework {
 
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hWnd, int pszSubAppName, int pszSubIdList);
+
+        #endregion
+
+        #region Macros
+
+        /* WINDOWS API ELEMENTS */
+
+        public static int GetHiWord(long value, int size) {
+            return (short)(value >> size);
+        }
+
+        public static int GetLoWord(long value) {
+            return (short)(value & 0xFFFF);
+        }
+
+        #endregion
+
     }
 }

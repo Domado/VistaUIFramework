@@ -56,6 +56,10 @@
     <Compile Include="IPv4Box.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Label.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LabelStyle.cs" />
     <Compile Include="ListView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -78,6 +82,8 @@
     <Compile Include="SplitClickEventArgs.cs" />
     <Compile Include="SplitClickEventHandler.cs" />
     <Compile Include="Taskbar\TaskbarHelper.cs" />
+    <Compile Include="Taskbar\ThumbnailButton.cs" />
+    <Compile Include="Taskbar\ThumbnailToolbar.cs" />
     <Compile Include="TBPFLAG.cs" />
     <Compile Include="TextBox.cs">
       <SubType>Component</SubType>

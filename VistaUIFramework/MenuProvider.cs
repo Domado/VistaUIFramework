@@ -13,7 +13,7 @@ namespace MyAPKapp.VistaUIFramework {
         public IntPtr renderBmpHbitmap = IntPtr.Zero;
     }
 
-    [ToolboxBitmap(typeof(MenuItem))]
+    [ToolboxBitmap(typeof(ContextMenu))]
     [ProvideProperty("Image", typeof(MenuItem))]
     public partial class MenuProvider : Component, IExtenderProvider, ISupportInitialize {
 

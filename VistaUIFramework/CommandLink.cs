@@ -23,6 +23,7 @@ namespace MyAPKapp.VistaUIFramework {
         [DefaultValue(null)]
         [Description("The CommandLink summary")]
         [Editor(typeof(MultilineStringEditor), typeof(System.Drawing.Design.UITypeEditor))]
+        [Localizable(true)]
         public string Note {
             get {
                 return _Note;

@@ -12,6 +12,8 @@ namespace MyAPKapp.VistaUIFramework {
 
         public Form() : base() {}
 
+        #region Form properties
+
         /// <summary>
         /// Set if close button is enabled
         /// </summary>
@@ -68,15 +70,22 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
-        protected override void OnLoad(EventArgs e) {
-            base.OnLoad(e);
-            if (Aero && NativeMethods.DwmIsCompositionEnabled()) {
-                margins = new NativeMethods.MARGINS();
-                margins.topHeight = _AeroMargin.Top;
-                margins.bottomHeight = _AeroMargin.Bottom;
-                margins.leftWidth = _AeroMargin.Left;
-                margins.rightWidth = _AeroMargin.Right;
-                NativeMethods.DwmExtendFrameIntoClientArea(Handle, ref margins);
+        [Browsable(true)]
+        public new virtual ContextMenu ContextMenu {
+            get {
+                return base.ContextMenu;
+            }
+            set {
+                base.ContextMenu = value;
+            }
+        }
+
+        #endregion
+
+        private void EnableCloseButton(bool enable) {
+            IntPtr hMenu = NativeMethods.GetSystemMenu(Handle, false);
+            if (hMenu != IntPtr.Zero) {
+                NativeMethods.EnableMenuItem(hMenu, NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | (enable ? NativeMethods.MF_ENABLED : NativeMethods.MF_GRAYED));
             }
         }
 
@@ -99,20 +108,15 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
-        private void EnableCloseButton(bool enable) {
-            IntPtr hMenu = NativeMethods.GetSystemMenu(Handle, false);
-            if (hMenu != IntPtr.Zero) {
-                NativeMethods.EnableMenuItem(hMenu, NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | (enable ? NativeMethods.MF_ENABLED : NativeMethods.MF_GRAYED));
-            }
-        }
-
-        [Browsable(true)]
-        public new virtual ContextMenu ContextMenu {
-            get {
-                return base.ContextMenu;
-            }
-            set {
-                base.ContextMenu = value;
+        protected override void OnLoad(EventArgs e) {
+            base.OnLoad(e);
+            if (Aero && NativeMethods.DwmIsCompositionEnabled()) {
+                margins = new NativeMethods.MARGINS();
+                margins.topHeight = _AeroMargin.Top;
+                margins.bottomHeight = _AeroMargin.Bottom;
+                margins.leftWidth = _AeroMargin.Left;
+                margins.rightWidth = _AeroMargin.Right;
+                NativeMethods.DwmExtendFrameIntoClientArea(Handle, ref margins);
             }
         }
 
