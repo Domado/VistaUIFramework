@@ -26,12 +26,29 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         [Browsable(true)]
-        public new virtual ContextMenu ContextMenu {
+        public override ContextMenu ContextMenu {
             get {
                 return base.ContextMenu;
             }
+
             set {
                 base.ContextMenu = value;
+                if (value != null && ContextMenuStrip != null) {
+                    ContextMenuStrip = null;
+                }
+            }
+        }
+
+        public override ContextMenuStrip ContextMenuStrip {
+            get {
+                return base.ContextMenuStrip;
+            }
+
+            set {
+                base.ContextMenuStrip = value;
+                if (value != null && ContextMenu != null) {
+                    ContextMenu = null;
+                }
             }
         }
 

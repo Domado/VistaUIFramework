@@ -22,6 +22,7 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         private TaskbarHelper() {
             if (taskbar == null) {
                 taskbar = (NativeMethods.ITaskbarList3)new TaskbarInstance();
+                taskbar.HrInit();
             }
         }
 

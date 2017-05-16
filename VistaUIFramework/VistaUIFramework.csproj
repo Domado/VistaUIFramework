@@ -60,6 +60,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="LabelStyle.cs" />
+    <Compile Include="LinkLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ListView.cs">
       <SubType>Component</SubType>
     </Compile>

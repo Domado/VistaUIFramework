@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 
 namespace MyAPKapp.VistaUIFramework {
-    [ToolboxBitmap(typeof(System.Windows.Forms.Button))]
+    [ToolboxBitmap(typeof(System.Windows.Forms.Label))]
     public class Label : System.Windows.Forms.Label {
 
         private LabelStyle _LabelStyle = LabelStyle.Default;
@@ -20,6 +20,12 @@ namespace MyAPKapp.VistaUIFramework {
             ForeColorChanged += LabelStyle_ForeColorChanged;
         }
 
+        /// <summary>
+        /// The Vista label styles
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue(LabelStyle.Default)]
+        [Description("The Vista label styles")]
         public LabelStyle LabelStyle {
             get {
                 return _LabelStyle;
@@ -30,6 +36,32 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        [Browsable(true)]
+        public override ContextMenu ContextMenu {
+            get {
+                return base.ContextMenu;
+            }
+
+            set {
+                base.ContextMenu = value;
+                if (value != null && ContextMenuStrip != null) {
+                    ContextMenuStrip = null;
+                }
+            }
+        }
+
+        public override ContextMenuStrip ContextMenuStrip {
+            get {
+                return base.ContextMenuStrip;
+            }
+
+            set {
+                base.ContextMenuStrip = value;
+                if (value != null && ContextMenu != null) {
+                    ContextMenu = null;
+                }
+            }
+        }
         private void changeLabelStyle(LabelStyle labelStyle) {
             FontChanged -= LabelStyle_FontChanged;
             ForeColorChanged -= LabelStyle_ForeColorChanged;
@@ -40,12 +72,12 @@ namespace MyAPKapp.VistaUIFramework {
                 defaultFont = base.Font;
                 defaultColor = base.ForeColor;
                 Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-                ForeColor = Color.FromArgb(0, 0, 51, 15);
+                ForeColor = Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
             } else if (LabelStyle == LabelStyle.GroupHeader) {
                 defaultFont = base.Font;
                 defaultColor = base.ForeColor;
                 Font = new Font("Segoe UI", 11F, FontStyle.Regular);
-                ForeColor = Color.FromArgb(0, 0, 51, 15);
+                ForeColor = Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
             }
             FontChanged += LabelStyle_FontChanged;
             ForeColorChanged += LabelStyle_ForeColorChanged;
@@ -54,13 +86,13 @@ namespace MyAPKapp.VistaUIFramework {
         private void LabelStyle_FontChanged(object sender, EventArgs e) {
             defaultFont = base.Font;
             defaultColor = base.ForeColor;
-            changeLabelStyle(LabelStyle.Default);
+            LabelStyle = LabelStyle.Default;
         }
 
         private void LabelStyle_ForeColorChanged(object sender, EventArgs e) {
             defaultFont = base.Font;
             defaultColor = base.ForeColor;
-            changeLabelStyle(LabelStyle.Default);
+            LabelStyle = LabelStyle.Default;
         }
 
         /// <summary>

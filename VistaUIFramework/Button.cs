@@ -20,6 +20,8 @@ namespace MyAPKapp.VistaUIFramework {
             base.FlatStyle = FlatStyle.System;
         }
 
+        #region Public properties
+
         /// <summary>
         /// This property can alter the native purpose of VistaUI
         /// </summary>
@@ -109,6 +111,35 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        [Browsable(true)]
+        public override ContextMenu ContextMenu {
+            get {
+                return base.ContextMenu;
+            }
+
+            set {
+                base.ContextMenu = value;
+                if (value != null && ContextMenuStrip != null) {
+                    ContextMenuStrip = null;
+                }
+            }
+        }
+
+        public override ContextMenuStrip ContextMenuStrip {
+            get {
+                return base.ContextMenuStrip;
+            }
+
+            set {
+                base.ContextMenuStrip = value;
+                if (value != null && ContextMenu != null) {
+                    ContextMenu = null;
+                }
+            }
+        }
+
+        #endregion
+
         protected override CreateParams CreateParams {
             get {
                 if (string.IsNullOrEmpty(Text)) {
@@ -140,16 +171,6 @@ namespace MyAPKapp.VistaUIFramework {
         private void SetShield(bool shield) {
             int bin = shield ? 1 : 0;
             NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETSHIELD, 0, bin);
-        }
-
-        [Browsable(true)]
-        public new virtual ContextMenu ContextMenu {
-            get {
-                return base.ContextMenu;
-            }
-            set {
-                base.ContextMenu = value;
-            }
         }
 
     }

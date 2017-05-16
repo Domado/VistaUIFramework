@@ -10,7 +10,10 @@ namespace MyAPKapp.VistaUIFramework {
         private Padding _AeroMargin;
         private NativeMethods.MARGINS margins;
 
-        public Form() : base() {}
+        public Form() : base() {
+            base.DoubleBuffered = true;
+            base.BackColor = SystemColors.Window;
+        }
 
         #region Form properties
 
@@ -41,8 +44,13 @@ namespace MyAPKapp.VistaUIFramework {
                 return _Aero;
             }
             set {
-                _Aero = value;
-                RecreateHandle();
+                if (_Aero != value) {
+                    _Aero = value;
+                    if (value && DoubleBuffered) {
+                        DoubleBuffered = false;
+                    }
+                    RecreateHandle();
+                }
             }
         }
 
@@ -59,6 +67,19 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        [DefaultValue(true)]
+        protected override bool DoubleBuffered {
+            get {
+                return base.DoubleBuffered;
+            }
+            set {
+                base.DoubleBuffered = value;
+                if (value && Aero) {
+                    Aero = false;
+                }
+            }
+        }
+
         protected override CreateParams CreateParams {
             get {
                 if (!CloseBox) {
@@ -71,12 +92,65 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         [Browsable(true)]
-        public new virtual ContextMenu ContextMenu {
+        public override ContextMenu ContextMenu {
             get {
                 return base.ContextMenu;
             }
+
             set {
                 base.ContextMenu = value;
+                if (value != null && ContextMenuStrip != null) {
+                    ContextMenuStrip = null;
+                }
+            }
+        }
+
+        public override ContextMenuStrip ContextMenuStrip {
+            get {
+                return base.ContextMenuStrip;
+            }
+
+            set {
+                base.ContextMenuStrip = value;
+                if (value != null && ContextMenu != null) {
+                    ContextMenu = null;
+                }
+            }
+        }
+
+        [Browsable(true)]
+        public new virtual MainMenu Menu {
+            get {
+                return base.Menu;
+            }
+            set {
+                base.Menu = value;
+                if (value != null && MainMenuStrip != null) {
+                    MainMenuStrip = null;
+                }
+            }
+        }
+
+        public new virtual MenuStrip MainMenuStrip {
+            get {
+                return base.MainMenuStrip;
+            }
+            set {
+                base.MainMenuStrip = value;
+                if (value != null && Menu != null) {
+                    Menu = null;
+                }
+            }
+        }
+
+        [DefaultValue(typeof(Color), "Window")]
+        public override Color BackColor {
+            get {
+                return base.BackColor;
+            }
+
+            set {
+                base.BackColor = value;
             }
         }
 
