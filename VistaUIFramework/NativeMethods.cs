@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -19,6 +20,7 @@ namespace MyAPKapp.VistaUIFramework {
         public const int IMAGE_BITMAP = 0;
         public const int IMAGE_ICON = 1;
         public const int GWL_EXSTYLE = (-20);
+        public const int S_OK = 0;
         public const string WC_IPADDRESS = "SysIPAddress32";
         public const string REBARCLASSNAME = "ReBarWindow32";
 
@@ -27,6 +29,7 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WM_PAINT = 0x000F;
         public const int WM_COMMAND = 0x0111;
         public const int WM_SETCURSOR = 0x0020;
+        public const int WM_CTLCOLORSTATIC = 0x0138;
         public const int WS_VISIBLE = 0x10000000;
         public const int WS_CHILD = 0x40000000;
         public const int WS_EX_CLIENTEDGE = 0x00000200;
@@ -344,8 +347,120 @@ namespace MyAPKapp.VistaUIFramework {
 
             /// <summary>The window has a vertical scroll bar.</summary>
             WS_VSCROLL = 0x200000,
-            RBS_VARHEIGHT = 0x00000200,
-            CCS_NODIVIDER = 0x00000040
+        }
+
+        public enum StockObjects {
+            WHITE_BRUSH = 0,
+            LTGRAY_BRUSH = 1,
+            GRAY_BRUSH = 2,
+            DKGRAY_BRUSH = 3,
+            BLACK_BRUSH = 4,
+            NULL_BRUSH = 5,
+            HOLLOW_BRUSH = NULL_BRUSH,
+            WHITE_PEN = 6,
+            BLACK_PEN = 7,
+            NULL_PEN = 8,
+            OEM_FIXED_FONT = 10,
+            ANSI_FIXED_FONT = 11,
+            ANSI_VAR_FONT = 12,
+            SYSTEM_FONT = 13,
+            DEVICE_DEFAULT_FONT = 14,
+            DEFAULT_PALETTE = 15,
+            SYSTEM_FIXED_FONT = 16,
+            DEFAULT_GUI_FONT = 17,
+            DC_BRUSH = 18,
+            DC_PEN = 19
+        }
+
+        [System.Flags]
+        public enum LoadLibraryFlags : uint {
+            DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
+            LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
+            LOAD_LIBRARY_AS_DATAFILE = 0x00000002,
+            LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE = 0x00000040,
+            LOAD_LIBRARY_AS_IMAGE_RESOURCE = 0x00000020,
+            LOAD_LIBRARY_SEARCH_APPLICATION_DIR = 0x00000200,
+            LOAD_LIBRARY_SEARCH_DEFAULT_DIRS = 0x00001000,
+            LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR = 0x00000100,
+            LOAD_LIBRARY_SEARCH_SYSTEM32 = 0x00000800,
+            LOAD_LIBRARY_SEARCH_USER_DIRS = 0x00000400,
+            LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008
+        }
+
+        [Flags]
+        public enum DTT : uint {
+            TextColor = (1 << 0),
+            BorderColor = (1 << 1),
+            ShadowColor = (1 << 2),
+            ShadowType = (1 << 3),
+            ShadowOffset = (1 << 4),
+            BorderSize = (1 << 5),
+            FontProp = (1 << 6),
+            ColorProp = (1 << 7),
+            StateID = (1 << 8),
+            CalcRect = (1 << 9),
+            ApplyOverlay = (1 << 10),
+            GlowSize = (1 << 11),
+            Callback = (1 << 12),
+            Composited = (1 << 13)
+        }
+
+        public enum BitmapCompressionMode : uint {
+            BI_RGB = 0,
+            BI_RLE8 = 1,
+            BI_RLE4 = 2,
+            BI_BITFIELDS = 3,
+            BI_JPEG = 4,
+            BI_PNG = 5
+        }
+
+        public enum TEXTSHADOWTYPE : int {
+            None = 0,
+            Single = 1,
+            Continuous = 2,
+        }
+
+        /// <summary>
+        ///     Specifies a raster-operation code. These codes define how the color data for the
+        ///     source rectangle is to be combined with the color data for the destination
+        ///     rectangle to achieve the final color.
+        /// </summary>
+        public enum TernaryRasterOperations : uint {
+            /// <summary>dest = source</summary>
+            SRCCOPY = 0x00CC0020,
+            /// <summary>dest = source OR dest</summary>
+            SRCPAINT = 0x00EE0086,
+            /// <summary>dest = source AND dest</summary>
+            SRCAND = 0x008800C6,
+            /// <summary>dest = source XOR dest</summary>
+            SRCINVERT = 0x00660046,
+            /// <summary>dest = source AND (NOT dest)</summary>
+            SRCERASE = 0x00440328,
+            /// <summary>dest = (NOT source)</summary>
+            NOTSRCCOPY = 0x00330008,
+            /// <summary>dest = (NOT src) AND (NOT dest)</summary>
+            NOTSRCERASE = 0x001100A6,
+            /// <summary>dest = (source AND pattern)</summary>
+            MERGECOPY = 0x00C000CA,
+            /// <summary>dest = (NOT source) OR dest</summary>
+            MERGEPAINT = 0x00BB0226,
+            /// <summary>dest = pattern</summary>
+            PATCOPY = 0x00F00021,
+            /// <summary>dest = DPSnoo</summary>
+            PATPAINT = 0x00FB0A09,
+            /// <summary>dest = pattern XOR dest</summary>
+            PATINVERT = 0x005A0049,
+            /// <summary>dest = (NOT dest)</summary>
+            DSTINVERT = 0x00550009,
+            /// <summary>dest = BLACK</summary>
+            BLACKNESS = 0x00000042,
+            /// <summary>dest = WHITE</summary>
+            WHITENESS = 0x00FF0062,
+            /// <summary>
+            /// Capture window as seen on screen.  This includes layered windows 
+            /// such as WPF windows with AllowsTransparency="true"
+            /// </summary>
+            CAPTUREBLT = 0x40000000
         }
 
         #endregion
@@ -403,6 +518,125 @@ namespace MyAPKapp.VistaUIFramework {
             public int cxIdeal;
             public int lParam;
             public int cxHeader;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT {
+            public int Left, Top, Right, Bottom;
+
+            public RECT(int left, int top, int right, int bottom) {
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
+            }
+
+            public RECT(System.Drawing.Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom) { }
+
+            public int X {
+                get { return Left; }
+                set { Right -= (Left - value); Left = value; }
+            }
+
+            public int Y {
+                get { return Top; }
+                set { Bottom -= (Top - value); Top = value; }
+            }
+
+            public int Height {
+                get { return Bottom - Top; }
+                set { Bottom = value + Top; }
+            }
+
+            public int Width {
+                get { return Right - Left; }
+                set { Right = value + Left; }
+            }
+
+            public System.Drawing.Point Location {
+                get { return new System.Drawing.Point(Left, Top); }
+                set { X = value.X; Y = value.Y; }
+            }
+
+            public System.Drawing.Size Size {
+                get { return new System.Drawing.Size(Width, Height); }
+                set { Width = value.Width; Height = value.Height; }
+            }
+
+            public static implicit operator System.Drawing.Rectangle(RECT r) {
+                return new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
+            }
+
+            public static implicit operator RECT(System.Drawing.Rectangle r) {
+                return new RECT(r);
+            }
+
+            public static bool operator ==(RECT r1, RECT r2) {
+                return r1.Equals(r2);
+            }
+
+            public static bool operator !=(RECT r1, RECT r2) {
+                return !r1.Equals(r2);
+            }
+
+            public bool Equals(RECT r) {
+                return r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
+            }
+
+            public override bool Equals(object obj) {
+                if (obj is RECT)
+                    return Equals((RECT)obj);
+                else if (obj is System.Drawing.Rectangle)
+                    return Equals(new RECT((System.Drawing.Rectangle)obj));
+                return false;
+            }
+
+            public override int GetHashCode() {
+                return ((System.Drawing.Rectangle)this).GetHashCode();
+            }
+
+            public override string ToString() {
+                return string.Format(System.Globalization.CultureInfo.CurrentCulture, "{{Left={0},Top={1},Right={2},Bottom={3}}}", Left, Top, Right, Bottom);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DTTOPTS {
+            public int dwSize;
+            public DTT dwFlags;
+            public int crText;
+            public int crBorder;
+            public int crShadow;
+            public TEXTSHADOWTYPE iTextShadowType;
+            public System.Drawing.Point ptShadowOffset;
+            public int iBorderSize;
+            public int iFontPropId;
+            public int iColorPropId;
+            public int iStateId;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool fApplyOverlay;
+            public int iGlowSize;
+            public int pfnDrawTextCallback;
+            public IntPtr lParam;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BITMAPINFO {
+            public uint biSize;
+            public int biWidth;
+            public int biHeight;
+            public ushort biPlanes;
+            public ushort biBitCount;
+            public BitmapCompressionMode biCompression;
+            public uint biSizeImage;
+            public int biXPelsPerMeter;
+            public int biYPelsPerMeter;
+            public uint biClrUsed;
+            public uint biClrImportant;
+
+            public void Init() {
+                biSize = (uint)Marshal.SizeOf(this);
+            }
         }
 
         /// <summary>
@@ -612,8 +846,8 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("dwmapi.dll")]
         public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
 
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern bool DwmIsCompositionEnabled();
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmIsCompositionEnabled(out bool enabled);
 
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
         public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
@@ -708,6 +942,105 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SetCursor(IntPtr hCursor);
 
+        [DllImport("gdi32.dll")]
+        public static extern int SetBkMode(IntPtr hdc, int iBkMode);
+
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr GetStockObject(StockObjects fnObject);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr LoadLibrary(string dllToLoad);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, LoadLibraryFlags dwFlags);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool FreeLibrary(IntPtr hModule);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType,
+   int cxDesired, int cyDesired, uint fuLoad);
+
+        [DllImport("uxtheme.dll")]
+        public static extern int DrawThemeTextEx(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, string text, int length, int flags, ref RECT rect, ref DTTOPTS poptions);
+
+        /// <summary>
+        ///        Creates a memory device context (DC) compatible with the specified device.
+        /// </summary>
+        /// <param name="hdc">A handle to an existing DC. If this handle is NULL,
+        ///        the function creates a memory DC compatible with the application's current screen.</param>
+        /// <returns>
+        ///        If the function succeeds, the return value is the handle to a memory DC.
+        ///        If the function fails, the return value is <see cref="System.IntPtr.Zero"/>.
+        /// </returns>
+        [DllImport("gdi32.dll", EntryPoint = "CreateCompatibleDC", SetLastError = true)]
+        public static extern IntPtr CreateCompatibleDC([In] IntPtr hdc);
+
+        [DllImport("gdi32.dll")]
+        public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BITMAPINFO pbmi,
+   uint pila, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
+
+        /// <summary>Selects an object into the specified device context (DC). The new object replaces the previous object of the same type.</summary>
+        /// <param name="hdc">A handle to the DC.</param>
+        /// <param name="hgdiobj">A handle to the object to be selected.</param>
+        /// <returns>
+        ///   <para>If the selected object is not a region and the function succeeds, the return value is a handle to the object being replaced. If the selected object is a region and the function succeeds, the return value is one of the following values.</para>
+        ///   <para>SIMPLEREGION - Region consists of a single rectangle.</para>
+        ///   <para>COMPLEXREGION - Region consists of more than one rectangle.</para>
+        ///   <para>NULLREGION - Region is empty.</para>
+        ///   <para>If an error occurs and the selected object is not a region, the return value is <c>NULL</c>. Otherwise, it is <c>HGDI_ERROR</c>.</para>
+        /// </returns>
+        /// <remarks>
+        ///   <para>This function returns the previously selected object of the specified type. An application should always replace a new object with the original, default object after it has finished drawing with the new object.</para>
+        ///   <para>An application cannot select a single bitmap into more than one DC at a time.</para>
+        ///   <para>ICM: If the object being selected is a brush or a pen, color management is performed.</para>
+        /// </remarks>
+        [DllImport("gdi32.dll", EntryPoint = "SelectObject")]
+        public static extern IntPtr SelectObject([In] IntPtr hdc, [In] IntPtr hgdiobj);
+
+        /// <summary>
+        ///    Performs a bit-block transfer of the color data corresponding to a
+        ///    rectangle of pixels from the specified source device context into
+        ///    a destination device context.
+        /// </summary>
+        /// <param name="hdc">Handle to the destination device context.</param>
+        /// <param name="nXDest">The leftmost x-coordinate of the destination rectangle (in pixels).</param>
+        /// <param name="nYDest">The topmost y-coordinate of the destination rectangle (in pixels).</param>
+        /// <param name="nWidth">The width of the source and destination rectangles (in pixels).</param>
+        /// <param name="nHeight">The height of the source and the destination rectangles (in pixels).</param>
+        /// <param name="hdcSrc">Handle to the source device context.</param>
+        /// <param name="nXSrc">The leftmost x-coordinate of the source rectangle (in pixels).</param>
+        /// <param name="nYSrc">The topmost y-coordinate of the source rectangle (in pixels).</param>
+        /// <param name="dwRop">A raster-operation code.</param>
+        /// <returns>
+        ///    <c>true</c> if the operation succeedes, <c>false</c> otherwise. To get extended error information, call <see cref="System.Runtime.InteropServices.Marshal.GetLastWin32Error"/>.
+        /// </returns>
+        [DllImport("gdi32.dll", EntryPoint = "BitBlt", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool BitBlt([In] IntPtr hdc, int nXDest, int nYDest, int nWidth, int nHeight, [In] IntPtr hdcSrc, int nXSrc, int nYSrc, TernaryRasterOperations dwRop);
+
+        /// <summary>Deletes a logical pen, brush, font, bitmap, region, or palette, freeing all system resources associated with the object. After the object is deleted, the specified handle is no longer valid.</summary>
+        /// <param name="hObject">A handle to a logical pen, brush, font, bitmap, region, or palette.</param>
+        /// <returns>
+        ///   <para>If the function succeeds, the return value is nonzero.</para>
+        ///   <para>If the specified handle is not valid or is currently selected into a DC, the return value is zero.</para>
+        /// </returns>
+        /// <remarks>
+        ///   <para>Do not delete a drawing object (pen or brush) while it is still selected into a DC.</para>
+        ///   <para>When a pattern brush is deleted, the bitmap associated with the brush is not deleted. The bitmap must be deleted independently.</para>
+        /// </remarks>
+        [DllImport("gdi32.dll", EntryPoint = "DeleteObject")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool DeleteObject([In] IntPtr hObject);
+
+        /// <summary>Deletes the specified device context (DC).</summary>
+        /// <param name="hdc">A handle to the device context.</param>
+        /// <returns><para>If the function succeeds, the return value is nonzero.</para><para>If the function fails, the return value is zero.</para></returns>
+        /// <remarks>An application must not delete a DC whose handle was obtained by calling the <c>GetDC</c> function. Instead, it must call the <c>ReleaseDC</c> function to free the DC.</remarks>
+        [DllImport("gdi32.dll", EntryPoint = "DeleteDC")]
+        public static extern bool DeleteDC([In] IntPtr hdc);
+
         #endregion
 
         #region Macros
@@ -720,6 +1053,14 @@ namespace MyAPKapp.VistaUIFramework {
 
         public static int GetLoWord(long value) {
             return (short)(value & 0xFFFF);
+        }
+
+        public static bool Succeeded(int hr) {
+            return hr == S_OK;
+        }
+
+        public static Win32Exception NativeException() {
+            return new Win32Exception(Marshal.GetLastWin32Error());
         }
 
         #endregion

@@ -11,6 +11,7 @@ namespace MyAPKapp.VistaUIFramework {
         private Icon _Icon;
         private Image _Image;
         private bool _Shield;
+        private bool _ImageOnly;
 
         /// <summary>
         /// The native button inherited from WinForms button<br />
@@ -84,6 +85,16 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        public bool ImageOnly {
+            get {
+                return _ImageOnly;
+            }
+            set {
+                _ImageOnly = value;
+                RecreateHandle();
+            }
+        }
+
         /// <summary>
         /// Set the button's shield to tell user action requires administrator privileges
         /// </summary>
@@ -142,7 +153,7 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override CreateParams CreateParams {
             get {
-                if (string.IsNullOrEmpty(Text)) {
+                if (_ImageOnly) {
                     CreateParams cp = base.CreateParams;
                     cp.Style |= NativeMethods.BS_ICON;
                     return cp;

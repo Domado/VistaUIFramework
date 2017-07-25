@@ -18,12 +18,11 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         private static NativeMethods.ITaskbarList3 taskbar;
         private IntPtr _MainHandle;
         private bool buttonsAdded;
+        private static TaskbarHelper helper;
 
         private TaskbarHelper() {
-            if (taskbar == null) {
-                taskbar = (NativeMethods.ITaskbarList3)new TaskbarInstance();
-                taskbar.HrInit();
-            }
+            taskbar = (NativeMethods.ITaskbarList3)new TaskbarInstance();
+            taskbar.HrInit();
         }
 
         internal NativeMethods.ITaskbarList3 NativeInterface {
@@ -125,17 +124,18 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         /// </summary>
         public static TaskbarHelper Instance {
             get {
-                if (!isSupported) {
+                if (!IsSupported) {
                     throw new UnsupportedWindowsException("Windows 7");
                 }
-                return new TaskbarHelper();
+                if (helper == null) new TaskbarHelper();
+                return helper;
             }
         }
 
         /// <summary>
         /// Check if Windows version supports taskbar methods.
         /// </summary>
-        public static bool isSupported {
+        public static bool IsSupported {
             get {
                 return Environment.OSVersion.Version >= new Version(6, 1);
             }

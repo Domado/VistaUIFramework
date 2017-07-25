@@ -1,19 +1,44 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace MyAPKapp.VistaUIFramework {
     public class Form : System.Windows.Forms.Form {
         private bool _CloseBox = true;
         private bool _Aero;
         private Padding _AeroMargin;
-        private NativeMethods.MARGINS margins;
 
         public Form() : base() {
             base.DoubleBuffered = true;
             base.BackColor = SystemColors.Window;
+            if (!DesignMode) {
+                Activated += Form_Activated;
+                Deactivate += Form_Deactivate;
+            }
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint
+              | ControlStyles.OptimizedDoubleBuffer
+              | ControlStyles.ResizeRedraw
+              | ControlStyles.UserPaint
+              , true);
         }
+
+        #region Inner events
+
+        private void Form_Activated(object sender, EventArgs e) {
+            Invalidate();
+        }
+
+        private void Form_Deactivate(object sender, EventArgs e) {
+            Invalidate();
+        }
+
+        #endregion
 
         #region Form properties
 
@@ -63,6 +88,7 @@ namespace MyAPKapp.VistaUIFramework {
             }
             set {
                 _AeroMargin = value;
+                Invalidate();
                 RecreateHandle();
             }
         }
@@ -164,33 +190,67 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         protected override void OnPaintBackground(PaintEventArgs e) {
+            base.OnPaintBackground(e);
             if (Aero) {
-                base.OnPaint(e);
-                if (NativeMethods.DwmIsCompositionEnabled()) {
-                    e.Graphics.Clear(Color.Black);
-                    Rectangle clientArea = new Rectangle(
-                            margins.leftWidth,
-                            margins.topHeight,
-                            this.ClientRectangle.Width - margins.leftWidth - margins.rightWidth,
-                            this.ClientRectangle.Height - margins.topHeight - margins.bottomHeight
+                bool isDWMEnabled;
+                int result = NativeMethods.DwmIsCompositionEnabled(out isDWMEnabled);
+                if (NativeMethods.Succeeded(result) && isDWMEnabled) {
+                    if (DesignMode) {
+                        e.Graphics.Clear(SystemColors.GradientActiveCaption);
+                    } else {
+                        e.Graphics.Clear(Color.Transparent);
+                    }
+                    if (!IsAeroSheet) {
+                        Rectangle clientArea = new Rectangle(
+                            _AeroMargin.Left,
+                            _AeroMargin.Top,
+                            this.ClientRectangle.Width - _AeroMargin.Left - _AeroMargin.Right,
+                            this.ClientRectangle.Height - _AeroMargin.Top - _AeroMargin.Bottom
                         );
-                    Brush b = new SolidBrush(this.BackColor);
-                    e.Graphics.FillRectangle(b, clientArea);
+                        Brush b = new SolidBrush(this.BackColor);
+                        e.Graphics.FillRectangle(b, clientArea);
+                    }
+                } else {
+                    if (DesignMode) {
+                        e.Graphics.Clear(SystemColors.GradientActiveCaption);
+                    } else {
+                        if (ActiveForm == this) {
+                            e.Graphics.Clear(SystemColors.GradientActiveCaption);
+                        } else {
+                            e.Graphics.Clear(SystemColors.GradientInactiveCaption);
+                        }
+                    }
+                    if (!IsAeroSheet) {
+                        Rectangle clientArea = new Rectangle(
+                            _AeroMargin.Left,
+                            _AeroMargin.Top,
+                            this.ClientRectangle.Width - _AeroMargin.Left - _AeroMargin.Right,
+                            this.ClientRectangle.Height - _AeroMargin.Top - _AeroMargin.Bottom
+                        );
+                        Brush b = new SolidBrush(this.BackColor);
+                        e.Graphics.FillRectangle(b, clientArea);
+                    }
                 }
-            } else {
-                base.OnPaintBackground(e);
             }
         }
 
         protected override void OnLoad(EventArgs e) {
             base.OnLoad(e);
-            if (Aero && NativeMethods.DwmIsCompositionEnabled()) {
-                margins = new NativeMethods.MARGINS();
+            bool isDWMEnabled;
+            int result = NativeMethods.DwmIsCompositionEnabled(out isDWMEnabled);
+            if (Aero && NativeMethods.Succeeded(result) && isDWMEnabled) {
+                NativeMethods.MARGINS margins = new NativeMethods.MARGINS();
                 margins.topHeight = _AeroMargin.Top;
                 margins.bottomHeight = _AeroMargin.Bottom;
                 margins.leftWidth = _AeroMargin.Left;
                 margins.rightWidth = _AeroMargin.Right;
                 NativeMethods.DwmExtendFrameIntoClientArea(Handle, ref margins);
+            }
+        }
+
+        private bool IsAeroSheet {
+            get {
+                return _AeroMargin.Left == -1 && _AeroMargin.Right == -1 && _AeroMargin.Top == -1 && _AeroMargin.Bottom == -1;
             }
         }
 
