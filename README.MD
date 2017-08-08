@@ -21,7 +21,7 @@ Make your application look like a Windows Vista/7 program. You won't stop lookin
 Developing custom controls like `CommandLink`, `SplitButton` or `ProgressBar` delays the release date of any project. Simply use VistaUIFramework and start developing.
 
 # IMPORTANT
-The source code is often under development and can be buggy. We recommend to check out the latest release and download the .DLL file for a stable version.
+The source code is often under development and may be buggy. We recommend to check out the latest release and download the .DLL file for a stable version, if you need to download the source code, go to Releases and download the source code as zip.
 
 # Download the stable release
 Stable releases are available on .DLL files.<br>
