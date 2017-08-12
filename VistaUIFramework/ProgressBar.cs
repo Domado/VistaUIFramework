@@ -15,7 +15,7 @@ namespace MyAPKapp.VistaUIFramework {
         /// <summary>
         /// Set the progress state as the progress color
         /// </summary>
-        [Category("Appearance")]
+        [Category("Behavior")]
         [DefaultValue(ProgressState.Normal)]
         [Description("Set the progress state as the progress color")]
         public ProgressState State {

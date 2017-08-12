@@ -79,6 +79,12 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// The margins between form container and Aero glass
+        /// </summary>
+        /// <remarks>
+        /// If all margins are set to -1, the glass will cover the whole form
+        /// </remarks>
         [Category("Design")]
         [DefaultValue(0)]
         [Description("The margins between form container and Aero glass")]
@@ -185,7 +191,7 @@ namespace MyAPKapp.VistaUIFramework {
         private void EnableCloseButton(bool enable) {
             IntPtr hMenu = NativeMethods.GetSystemMenu(Handle, false);
             if (hMenu != IntPtr.Zero) {
-                NativeMethods.EnableMenuItem(hMenu, NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | (enable ? NativeMethods.MF_ENABLED : NativeMethods.MF_GRAYED));
+                NativeMethods.EnableMenuItem(hMenu, NativeMethods.SC_CLOSE, NativeMethods.MF_BYCOMMAND | (enable ? NativeMethods.MF_ENABLED : (NativeMethods.MF_DISABLED | NativeMethods.MF_GRAYED)));
             }
         }
 

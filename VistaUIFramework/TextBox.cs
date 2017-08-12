@@ -24,7 +24,7 @@ namespace MyAPKapp.VistaUIFramework {
             }
             set {
                 _Hint = value;
-                NativeMethods.SendMessageW(Handle, NativeMethods.EM_SETCUEBANNER, IntPtr.Zero, value);
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETCUEBANNER, IntPtr.Zero, value);
             }
         }
 

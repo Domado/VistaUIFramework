@@ -30,7 +30,7 @@ namespace MyAPKapp.VistaUIFramework {
             }
             set {
                 _Note = value;
-                NativeMethods.SendMessageW(Handle, NativeMethods.BCM_SETNOTE, IntPtr.Zero, value);
+                NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETNOTE, IntPtr.Zero, value);
             }
         }
 

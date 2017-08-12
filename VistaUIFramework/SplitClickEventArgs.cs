@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace MyAPKapp.VistaUIFramework {
     public class SplitClickEventArgs : CancelEventArgs {
 
-        public SplitClickEventArgs(ContextMenu menu) {
+        public SplitClickEventArgs(ContextMenu menu) : base() {
             Menu = menu;
         }
 

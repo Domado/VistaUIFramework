@@ -1,9 +1,12 @@
-﻿using System;
+﻿using MyAPKapp.VistaUIFramework.TaskDialog;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace MyAPKapp.VistaUIFramework {
+
+    internal delegate int TaskDialogCallbackProc(IntPtr hWnd, uint message, IntPtr wParam, IntPtr lParam, IntPtr referenceData);
 
     /// <summary>
     /// NativeMethods is an internal class that contains all unmanaged native classes, interfaces, enums, structs, methods, macros, etc.
@@ -12,15 +15,22 @@ namespace MyAPKapp.VistaUIFramework {
 
         #region Native constants
 
+        public const int TRUE = 1;
+        public const int FALSE = 0;
         public const int SC_CLOSE = 0xF060;
         public const int MF_BYCOMMAND = 0x0000;
         public const int MF_ENABLED = 0x0000;
+        public const int MF_DISABLED = 0x0002;
         public const int MF_GRAYED = 0x0001;
         public const int CS_NOCLOSE = 0x0200;
         public const int IMAGE_BITMAP = 0;
         public const int IMAGE_ICON = 1;
+        public const int ICON_BIG = 1;
+        public const int ICON_SMALL = 0;
         public const int GWL_EXSTYLE = (-20);
         public const int S_OK = 0;
+        public const int S_FALSE = 1;
+        public const int ERROR_INVALID_HANDLE = 6;
         public const string WC_IPADDRESS = "SysIPAddress32";
         public const string REBARCLASSNAME = "ReBarWindow32";
 
@@ -30,6 +40,7 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WM_COMMAND = 0x0111;
         public const int WM_SETCURSOR = 0x0020;
         public const int WM_CTLCOLORSTATIC = 0x0138;
+        public const int WM_SETICON = 0x0080;
         public const int WS_VISIBLE = 0x10000000;
         public const int WS_CHILD = 0x40000000;
         public const int WS_EX_CLIENTEDGE = 0x00000200;
@@ -92,6 +103,40 @@ namespace MyAPKapp.VistaUIFramework {
         public const int MIM_STYLE = 0x00000010;
         public const int MNS_CHECKORBMP = 0x04000000;
         public const int MIIM_BITMAP = 0x00000080;
+
+        /* TASK DIALOG VARIABLES */
+        public const int TDM_NAVIGATE_PAGE = WM_USER + 101;
+        public const int TDM_CLICK_BUTTON = WM_USER + 102;
+        public const int TDM_SET_MARQUEE_PROGRESS_BAR = WM_USER + 103;
+        public const int TDM_SET_PROGRESS_BAR_STATE = WM_USER + 104;
+        public const int TDM_SET_PROGRESS_BAR_RANGE = WM_USER + 105;
+        public const int TDM_SET_PROGRESS_BAR_POS = WM_USER + 106;
+        public const int TDM_SET_PROGRESS_BAR_MARQUEE = WM_USER + 107;
+        public const int TDM_SET_ELEMENT_TEXT = WM_USER + 108;
+        public const int TDM_CLICK_RADIO_BUTTON = WM_USER + 110;
+        public const int TDM_ENABLE_BUTTON = WM_USER + 111;
+        public const int TDM_ENABLE_RADIO_BUTTON = WM_USER + 112;
+        public const int TDM_CLICK_VERIFICATION = WM_USER + 113;
+        public const int TDM_UPDATE_ELEMENT_TEXT = WM_USER + 114;
+        public const int TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE = WM_USER + 115;
+        public const int TDM_UPDATE_ICON = WM_USER + 116;
+        public const int TDN_CREATED = 0;
+        public const int TDN_NAVIGATED = 1;
+        public const int TDN_BUTTON_CLICKED = 2;
+        public const int TDN_HYPERLINK_CLICKED = 3;
+        public const int TDN_TIMER = 4;
+        public const int TDN_DESTROYED = 5;
+        public const int TDN_RADIO_BUTTON_CLICKED = 6;
+        public const int TDN_DIALOG_CONSTRUCTED = 7;
+        public const int TDN_VERIFICATION_CLICKED = 8;
+        public const int TDN_HELP = 9;
+        public const int TDN_EXPANDO_BUTTON_CLICKED = 10;
+        public const int TDE_CONTENT = 0;
+        public const int TDE_EXPANDED_INFORMATION = 1;
+        public const int TDE_FOOTER = 2;
+        public const int TDE_MAIN_INSTRUCTION = 3;
+        public const int TDIE_ICON_MAIN = 0;
+        public const int TDIE_ICON_FOOTER = 1;
 
         #endregion
 
@@ -372,7 +417,7 @@ namespace MyAPKapp.VistaUIFramework {
             DC_PEN = 19
         }
 
-        [System.Flags]
+        [Flags]
         public enum LoadLibraryFlags : uint {
             DONT_RESOLVE_DLL_REFERENCES = 0x00000001,
             LOAD_IGNORE_CODE_AUTHZ_LEVEL = 0x00000010,
@@ -461,6 +506,28 @@ namespace MyAPKapp.VistaUIFramework {
             /// such as WPF windows with AllowsTransparency="true"
             /// </summary>
             CAPTUREBLT = 0x40000000
+        }
+
+        [Flags]
+        public enum TaskDialogFlags {
+            TDF_ENABLE_HYPERLINKS = 0x0001,
+            TDF_USE_HICON_MAIN = 0x0002,
+            TDF_USE_HICON_FOOTER = 0x0004,
+            TDF_ALLOW_DIALOG_CANCELLATION = 0x0008,
+            TDF_USE_COMMAND_LINKS = 0x0010,
+            TDF_USE_COMMAND_LINKS_NO_ICON = 0x0020,
+            TDF_EXPAND_FOOTER_AREA = 0x0040,
+            TDF_EXPANDED_BY_DEFAULT = 0x0080,
+            TDF_VERIFICATION_FLAG_CHECKED = 0x0100,
+            TDF_SHOW_PROGRESS_BAR = 0x0200,
+            TDF_SHOW_MARQUEE_PROGRESS_BAR = 0x0400,
+            TDF_CALLBACK_TIMER = 0x0800,
+            TDF_POSITION_RELATIVE_TO_WINDOW = 0x1000,
+            TDF_RTL_LAYOUT = 0x2000,
+            TDF_NO_DEFAULT_RADIO_BUTTON = 0x4000,
+            TDF_CAN_BE_MINIMIZED = 0x8000,
+            TDF_NO_SET_FOREGROUND = 0x00010000,
+            TDF_SIZE_TO_CONTENT = 0x01000000
         }
 
         #endregion
@@ -708,7 +775,7 @@ namespace MyAPKapp.VistaUIFramework {
             /// shown. This window's associated taskbar button will display the progress bar.</param>
             /// <param name="tbpFlags">Flags that control the current state of the progress button. Specify
             /// only one of the following flags; all states are mutually exclusive of all others.</param>
-            void SetProgressState(IntPtr hWnd, TBPFLAG tbpFlags);
+            void SetProgressState(IntPtr hWnd, TaskBarProgressState tbpFlags);
 
             /// <summary>
             /// Informs the taskbar that a new tab or document thumbnail has been provided for display in an
@@ -816,6 +883,85 @@ namespace MyAPKapp.VistaUIFramework {
             void SetThumbnailClip(IntPtr hWnd, IntPtr prcClip);
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
+        public struct TASKDIALOGCONFIG {
+            public int cbSize;
+            public IntPtr hwndParent;
+            public IntPtr hInstance;
+            public TaskDialogFlags dwFlags;
+            public TaskDialogCommonButton dwCommonButtons;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszWindowTitle;
+            public IconUnion mainIcon;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszMainInstruction;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszContent;
+            public int cButtons;
+            public IntPtr pButtons;
+            public int nDefaultButton;
+            public int cRadioButtons;
+            public IntPtr pRadioButtons;
+            public int nDefaultRadioButton;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszVerificationText;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszExpandedInformation;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszExpandedControlText;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszCollapsedControlText;
+            public IconUnion footerIcon;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszFooter;
+            public TaskDialogCallbackProc pfCallback;
+            public IntPtr lpCallbackData;
+            public int cxWidth;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
+        public struct TASKDIALOG_BUTTON {
+            public int nButtonID;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszButtonText;
+        }
+
+        [StructLayout(LayoutKind.Explicit, CharSet = CharSet.Auto)]
+        public struct IconUnion {
+            [FieldOffset(0)]
+            public IntPtr hIcon;
+
+            [FieldOffset(0)]
+            public int pszIcon;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        public static IntPtr StructArrayToPtr(TASKDIALOG_BUTTON[] structs, bool deleteOld) {
+            IntPtr initialPtr = Marshal.AllocHGlobal(
+                Marshal.SizeOf(typeof(TASKDIALOG_BUTTON)) * structs.Length);
+            IntPtr currentPtr = initialPtr;
+            foreach (TASKDIALOG_BUTTON button in structs) {
+                Marshal.StructureToPtr(button, currentPtr, false);
+                currentPtr = (IntPtr)((int)currentPtr + Marshal.SizeOf(button));
+            }
+            return initialPtr;
+        }
+
+        public static int BoolToNative(bool boolean) {
+            return boolean ? TRUE : FALSE;
+        }
+
+        public static bool NativeToBool(int NativeBool) {
+            return NativeBool == 1;
+        }
+
+        public static bool NativeToBool(IntPtr NativeBool) {
+            return NativeToBool(NativeBool.ToInt32());
+        }
+
         #endregion
 
         #region Methods
@@ -825,14 +971,17 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, StringBuilder lParam);
 
-        [DllImport("user32.dll")]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPStr)] string lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref REBARBANDINFO lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
-        [DllImport("user32.dll", EntryPoint = "SendMessageW")]
-        public static extern IntPtr SendMessageW(IntPtr hWnd, int Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -849,16 +998,16 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("dwmapi.dll")]
         public static extern int DwmIsCompositionEnabled(out bool enabled);
 
-        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
 
-        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, int pszSubAppName, string pszSubIdList);
 
-        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, int pszSubIdList);
 
-        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Unicode)]
+        [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, int pszSubAppName, int pszSubIdList);
 
         /// <summary>
@@ -1041,6 +1190,48 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("gdi32.dll", EntryPoint = "DeleteDC")]
         public static extern bool DeleteDC([In] IntPtr hdc);
 
+        [DllImport("comctl32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern int TaskDialog([In] IntPtr hWndParent, [In] IntPtr hInstance, [MarshalAs(UnmanagedType.LPWStr), In] string pszWindowTitle, [MarshalAs(UnmanagedType.LPWStr), In] string pszMainInstruction, [MarshalAs(UnmanagedType.LPWStr), In] string pszContent, [In] TaskDialogCommonButton dwCommonButtons, [In] int pszIcon, [Out] out int pnButton);
+
+        [DllImport("comctl32.dll", SetLastError = true)]
+        public static extern int TaskDialogIndirect([In] TASKDIALOGCONFIG pTaskConfig, [Out] out int pnButton, [Out] out int pnRadioButton, [MarshalAs(UnmanagedType.Bool), Out] out bool pfverificationFlagChecked);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetActiveWindow();
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool IsWindow(IntPtr hWnd);
+
+        /// <summary>
+        ///     Changes the text of the specified window's title bar (if it has one). If the specified window is a control, the
+        ///     text of the control is changed. However, SetWindowText cannot change the text of a control in another application.
+        ///     <para>
+        ///     Go to https://msdn.microsoft.com/en-us/library/windows/desktop/ms633546%28v=vs.85%29.aspx for more
+        ///     information
+        ///     </para>
+        /// </summary>
+        /// <param name="hwnd">C++ ( hWnd [in]. Type: HWND )<br />A handle to the window or control whose text is to be changed.</param>
+        /// <param name="lpString">C++ ( lpString [in, optional]. Type: LPCTSTR )<br />The new title or control text.</param>
+        /// <returns>
+        ///     If the function succeeds, the return value is nonzero. If the function fails, the return value is zero.<br />
+        ///     To get extended error information, call GetLastError.
+        /// </returns>
+        /// <remarks>
+        ///     If the target window is owned by the current process, <see cref="SetWindowText" /> causes a WM_SETTEXT message to
+        ///     be sent to the specified window or control. If the control is a list box control created with the WS_CAPTION style,
+        ///     however, <see cref="SetWindowText" /> sets the text for the control, not for the list box entries.<br />To set the
+        ///     text of a control in another process, send the WM_SETTEXT message directly instead of calling
+        ///     <see cref="SetWindowText" />. The <see cref="SetWindowText" /> function does not expand tab characters (ASCII code
+        ///     0x09). Tab characters are displayed as vertical bar(|) characters.<br />For an example go to
+        ///     <see cref="!:https://msdn.microsoft.com/en-us/library/windows/desktop/ms644928%28v=vs.85%29.aspx#sending">
+        ///     Sending a
+        ///     Message.
+        ///     </see>
+        /// </remarks>
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        public static extern bool SetWindowText(IntPtr hwnd, [MarshalAs(UnmanagedType.LPWStr)] string lpString);
+
         #endregion
 
         #region Macros
@@ -1055,8 +1246,24 @@ namespace MyAPKapp.VistaUIFramework {
             return (short)(value & 0xFFFF);
         }
 
+        public static long MakeLParam(int low, int high) {
+            return (high << 16) + low;
+        }
+
         public static bool Succeeded(int hr) {
             return hr == S_OK;
+        }
+
+        public static int MakeIntResource(int resource) {
+            return (ushort) resource;
+        }
+
+        public static string MakeIntResource(int resource, bool sharpMode) {
+            if (sharpMode) {
+                return "#" + resource;
+            } else {
+                return MakeIntResource(resource).ToString();
+            }
         }
 
         public static Win32Exception NativeException() {

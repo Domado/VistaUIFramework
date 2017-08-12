@@ -85,6 +85,12 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// Set if button has image only
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue(false)]
+        [Description("Set if button has image only")]
         public bool ImageOnly {
             get {
                 return _ImageOnly;

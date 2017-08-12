@@ -14,15 +14,17 @@ namespace MyAPKapp.VistaUIFramework {
         public SplitButton() : base() {}
 
         /// <summary>
-        /// It's triggered when split arrow is clicked
+        /// Fires when split arrow is clicked
         /// </summary>
+        [Category("Action")]
+        [Description("Fires when split arrow is clicked")]
         public event SplitClickEventHandler SplitClick;
 
         /// <summary>
         /// Set the split button's menu, set the SplitClick e.cancel to true to prevent the menu from showing
         /// </summary>
         [Category("Behavior")]
-        [DefaultValue((ContextMenu) null)]
+        [DefaultValue(null)]
         [Description("Set the split button's menu, set the SplitClick e.cancel to true to prevent the menu from showing")]
         public ContextMenu Menu {get; set;}
 
@@ -49,7 +51,7 @@ namespace MyAPKapp.VistaUIFramework {
                             if (!e.Cancel && Menu != null) {
                                 Menu.Show(this, new Point(0, Height));
                             }
-                        } else {
+                        } else if (Menu != null) {
                             Menu.Show(this, new Point(0, Height));
                         }
                     }

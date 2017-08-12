@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel;
 using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace MyAPKapp.VistaUIFramework {
     [ToolboxBitmap(typeof(System.Windows.Forms.Label))]
@@ -13,11 +10,19 @@ namespace MyAPKapp.VistaUIFramework {
         private LabelStyle _LabelStyle = LabelStyle.Default;
         private Font defaultFont;
         private Color defaultColor;
+        private bool _Aero;
 
         public Label() : base() {
             base.FlatStyle = FlatStyle.System;
             FontChanged += LabelStyle_FontChanged;
             ForeColorChanged += LabelStyle_ForeColorChanged;
+            SetStyle(ControlStyles.SupportsTransparentBackColor |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint, true);
+
+            BackColor = Color.Transparent;
         }
 
         /// <summary>
@@ -95,17 +100,20 @@ namespace MyAPKapp.VistaUIFramework {
             LabelStyle = LabelStyle.Default;
         }
 
-        /// <summary>
-        /// This property can alter the native purpose of VistaUI
-        /// </summary>
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [Obsolete("This property can alter the native purpose of VistaUI")]
-        [DefaultValue(typeof(FlatStyle), "System")]
+        [DefaultValue(FlatStyle.System)]
         public new FlatStyle FlatStyle {
             get { return base.FlatStyle; }
             set { base.FlatStyle = value; }
+        }
+
+        [DefaultValue(typeof(Color), "Transparent")]
+        public override Color BackColor {
+            get {
+                return base.BackColor;
+            }
+            set {
+                base.BackColor = value;
+            }
         }
 
     }

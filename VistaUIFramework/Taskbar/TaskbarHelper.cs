@@ -55,7 +55,7 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         /// </summary>
         /// <param name="Handle">The associated handle</param>
         /// <param name="state">The progress state</param>
-        public void SetProgressState(IntPtr Handle, TBPFLAG state) {
+        public void SetProgressState(IntPtr Handle, TaskBarProgressState state) {
             taskbar.SetProgressState(Handle, state);
         }
 
@@ -63,7 +63,7 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         /// Set progress state in the taskbar item of your application
         /// </summary>
         /// <param name="state">The progress state</param>
-        public void SetProgressState(TBPFLAG state) {
+        public void SetProgressState(TaskBarProgressState state) {
             SetProgressState(MainHandle, state);
         }
 

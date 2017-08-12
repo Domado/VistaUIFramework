@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\VistaUIFramework.xml</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,6 +50,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CommandLink.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FlagsEnumEditor.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Form.cs">
@@ -87,7 +92,22 @@
     <Compile Include="Taskbar\TaskbarHelper.cs" />
     <Compile Include="Taskbar\ThumbnailButton.cs" />
     <Compile Include="Taskbar\ThumbnailToolbar.cs" />
-    <Compile Include="TBPFLAG.cs" />
+    <Compile Include="TaskBarProgressState.cs" />
+    <Compile Include="TaskDialog\TaskDialog.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TaskDialog\TaskDialogButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TaskDialog\TaskDialogRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TaskDialog\TaskDialogButtonException.cs" />
+    <Compile Include="TaskDialog\TaskDialogCommonButton.cs" />
+    <Compile Include="TaskDialog\TaskDialogEventArgs.cs" />
+    <Compile Include="TaskDialog\TaskDialogEventHandlers.cs" />
+    <Compile Include="TaskDialog\TaskDialogIcon.cs" />
+    <Compile Include="TaskDialog\TaskDialogResult.cs" />
     <Compile Include="TextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -96,7 +116,9 @@
     </Compile>
     <Compile Include="UnsupportedWindowsException.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="TaskDialog.bmp" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
