@@ -18,16 +18,20 @@ Stop trying to learn Windows API to learn p/invoke to make vista controls. Let V
 Make your application look like a Windows Vista/7 program. You won't stop looking at your program.
 
 ## Don't spend your time developing custom controls
-Developing custom controls like `CommandLink`, `SplitButton` or `ProgressBar` delays the release date of any project. Simply use VistaUIFramework and start developing.
+Developing custom controls like `CommandLink`, `SplitButton` or `ProgressBar` is time-consuming and delays the release date of any project. Use VistaUIFramework instead of reinventing the wheel and start developing.
 
 # IMPORTANT
-The source code is often under development and can be buggy. We recommend to check out the latest release and download the .DLL file for a stable version.
+The source code is often under development and may be buggy. We recommend to check out the latest release and download the .DLL file for a stable version, if you need to download the source code, go to Releases and download the source code as zip.
 
 # Download the stable release
 Stable releases are available on .DLL files.<br>
 The only minimum requirement: .NET Framework 2.0 or later.
 
 [Click here to download the latest stable version](https://github.com/myapkapp/VistaUIFramework/releases)
+
+You can also download the framework as [NuGet package](https://www.nuget.org/packages/VistaUIFramework/).
+
+    PM >Install-Package VistaUIFramework
 
 # Where's the documentation?
 The frameworks has its documentation. And you can also check out our [official documentation](https://github.com/myapkapp/VistaUIFramework/wiki).
