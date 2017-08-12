@@ -18,7 +18,7 @@ Stop trying to learn Windows API to learn p/invoke to make vista controls. Let V
 Make your application look like a Windows Vista/7 program. You won't stop looking at your program.
 
 ## Don't spend your time developing custom controls
-Developing custom controls like `CommandLink`, `SplitButton` or `ProgressBar` delays the release date of any project. Simply use VistaUIFramework and start developing.
+Developing custom controls like `CommandLink`, `SplitButton` or `ProgressBar` is time-consuming and delays the release date of any project. Use VistaUIFramework instead of reinventing the wheel and start developing.
 
 # IMPORTANT
 The source code is often under development and may be buggy. We recommend to check out the latest release and download the .DLL file for a stable version, if you need to download the source code, go to Releases and download the source code as zip.
