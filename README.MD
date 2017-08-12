@@ -31,7 +31,7 @@ The only minimum requirement: .NET Framework 2.0 or later.
 
 You can also download the framework as [NuGet package](https://www.nuget.org/packages/VistaUIFramework/).
 
-    PM >Install-Package VistaUIFramework
+    PM> Install-Package VistaUIFramework
 
 # Where's the documentation?
 The frameworks has its documentation. And you can also check out our [official documentation](https://github.com/myapkapp/VistaUIFramework/wiki).
