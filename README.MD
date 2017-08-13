@@ -37,4 +37,4 @@ You can also download the framework as [NuGet package](https://www.nuget.org/pac
 The frameworks has its documentation. And you can also check out our [official documentation](https://github.com/myapkapp/VistaUIFramework/wiki).
 
 # Repository forking
-If you fork the VistaUIFramework repository, you must tell the original repository belongs to myapkapp.
+If you fork the VistaUIFramework repository, regardless of your purposes, you must tell the original repository belongs to myapkapp.
