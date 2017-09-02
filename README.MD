@@ -25,7 +25,9 @@ The source code is often under development and may be buggy. We recommend to che
 
 # Download the stable release
 Stable releases are available on .DLL files.<br>
-The only minimum requirement: .NET Framework 2.0 or later.
+Minimum requirements:
+* .NET Framework 2.0 or later.
+* Windows Vista or later
 
 [Click here to download the latest stable version](https://github.com/myapkapp/VistaUIFramework/releases)
 
