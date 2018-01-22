@@ -9,10 +9,13 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
 namespace MyAPKapp.VistaUIFramework {
+
     public class Form : System.Windows.Forms.Form {
+
         private bool _CloseBox = true;
         private bool _Aero;
         private Padding _AeroMargin;
+        private bool _AeroDrag;
 
         public Form() : base() {
             base.DoubleBuffered = true;
@@ -71,6 +74,7 @@ namespace MyAPKapp.VistaUIFramework {
             set {
                 if (_Aero != value) {
                     _Aero = value;
+                    if (!value && AeroDrag) AeroDrag = false;
                     if (value && DoubleBuffered) {
                         DoubleBuffered = false;
                     }
@@ -93,9 +97,29 @@ namespace MyAPKapp.VistaUIFramework {
                 return _AeroMargin;
             }
             set {
-                _AeroMargin = value;
-                Invalidate();
-                RecreateHandle();
+                if (_AeroMargin != value) {
+                    _AeroMargin = value;
+                    Invalidate();
+                    RecreateHandle();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns/sets if mouse is able to move the window by dragging the Aero glass
+        /// </summary>
+        [Category("Behavior")]
+        [DefaultValue(false)]
+        [Description("Returns/sets if mouse is able to move the window by dragging the Aero glass")]
+        public bool AeroDrag {
+            get {
+                return _AeroDrag;
+            }
+            set {
+                if (_AeroDrag != value) {
+                    _AeroDrag = value;
+                    if (value && !Aero) Aero = true;
+                }
             }
         }
 
@@ -202,9 +226,9 @@ namespace MyAPKapp.VistaUIFramework {
                 int result = NativeMethods.DwmIsCompositionEnabled(out isDWMEnabled);
                 if (NativeMethods.Succeeded(result) && isDWMEnabled) {
                     if (DesignMode) {
-                        e.Graphics.Clear(SystemColors.GradientActiveCaption);
+                        e.Graphics.Clear(ActiveCaption);
                     } else {
-                        e.Graphics.Clear(Color.Transparent);
+                        e.Graphics.Clear(Color.Black);
                     }
                     if (!IsAeroSheet) {
                         Rectangle clientArea = new Rectangle(
@@ -218,12 +242,12 @@ namespace MyAPKapp.VistaUIFramework {
                     }
                 } else {
                     if (DesignMode) {
-                        e.Graphics.Clear(SystemColors.GradientActiveCaption);
+                        e.Graphics.Clear(ActiveCaption);
                     } else {
                         if (ActiveForm == this) {
-                            e.Graphics.Clear(SystemColors.GradientActiveCaption);
+                            e.Graphics.Clear(ActiveCaption);
                         } else {
-                            e.Graphics.Clear(SystemColors.GradientInactiveCaption);
+                            e.Graphics.Clear(InactiveCaption);
                         }
                     }
                     if (!IsAeroSheet) {
@@ -252,6 +276,41 @@ namespace MyAPKapp.VistaUIFramework {
                 margins.rightWidth = _AeroMargin.Right;
                 NativeMethods.DwmExtendFrameIntoClientArea(Handle, ref margins);
             }
+        }
+
+        protected override void WndProc(ref Message m) {
+            base.WndProc(ref m);
+            if (_Aero && _AeroDrag && m.Msg == NativeMethods.WM_NCHITTEST && m.Result.ToInt32() == NativeMethods.HTCLIENT) {
+                if (IsAeroSheet) {
+                    m.Result = new IntPtr(NativeMethods.HTCAPTION);
+                } else {
+                    int x = NativeMethods.GetLoWord(m.LParam.ToInt64());
+                    int y = NativeMethods.GetHiWord(m.LParam.ToInt64(), 16);
+                    Point ClientPoint = PointToClient(new Point(x, y));
+                    if (IsOutside(_AeroMargin, ClientPoint, ClientSize)) {
+                        m.Result = new IntPtr(NativeMethods.HTCAPTION);
+                    }
+                }
+            }
+        }
+
+        private Color ActiveCaption {
+            get {
+                return Color.FromArgb(((int)(((byte)(185)))), ((int)(((byte)(209)))), ((int)(((byte)(234)))));
+            }
+        }
+
+        private Color InactiveCaption {
+            get {
+                return Color.FromArgb(((int)(((byte)(215)))), ((int)(((byte)(228)))), ((int)(((byte)(242)))));
+            }
+        }
+
+        private bool IsOutside(Padding p, Point point, Size size) {
+            return (point.X < p.Left ||
+                    point.X > (size.Width - p.Right) ||
+                    point.Y < p.Top ||
+                    point.Y > (size.Height - p.Bottom));
         }
 
         private bool IsAeroSheet {

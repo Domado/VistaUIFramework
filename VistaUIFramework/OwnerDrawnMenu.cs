@@ -141,8 +141,8 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
 
-        private static string ShortcutToString(Shortcut shortcut) {
-            if (shortcut != Shortcut.None) {
+        private static string ShortcutToString(System.Windows.Forms.Shortcut shortcut) {
+            if (shortcut != System.Windows.Forms.Shortcut.None) {
                 Keys keys = (Keys)shortcut;
                 return TypeDescriptor.GetConverter(keys.GetType()).ConvertToString(keys);
             }

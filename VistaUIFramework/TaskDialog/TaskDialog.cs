@@ -13,7 +13,7 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
     /// <summary>
     /// TaskDialog is a kind of Windows dialog introduced with Windows Vista.
     /// </summary>
-    [ToolboxBitmap(typeof(TaskDialog), "TaskDialog.bmp")]
+    [ToolboxBitmap("TaskDialog.bmp")]
     [ToolboxItem(true)]
     [DefaultEvent("Created")]
     [DefaultProperty("CustomButtons")]

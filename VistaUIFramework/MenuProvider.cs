@@ -17,15 +17,6 @@ namespace MyAPKapp.VistaUIFramework {
     [ProvideProperty("Image", typeof(MenuItem))]
     public partial class MenuProvider : Component, IExtenderProvider, ISupportInitialize {
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern bool SetMenuItemInfo(HandleRef hMenu, int uItem, bool fByPosition, MENUITEMINFO_T_RW lpmii);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern bool SetMenuInfo(HandleRef hMenu, MENUINFO lpcmi);
-
-        [DllImport("gdi32.dll")]
-        public static extern bool DeleteObject(IntPtr hObject);
-
         Container components;
         readonly Hashtable properties = new Hashtable();
         readonly Hashtable menuParents = new Hashtable();
@@ -47,10 +38,9 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override void Dispose(bool disposing) {
             if (disposing) {
-                //release all the HBitmap handles created
                 foreach (DictionaryEntry de in properties) {
                     if (((Properties)de.Value).renderBmpHbitmap != IntPtr.Zero)
-                        DeleteObject(((Properties)de.Value).renderBmpHbitmap);
+                        NativeMethods.DeleteObject(((Properties)de.Value).renderBmpHbitmap);
                 }
 
 
@@ -63,11 +53,9 @@ namespace MyAPKapp.VistaUIFramework {
 
         bool IExtenderProvider.CanExtend(object o) {
             if (o is MenuItem) {
-                // reject the menuitem if it's a top level element on a MainMenu bar
                 if (((MenuItem)o).Parent != null)
                     return ((MenuItem)o).Parent.GetType() != typeof(MainMenu);
 
-                // parent is null - meaning it's a context menu
                 return true;
             }
 
@@ -99,7 +87,7 @@ namespace MyAPKapp.VistaUIFramework {
             prop.Image = value;
             if (!DesignMode && isVistaOrLater) {
                 if (prop.renderBmpHbitmap != IntPtr.Zero) {
-                    DeleteObject(prop.renderBmpHbitmap);
+                    NativeMethods.DeleteObject(prop.renderBmpHbitmap);
                     prop.renderBmpHbitmap = IntPtr.Zero;
                 }
                 if (value == null)
@@ -119,7 +107,7 @@ namespace MyAPKapp.VistaUIFramework {
 
         void ISupportInitialize.BeginInit() { }
 
-        MENUINFO mnuInfo = new MENUINFO();
+        NativeMethods.MENUINFO mnuInfo = new NativeMethods.MENUINFO();
 
         void AddMenuProviderItem(MenuItem mnuItem) {
             if (menuParents[mnuItem.Parent] == null) {
@@ -127,7 +115,7 @@ namespace MyAPKapp.VistaUIFramework {
                     ((ContextMenu)mnuItem.Parent).Popup += MenuItem_Popup;
                 else
                     ((MenuItem)mnuItem.Parent).Popup += MenuItem_Popup;
-                SetMenuInfo(new HandleRef(null, mnuItem.Parent.Handle), mnuInfo);
+                NativeMethods.SetMenuInfo(new HandleRef(null, mnuItem.Parent.Handle), mnuInfo);
                 menuParents[mnuItem.Parent] = true;
             }
         }
@@ -179,7 +167,7 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         void MenuItem_Popup(object sender, EventArgs e) {
-            MENUITEMINFO_T_RW menuItemInfo = new MENUITEMINFO_T_RW();
+            NativeMethods.MENUITEMINFO_T_RW menuItemInfo = new NativeMethods.MENUITEMINFO_T_RW();
             Menu.MenuItemCollection mi = sender.GetType() == typeof(ContextMenu) ? ((ContextMenu)sender).MenuItems : ((MenuItem)sender).MenuItems;
             int miOn = 0;
             for (int i = 0; i < mi.Count; i++) {
@@ -187,38 +175,11 @@ namespace MyAPKapp.VistaUIFramework {
                     Properties p = ((Properties)properties[mi[i]]);
                     if (p != null) {
                         menuItemInfo.hbmpItem = p.renderBmpHbitmap;
-                        SetMenuItemInfo(new HandleRef(null, ((Menu)sender).Handle), miOn, true, menuItemInfo);
+                        NativeMethods.SetMenuItemInfo(new HandleRef(null, ((Menu)sender).Handle), miOn, true, menuItemInfo);
                     }
                     miOn++;
                 }
             }
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public class MENUITEMINFO_T_RW {
-            public int cbSize = Marshal.SizeOf(typeof(MENUITEMINFO_T_RW));
-            public int fMask = 0x00000080; //MIIM_BITMAP = 0x00000080
-            public int fType;
-            public int fState;
-            public int wID;
-            public IntPtr hSubMenu = IntPtr.Zero;
-            public IntPtr hbmpChecked = IntPtr.Zero;
-            public IntPtr hbmpUnchecked = IntPtr.Zero;
-            public IntPtr dwItemData = IntPtr.Zero;
-            public IntPtr dwTypeData = IntPtr.Zero;
-            public int cch;
-            public IntPtr hbmpItem = IntPtr.Zero;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public class MENUINFO {
-            public int cbSize = Marshal.SizeOf(typeof(MENUINFO));
-            public int fMask = 0x00000010; //MIM_STYLE;
-            public int dwStyle = 0x04000000; //MNS_CHECKORBMP;
-            public uint cyMax;
-            public IntPtr hbrBack = IntPtr.Zero;
-            public int dwContextHelpID;
-            public IntPtr dwMenuData = IntPtr.Zero;
         }
 
     }

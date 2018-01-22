@@ -18,10 +18,6 @@ namespace MyAPKapp.VistaUIFramework {
         public const int TRUE = 1;
         public const int FALSE = 0;
         public const int SC_CLOSE = 0xF060;
-        public const int MF_BYCOMMAND = 0x0000;
-        public const int MF_ENABLED = 0x0000;
-        public const int MF_DISABLED = 0x0002;
-        public const int MF_GRAYED = 0x0001;
         public const int CS_NOCLOSE = 0x0200;
         public const int IMAGE_BITMAP = 0;
         public const int IMAGE_ICON = 1;
@@ -31,24 +27,56 @@ namespace MyAPKapp.VistaUIFramework {
         public const int S_OK = 0;
         public const int S_FALSE = 1;
         public const int ERROR_INVALID_HANDLE = 6;
+        public const int HTCLIENT = 1;
+        public const int HTCAPTION = 2;
+        public const int MAX_PATH = 260;
         public const string WC_IPADDRESS = "SysIPAddress32";
         public const string REBARCLASSNAME = "ReBarWindow32";
 
-        /* WM AND WS VARIABLES */
+        /* MF VARIABLES */
+        public const int MF_BYCOMMAND = 0x0000;
+        public const int MF_ENABLED = 0x0000;
+        public const int MF_DISABLED = 0x0002;
+        public const int MF_GRAYED = 0x0001;
+
+        /* WM VARIABLES */
         public const int WM_USER = 0x0400;
         public const int WM_PAINT = 0x000F;
         public const int WM_COMMAND = 0x0111;
         public const int WM_SETCURSOR = 0x0020;
         public const int WM_CTLCOLORSTATIC = 0x0138;
         public const int WM_SETICON = 0x0080;
+        public const int WM_NCHITTEST = 0x0084;
+
+        /* WS VARIABLES */
         public const int WS_VISIBLE = 0x10000000;
         public const int WS_CHILD = 0x40000000;
+        public const int WS_BORDER = 0x00800000;
+        public const int WS_CLIPSIBLINGS = 0x04000000;
         public const int WS_EX_CLIENTEDGE = 0x00000200;
+        public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_NOPARENTNOTIFY = 0x00000004;
         public const int WS_EX_LAYOUTRTL = 0x00400000;
         public const int WS_EX_RIGHT = 0x00001000;
         public const int WS_EX_RTLREADING = 0x00002000;
         public const int WS_EX_LEFTSCROLLBAR = 0x00004000;
+
+        /* SW VARIABLES */
+        public const int SW_HIDE = 0;
+        public const int SW_SHOWNORMAL = 1;
+        public const int SW_NORMAL = 1;
+        public const int SW_SHOWMINIMIZED = 2;
+        public const int SW_SHOWMAXIMIZED = 3;
+        public const int SW_MAXIMIZE = 3;
+        public const int SW_SHOWNOACTIVATE = 4;
+        public const int SW_SHOW = 5;
+        public const int SW_MINIMIZE = 6;
+        public const int SW_SHOWMINNOACTIVE = 7;
+        public const int SW_SHOWNA = 8;
+        public const int SW_RESTORE = 9;
+        public const int SW_SHOWDEFAULT = 10;
+        public const int SW_FORCEMINIMIZE = 11;
+        public const int SW_MAX = 11;
 
         /* EDIT VARIABLES */
         public const int ECM_FIRST = 0x1500;
@@ -94,11 +122,6 @@ namespace MyAPKapp.VistaUIFramework {
         public const int TVS_EX_FADEINOUTEXPANDOS = 0x0040;
         public const int TVS_EX_DOUBLEBUFFER = 0x0004;
 
-        /* TOOLBAR VARIABLES */
-        public const int ICC_COOL_CLASSES = 0x00000400;
-        public const int ICC_BAR_CLASSES = 0x00000004;
-        public const int RB_INSERTBAND = WM_USER + 10;
-
         /* MENU VARIABLES */
         public const int MIM_STYLE = 0x00000010;
         public const int MNS_CHECKORBMP = 0x04000000;
@@ -138,6 +161,39 @@ namespace MyAPKapp.VistaUIFramework {
         public const int TDIE_ICON_MAIN = 0;
         public const int TDIE_ICON_FOOTER = 1;
 
+        /* REBAR VARIABLES */
+        public const int ICC_COOL_CLASSES = 0x00000400;
+        public const int ICC_BAR_CLASSES = 0x00000004;
+        public const int CCS_NODIVIDER = 0x00000040;
+        public const int RBS_VARHEIGHT = 0x00000200;
+        public const int RBS_BANDBORDERS = 0x00000400;
+        public const int RB_INSERTBANDA = WM_USER + 1;
+        public const int RB_DELETEBAND = WM_USER + 2;
+        public const int RB_INSERTBANDW = WM_USER + 10;
+        public const int RB_SETBANDINFOA = WM_USER + 6;
+        public const int RB_SETBANDINFOW = WM_USER + 11;
+        public static readonly int RB_INSERTBAND = (Marshal.SystemDefaultCharSize == 1) ? RB_INSERTBANDA : RB_INSERTBANDW;
+        public static readonly int RB_SETBANDINFO = (Marshal.SystemDefaultCharSize == 1) ? RB_SETBANDINFOA : RB_SETBANDINFOW;
+        public const int RBBIM_STYLE = 0x00000001;
+        public const int RBBIM_COLORS = 0x00000002;
+        public const int RBBIM_TEXT = 0x00000004;
+        public const int RBBIM_IMAGE = 0x00000008;
+        public const int RBBIM_CHILD = 0x00000010;
+        public const int RBBIM_CHILDSIZE = 0x00000020;
+        public const int RBBIM_SIZE = 0x00000040;
+        public const int RBBIM_BACKGROUND = 0x00000080;
+        public const int RBBIM_ID = 0x00000100;
+        public const int RBBIM_IDEALSIZE = 0x00000200;
+        public const int RBBIM_LPARAM = 0x00000400;
+        public const int RBBIM_HEADERSIZE = 0x00000800;
+        public const int RBBIM_CHEVRONLOCATION = 0x00001000;
+        public const int RBBIM_CHEVRONSTATE = 0x00002000;
+
+        /* STGM VARIABLES */
+        public const int STGM_READ = 0x00000000;
+        public const int STGM_WRITE = 0x00000001;
+        public const int STGM_READWRITE = 0x00000002;
+
         #endregion
 
         #region Native resources
@@ -148,6 +204,7 @@ namespace MyAPKapp.VistaUIFramework {
 
         #region Native enums
 
+        [Flags]
         public enum THUMBBUTTONFLAGS {
             THBF_ENABLED = 0,
             THBF_DISABLED = 0x1,
@@ -157,241 +214,12 @@ namespace MyAPKapp.VistaUIFramework {
             THBF_NONINTERACTIVE = 0x10
         }
 
+        [Flags]
         public enum THUMBBUTTONMASK {
             THB_BITMAP = 0x1,
             THB_ICON = 0x2,
             THB_TOOLTIP = 0x4,
             THB_FLAGS = 0x8
-        }
-
-        [Flags]
-        public enum WindowStylesEx : uint {
-            /// <summary>Specifies a window that accepts drag-drop files.</summary>
-            WS_EX_ACCEPTFILES = 0x00000010,
-
-            /// <summary>Forces a top-level window onto the taskbar when the window is visible.</summary>
-            WS_EX_APPWINDOW = 0x00040000,
-
-            /// <summary>Specifies a window that has a border with a sunken edge.</summary>
-            WS_EX_CLIENTEDGE = 0x00000200,
-
-            /// <summary>
-            /// Specifies a window that paints all descendants in bottom-to-top painting order using double-buffering.
-            /// This cannot be used if the window has a class style of either CS_OWNDC or CS_CLASSDC. This style is not supported in Windows 2000.
-            /// </summary>
-            /// <remarks>
-            /// With WS_EX_COMPOSITED set, all descendants of a window get bottom-to-top painting order using double-buffering.
-            /// Bottom-to-top painting order allows a descendent window to have translucency (alpha) and transparency (color-key) effects,
-            /// but only if the descendent window also has the WS_EX_TRANSPARENT bit set.
-            /// Double-buffering allows the window and its descendents to be painted without flicker.
-            /// </remarks>
-            WS_EX_COMPOSITED = 0x02000000,
-
-            /// <summary>
-            /// Specifies a window that includes a question mark in the title bar. When the user clicks the question mark,
-            /// the cursor changes to a question mark with a pointer. If the user then clicks a child window, the child receives a WM_HELP message.
-            /// The child window should pass the message to the parent window procedure, which should call the WinHelp function using the HELP_WM_HELP command.
-            /// The Help application displays a pop-up window that typically contains help for the child window.
-            /// WS_EX_CONTEXTHELP cannot be used with the WS_MAXIMIZEBOX or WS_MINIMIZEBOX styles.
-            /// </summary>
-            WS_EX_CONTEXTHELP = 0x00000400,
-
-            /// <summary>
-            /// Specifies a window which contains child windows that should take part in dialog box navigation.
-            /// If this style is specified, the dialog manager recurses into children of this window when performing navigation operations
-            /// such as handling the TAB key, an arrow key, or a keyboard mnemonic.
-            /// </summary>
-            WS_EX_CONTROLPARENT = 0x00010000,
-
-            /// <summary>Specifies a window that has a double border.</summary>
-            WS_EX_DLGMODALFRAME = 0x00000001,
-
-            /// <summary>
-            /// Specifies a window that is a layered window.
-            /// This cannot be used for child windows or if the window has a class style of either CS_OWNDC or CS_CLASSDC.
-            /// </summary>
-            WS_EX_LAYERED = 0x00080000,
-
-            /// <summary>
-            /// Specifies a window with the horizontal origin on the right edge. Increasing horizontal values advance to the left.
-            /// The shell language must support reading-order alignment for this to take effect.
-            /// </summary>
-            WS_EX_LAYOUTRTL = 0x00400000,
-
-            /// <summary>Specifies a window that has generic left-aligned properties. This is the default.</summary>
-            WS_EX_LEFT = 0x00000000,
-
-            /// <summary>
-            /// Specifies a window with the vertical scroll bar (if present) to the left of the client area.
-            /// The shell language must support reading-order alignment for this to take effect.
-            /// </summary>
-            WS_EX_LEFTSCROLLBAR = 0x00004000,
-
-            /// <summary>
-            /// Specifies a window that displays text using left-to-right reading-order properties. This is the default.
-            /// </summary>
-            WS_EX_LTRREADING = 0x00000000,
-
-            /// <summary>
-            /// Specifies a multiple-document interface (MDI) child window.
-            /// </summary>
-            WS_EX_MDICHILD = 0x00000040,
-
-            /// <summary>
-            /// Specifies a top-level window created with this style does not become the foreground window when the user clicks it.
-            /// The system does not bring this window to the foreground when the user minimizes or closes the foreground window.
-            /// The window does not appear on the taskbar by default. To force the window to appear on the taskbar, use the WS_EX_APPWINDOW style.
-            /// To activate the window, use the SetActiveWindow or SetForegroundWindow function.
-            /// </summary>
-            WS_EX_NOACTIVATE = 0x08000000,
-
-            /// <summary>
-            /// Specifies a window which does not pass its window layout to its child windows.
-            /// </summary>
-            WS_EX_NOINHERITLAYOUT = 0x00100000,
-
-            /// <summary>
-            /// Specifies that a child window created with this style does not send the WM_PARENTNOTIFY message to its parent window when it is created or destroyed.
-            /// </summary>
-            WS_EX_NOPARENTNOTIFY = 0x00000004,
-
-            /// <summary>Specifies an overlapped window.</summary>
-            WS_EX_OVERLAPPEDWINDOW = WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE,
-
-            /// <summary>Specifies a palette window, which is a modeless dialog box that presents an array of commands.</summary>
-            WS_EX_PALETTEWINDOW = WS_EX_WINDOWEDGE | WS_EX_TOOLWINDOW | WS_EX_TOPMOST,
-
-            /// <summary>
-            /// Specifies a window that has generic "right-aligned" properties. This depends on the window class.
-            /// The shell language must support reading-order alignment for this to take effect.
-            /// Using the WS_EX_RIGHT style has the same effect as using the SS_RIGHT (static), ES_RIGHT (edit), and BS_RIGHT/BS_RIGHTBUTTON (button) control styles.
-            /// </summary>
-            WS_EX_RIGHT = 0x00001000,
-
-            /// <summary>Specifies a window with the vertical scroll bar (if present) to the right of the client area. This is the default.</summary>
-            WS_EX_RIGHTSCROLLBAR = 0x00000000,
-
-            /// <summary>
-            /// Specifies a window that displays text using right-to-left reading-order properties.
-            /// The shell language must support reading-order alignment for this to take effect.
-            /// </summary>
-            WS_EX_RTLREADING = 0x00002000,
-
-            /// <summary>Specifies a window with a three-dimensional border style intended to be used for items that do not accept user input.</summary>
-            WS_EX_STATICEDGE = 0x00020000,
-
-            /// <summary>
-            /// Specifies a window that is intended to be used as a floating toolbar.
-            /// A tool window has a title bar that is shorter than a normal title bar, and the window title is drawn using a smaller font.
-            /// A tool window does not appear in the taskbar or in the dialog that appears when the user presses ALT+TAB.
-            /// If a tool window has a system menu, its icon is not displayed on the title bar.
-            /// However, you can display the system menu by right-clicking or by typing ALT+SPACE. 
-            /// </summary>
-            WS_EX_TOOLWINDOW = 0x00000080,
-
-            /// <summary>
-            /// Specifies a window that should be placed above all non-topmost windows and should stay above them, even when the window is deactivated.
-            /// To add or remove this style, use the SetWindowPos function.
-            /// </summary>
-            WS_EX_TOPMOST = 0x00000008,
-
-            /// <summary>
-            /// Specifies a window that should not be painted until siblings beneath the window (that were created by the same thread) have been painted.
-            /// The window appears transparent because the bits of underlying sibling windows have already been painted.
-            /// To achieve transparency without these restrictions, use the SetWindowRgn function.
-            /// </summary>
-            WS_EX_TRANSPARENT = 0x00000020,
-
-            /// <summary>Specifies a window that has a border with a raised edge.</summary>
-            WS_EX_WINDOWEDGE = 0x00000100
-        }
-
-        /// <summary>
-        /// Window Styles.
-        /// The following styles can be specified wherever a window style is required. After the control has been created, these styles cannot be modified, except as noted.
-        /// </summary>
-        [Flags()]
-        public enum WindowStyles : uint {
-            /// <summary>The window has a thin-line border.</summary>
-            WS_BORDER = 0x800000,
-
-            /// <summary>The window has a title bar (includes the WS_BORDER style).</summary>
-            WS_CAPTION = 0xc00000,
-
-            /// <summary>The window is a child window. A window with this style cannot have a menu bar. This style cannot be used with the WS_POPUP style.</summary>
-            WS_CHILD = 0x40000000,
-
-            /// <summary>Excludes the area occupied by child windows when drawing occurs within the parent window. This style is used when creating the parent window.</summary>
-            WS_CLIPCHILDREN = 0x2000000,
-
-            /// <summary>
-            /// Clips child windows relative to each other; that is, when a particular child window receives a WM_PAINT message, the WS_CLIPSIBLINGS style clips all other overlapping child windows out of the region of the child window to be updated.
-            /// If WS_CLIPSIBLINGS is not specified and child windows overlap, it is possible, when drawing within the client area of a child window, to draw within the client area of a neighboring child window.
-            /// </summary>
-            WS_CLIPSIBLINGS = 0x4000000,
-
-            /// <summary>The window is initially disabled. A disabled window cannot receive input from the user. To change this after a window has been created, use the EnableWindow function.</summary>
-            WS_DISABLED = 0x8000000,
-
-            /// <summary>The window has a border of a style typically used with dialog boxes. A window with this style cannot have a title bar.</summary>
-            WS_DLGFRAME = 0x400000,
-
-            /// <summary>
-            /// The window is the first control of a group of controls. The group consists of this first control and all controls defined after it, up to the next control with the WS_GROUP style.
-            /// The first control in each group usually has the WS_TABSTOP style so that the user can move from group to group. The user can subsequently change the keyboard focus from one control in the group to the next control in the group by using the direction keys.
-            /// You can turn this style on and off to change dialog box navigation. To change this style after a window has been created, use the SetWindowLong function.
-            /// </summary>
-            WS_GROUP = 0x20000,
-
-            /// <summary>The window has a horizontal scroll bar.</summary>
-            WS_HSCROLL = 0x100000,
-
-            /// <summary>The window is initially maximized.</summary> 
-            WS_MAXIMIZE = 0x1000000,
-
-            /// <summary>The window has a maximize button. Cannot be combined with the WS_EX_CONTEXTHELP style. The WS_SYSMENU style must also be specified.</summary> 
-            WS_MAXIMIZEBOX = 0x10000,
-
-            /// <summary>The window is initially minimized.</summary>
-            WS_MINIMIZE = 0x20000000,
-
-            /// <summary>The window has a minimize button. Cannot be combined with the WS_EX_CONTEXTHELP style. The WS_SYSMENU style must also be specified.</summary>
-            WS_MINIMIZEBOX = 0x20000,
-
-            /// <summary>The window is an overlapped window. An overlapped window has a title bar and a border.</summary>
-            WS_OVERLAPPED = 0x0,
-
-            /// <summary>The window is an overlapped window.</summary>
-            WS_OVERLAPPEDWINDOW = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_SIZEFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
-
-            /// <summary>The window is a pop-up window. This style cannot be used with the WS_CHILD style.</summary>
-            WS_POPUP = 0x80000000u,
-
-            /// <summary>The window is a pop-up window. The WS_CAPTION and WS_POPUPWINDOW styles must be combined to make the window menu visible.</summary>
-            WS_POPUPWINDOW = WS_POPUP | WS_BORDER | WS_SYSMENU,
-
-            /// <summary>The window has a sizing border.</summary>
-            WS_SIZEFRAME = 0x40000,
-
-            /// <summary>The window has a sizing border. Same as the WS_SIZEBOX style.</summary>
-            WS_THICKFRAME = 0x00040000,
-
-            /// <summary>The window has a window menu on its title bar. The WS_CAPTION style must also be specified.</summary>
-            WS_SYSMENU = 0x80000,
-
-            /// <summary>
-            /// The window is a control that can receive the keyboard focus when the user presses the TAB key.
-            /// Pressing the TAB key changes the keyboard focus to the next control with the WS_TABSTOP style.  
-            /// You can turn this style on and off to change dialog box navigation. To change this style after a window has been created, use the SetWindowLong function.
-            /// For user-created windows and modeless dialogs to work with tab stops, alter the message loop to call the IsDialogMessage function.
-            /// </summary>
-            WS_TABSTOP = 0x10000,
-
-            /// <summary>The window is initially visible. This style can be turned on and off by using the ShowWindow or SetWindowPos function.</summary>
-            WS_VISIBLE = 0x10000000,
-
-            /// <summary>The window has a vertical scroll bar.</summary>
-            WS_VSCROLL = 0x200000,
         }
 
         public enum StockObjects {
@@ -528,6 +356,80 @@ namespace MyAPKapp.VistaUIFramework {
             TDF_CAN_BE_MINIMIZED = 0x8000,
             TDF_NO_SET_FOREGROUND = 0x00010000,
             TDF_SIZE_TO_CONTENT = 0x01000000
+        }
+
+        [Flags]
+        public enum SHGSI : uint {
+            SHGSI_ICONLOCATION = 0,
+            SHGSI_ICON = 0x000000100,
+            SHGSI_SYSICONINDEX = 0x000004000,
+            SHGSI_LINKOVERLAY = 0x000008000,
+            SHGSI_SELECTED = 0x000010000,
+            SHGSI_LARGEICON = 0x000000000,
+            SHGSI_SMALLICON = 0x000000001,
+            SHGSI_SHELLICONSIZE = 0x000000004
+        }
+
+        [Flags]
+        public enum SLGP_FLAGS {
+            SLGP_SHORTPATH = 0x1,
+            SLGP_UNCPRIORITY = 0x2,
+            SLGP_RAWPATH = 0x4,
+            SLGP_RELATIVEPRIORITY = 0x8
+        }
+
+        [Flags]
+        public enum SLR_FLAGS {
+            SLR_NONE = 0,
+            SLR_NO_UI = 0x1,
+            SLR_ANY_MATCH = 0x2,
+            SLR_UPDATE = 0x4,
+            SLR_NOUPDATE = 0x8,
+            SLR_NOSEARCH = 0x10,
+            SLR_NOTRACK = 0x20,
+            SLR_NOLINKINFO = 0x40,
+            SLR_INVOKE_MSI = 0x80,
+            SLR_NO_UI_WITH_MSG_PUMP = 0x101,
+            SLR_OFFER_DELETE_WITHOUT_FILE = 0x200,
+            SLR_KNOWNFOLDER = 0x400,
+            SLR_MACHINE_IN_LOCAL_TARGET = 0x800,
+            SLR_UPDATE_MACHINE_AND_SID = 0x1000,
+            SLR_NO_OBJECT_ID = 0x2000
+        }
+
+        [Flags]
+        public enum SHELL_LINK_DATA_FLAGS {
+            SLDF_DEFAULT = 0x00000000,
+            SLDF_HAS_ID_LIST = 0x00000001,
+            SLDF_HAS_LINK_INFO = 0x00000002,
+            SLDF_HAS_NAME = 0x00000004,
+            SLDF_HAS_RELPATH = 0x00000008,
+            SLDF_HAS_WORKINGDIR = 0x00000010,
+            SLDF_HAS_ARGS = 0x00000020,
+            SLDF_HAS_ICONLOCATION = 0x00000040,
+            SLDF_UNICODE = 0x00000080,
+            SLDF_FORCE_NO_LINKINFO = 0x00000100,
+            SLDF_HAS_EXP_SZ = 0x00000200,
+            SLDF_RUN_IN_SEPARATE = 0x00000400,
+            SLDF_HAS_LOGO3ID = 0x00000800,
+            SLDF_HAS_DARWINID = 0x00001000,
+            SLDF_RUNAS_USER = 0x00002000,
+            SLDF_HAS_EXP_ICON_SZ = 0x00004000,
+            SLDF_NO_PIDL_ALIAS = 0x00008000,
+            SLDF_FORCE_UNCNAME = 0x00010000,
+            SLDF_RUN_WITH_SHIMLAYER = 0x00020000,
+            SLDF_FORCE_NO_LINKTRACK = 0x00040000,
+            SLDF_ENABLE_TARGET_METADATA = 0x000800000,
+            SLDF_DISABLE_LINK_PATH_TRACKING = 0x00100000,
+            SLDF_DISABLE_KNOWNFOLDER_RELATIVE_TRACKING = 0x00200000,
+            SLDF_NO_KF_ALIAS = 0x00400000,
+            SLDF_ALLOW_LINK_TO_LINK = 0x00800000,
+            SLDF_UNALIAS_ON_SAVE = 0x01000000,
+            SLDF_PREFER_ENVIRONMENT_PATH = 0x02000000,
+            SLDF_KEEP_LOCAL_IDLIST_FOR_UNC_TARGET = 0x04000000,
+            SLDF_PERSIST_VOLUME_ID_RELATIVE = 0x08000000,
+            SLDF_VALID = 0x0FFFF7FF,
+            SLDF_RESERVED = 0x8000000
         }
 
         #endregion
@@ -689,7 +591,7 @@ namespace MyAPKapp.VistaUIFramework {
 
         [StructLayout(LayoutKind.Sequential)]
         public struct BITMAPINFO {
-            public uint biSize;
+            public int biSize;
             public int biWidth;
             public int biHeight;
             public ushort biPlanes;
@@ -700,10 +602,6 @@ namespace MyAPKapp.VistaUIFramework {
             public int biYPelsPerMeter;
             public uint biClrUsed;
             public uint biClrImportant;
-
-            public void Init() {
-                biSize = (uint)Marshal.SizeOf(this);
-            }
         }
 
         /// <summary>
@@ -883,6 +781,89 @@ namespace MyAPKapp.VistaUIFramework {
             void SetThumbnailClip(IntPtr hWnd, IntPtr prcClip);
         }
 
+        /// <summary>The IShellLink interface allows Shell links to be created, modified, and resolved</summary>
+        [Guid("000214F9-0000-0000-C000-000000000046")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport()]
+        public interface IShellLink {
+            /// <summary>Retrieves the path and file name of a Shell link object</summary>
+            int GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, out WIN32_FIND_DATA pfd, SLGP_FLAGS fFlags);
+            /// <summary>Retrieves the list of item identifiers for a Shell link object</summary>
+            int GetIDList(out IntPtr ppidl);
+            /// <summary>Sets the pointer to an item identifier list (PIDL) for a Shell link object.</summary>
+            int SetIDList(IntPtr pidl);
+            /// <summary>Retrieves the description string for a Shell link object</summary>
+            int GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
+            /// <summary>Sets the description for a Shell link object. The description can be any application-defined string</summary>
+            int SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+            /// <summary>Retrieves the name of the working directory for a Shell link object</summary>
+            int GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
+            /// <summary>Sets the name of the working directory for a Shell link object</summary>
+            int SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
+            /// <summary>Retrieves the command-line arguments associated with a Shell link object</summary>
+            int GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
+            /// <summary>Sets the command-line arguments for a Shell link object</summary>
+            int SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
+            /// <summary>Retrieves the hot key for a Shell link object</summary>
+            int GetHotkey(out short pwHotkey);
+            /// <summary>Sets a hot key for a Shell link object</summary>
+            int SetHotkey(short wHotkey);
+            /// <summary>Retrieves the show command for a Shell link object</summary>
+            int GetShowCmd(out int piShowCmd);
+            /// <summary>Sets the show command for a Shell link object. The show command sets the initial show state of the window.</summary>
+            int SetShowCmd(int iShowCmd);
+            /// <summary>Retrieves the location (path and index) of the icon for a Shell link object</summary>
+            int GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
+                int cchIconPath, out int piIcon);
+            /// <summary>Sets the location (path and index) of the icon for a Shell link object</summary>
+            int SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
+            /// <summary>Sets the relative path to the Shell link object</summary>
+            int SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, int dwReserved);
+            /// <summary>Attempts to find the target of a Shell link, even if it has been moved or renamed</summary>
+            int Resolve(IntPtr hwnd, SLR_FLAGS fFlags);
+            /// <summary>Sets the path and file name of a Shell link object</summary>
+            int SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
+        }
+
+        [Guid("45e2b4ae-b1c3-11d0-b92f-00a0c90312e1")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport()]
+        public interface IShellLinkDataList {
+            int AddDataBlock(IntPtr pDataBlock);
+            int CopyDataBlock(uint dwSig, out IntPtr ppDataBlock);
+            int RemoveDataBlock(uint dwSig);
+            int GetFlags(out SHELL_LINK_DATA_FLAGS pdwFlags);
+            int SetFlags(SHELL_LINK_DATA_FLAGS dwFlags);
+        }
+
+        [Guid("0000010b-0000-0000-C000-000000000046")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport()]
+        public interface IPersistFile {
+            int GetClassID(out Guid pClassID);
+            int IsDirty();
+            int Load([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
+            int Save([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName, [In, MarshalAs(UnmanagedType.Bool)] bool fRemember);
+            int SaveCompleted([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
+            int GetCurFile([In, MarshalAs(UnmanagedType.LPWStr)] string ppszFileName);
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct WIN32_FIND_DATA {
+            public uint dwFileAttributes;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftCreationTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastAccessTime;
+            public System.Runtime.InteropServices.ComTypes.FILETIME ftLastWriteTime;
+            public uint nFileSizeHigh;
+            public uint nFileSizeLow;
+            public uint dwReserved0;
+            public uint dwReserved1;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string cFileName;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 14)]
+            public string cAlternateFileName;
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 4)]
         public struct TASKDIALOGCONFIG {
             public int cbSize;
@@ -933,6 +914,67 @@ namespace MyAPKapp.VistaUIFramework {
 
             [FieldOffset(0)]
             public int pszIcon;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct FLASHWINFO {
+            public int cbSize;
+            public IntPtr hwnd;
+            public int dwFlags;
+            public int uCount;
+            public int dwTimeout;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct SHSTOCKICONINFO {
+            public int cbSize;
+            public IntPtr hIcon;
+            public int iSysIconIndex;
+            public int iIcon;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szPath;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DATABLOCK_HEADER {
+            public int cbSize;
+            public int dwSignature;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct EXP_DARWIN_LINK {
+            public DATABLOCK_HEADER dbh;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szDarwinID;
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
+            public string szwDarwinID;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public class MENUITEMINFO_T_RW {
+            public int cbSize = Marshal.SizeOf(typeof(MENUITEMINFO_T_RW));
+            public int fMask = 0x00000080; //MIIM_BITMAP = 0x00000080
+            public int fType;
+            public int fState;
+            public int wID;
+            public IntPtr hSubMenu = IntPtr.Zero;
+            public IntPtr hbmpChecked = IntPtr.Zero;
+            public IntPtr hbmpUnchecked = IntPtr.Zero;
+            public IntPtr dwItemData = IntPtr.Zero;
+            public IntPtr dwTypeData = IntPtr.Zero;
+            public int cch;
+            public IntPtr hbmpItem = IntPtr.Zero;
+        }
+
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public class MENUINFO {
+            public int cbSize = Marshal.SizeOf(typeof(MENUINFO));
+            public int fMask = 0x00000010; //MIM_STYLE;
+            public int dwStyle = 0x04000000; //MNS_CHECKORBMP;
+            public uint cyMax;
+            public IntPtr hbrBack = IntPtr.Zero;
+            public int dwContextHelpID;
+            public IntPtr dwMenuData = IntPtr.Zero;
         }
 
         #endregion
@@ -1010,62 +1052,6 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, int pszSubAppName, int pszSubIdList);
 
-        /// <summary>
-        /// The CreateWindowEx function creates an overlapped, pop-up, or child window with an extended window style; otherwise, this function is identical to the CreateWindow function. 
-        /// </summary>
-        /// <param name="dwExStyle">Specifies the extended window style of the window being created.</param>
-        /// <param name="lpClassName">Pointer to a null-terminated string or a class atom created by a previous call to the RegisterClass or RegisterClassEx function. The atom must be in the low-order word of lpClassName; the high-order word must be zero. If lpClassName is a string, it specifies the window class name. The class name can be any name registered with RegisterClass or RegisterClassEx, provided that the module that registers the class is also the module that creates the window. The class name can also be any of the predefined system class names.</param>
-        /// <param name="lpWindowName">Pointer to a null-terminated string that specifies the window name. If the window style specifies a title bar, the window title pointed to by lpWindowName is displayed in the title bar. When using CreateWindow to create controls, such as buttons, check boxes, and static controls, use lpWindowName to specify the text of the control. When creating a static control with the SS_ICON style, use lpWindowName to specify the icon name or identifier. To specify an identifier, use the syntax "#num". </param>
-        /// <param name="dwStyle">Specifies the style of the window being created. This parameter can be a combination of window styles, plus the control styles indicated in the Remarks section.</param>
-        /// <param name="x">Specifies the initial horizontal position of the window. For an overlapped or pop-up window, the x parameter is the initial x-coordinate of the window's upper-left corner, in screen coordinates. For a child window, x is the x-coordinate of the upper-left corner of the window relative to the upper-left corner of the parent window's client area. If x is set to CW_USEDEFAULT, the system selects the default position for the window's upper-left corner and ignores the y parameter. CW_USEDEFAULT is valid only for overlapped windows; if it is specified for a pop-up or child window, the x and y parameters are set to zero.</param>
-        /// <param name="y">Specifies the initial vertical position of the window. For an overlapped or pop-up window, the y parameter is the initial y-coordinate of the window's upper-left corner, in screen coordinates. For a child window, y is the initial y-coordinate of the upper-left corner of the child window relative to the upper-left corner of the parent window's client area. For a list box y is the initial y-coordinate of the upper-left corner of the list box's client area relative to the upper-left corner of the parent window's client area.
-        /// <para>If an overlapped window is created with the WS_VISIBLE style bit set and the x parameter is set to CW_USEDEFAULT, then the y parameter determines how the window is shown. If the y parameter is CW_USEDEFAULT, then the window manager calls ShowWindow with the SW_SHOW flag after the window has been created. If the y parameter is some other value, then the window manager calls ShowWindow with that value as the nCmdShow parameter.</para></param>
-        /// <param name="nWidth">Specifies the width, in device units, of the window. For overlapped windows, nWidth is the window's width, in screen coordinates, or CW_USEDEFAULT. If nWidth is CW_USEDEFAULT, the system selects a default width and height for the window; the default width extends from the initial x-coordinates to the right edge of the screen; the default height extends from the initial y-coordinate to the top of the icon area. CW_USEDEFAULT is valid only for overlapped windows; if CW_USEDEFAULT is specified for a pop-up or child window, the nWidth and nHeight parameter are set to zero.</param>
-        /// <param name="nHeight">Specifies the height, in device units, of the window. For overlapped windows, nHeight is the window's height, in screen coordinates. If the nWidth parameter is set to CW_USEDEFAULT, the system ignores nHeight.</param> <param name="hWndParent">Handle to the parent or owner window of the window being created. To create a child window or an owned window, supply a valid window handle. This parameter is optional for pop-up windows.
-        /// <para>Windows 2000/XP: To create a message-only window, supply HWND_MESSAGE or a handle to an existing message-only window.</para></param>
-        /// <param name="hMenu">Handle to a menu, or specifies a child-window identifier, depending on the window style. For an overlapped or pop-up window, hMenu identifies the menu to be used with the window; it can be NULL if the class menu is to be used. For a child window, hMenu specifies the child-window identifier, an integer value used by a dialog box control to notify its parent about events. The application determines the child-window identifier; it must be unique for all child windows with the same parent window.</param>
-        /// <param name="hInstance">Handle to the instance of the module to be associated with the window.</param> <param name="lpParam">Pointer to a value to be passed to the window through the CREATESTRUCT structure (lpCreateParams member) pointed to by the lParam param of the WM_CREATE message. This message is sent to the created window by this function before it returns.
-        /// <para>If an application calls CreateWindow to create a MDI client window, lpParam should point to a CLIENTCREATESTRUCT structure. If an MDI client window calls CreateWindow to create an MDI child window, lpParam should point to a MDICREATESTRUCT structure. lpParam may be NULL if no additional data is needed.</para></param>
-        /// <returns>If the function succeeds, the return value is a handle to the new window.
-        /// <para>If the function fails, the return value is NULL. To get extended error information, call GetLastError.</para>
-        /// <para>This function typically fails for one of the following reasons:</para>
-        /// <list type="">
-        /// <item>an invalid parameter value</item>
-        /// <item>the system class was registered by a different module</item>
-        /// <item>The WH_CBT hook is installed and returns a failure code</item>
-        /// <item>if one of the controls in the dialog template is not registered, or its window window procedure fails WM_CREATE or WM_NCCREATE</item>
-        /// </list></returns>
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr CreateWindowEx(
-           WindowStylesEx dwExStyle,
-           [MarshalAs(UnmanagedType.LPStr)] string lpClassName,
-           [MarshalAs(UnmanagedType.LPStr)] string lpWindowName,
-           WindowStyles dwStyle,
-           int x,
-           int y,
-           int nWidth,
-           int nHeight,
-           IntPtr hWndParent,
-           IntPtr hMenu,
-           IntPtr hInstance,
-           IntPtr lpParam);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr CreateWindowEx(
-           WindowStylesEx dwExStyle,
-           [MarshalAs(UnmanagedType.LPStr)] string lpClassName,
-           [MarshalAs(UnmanagedType.LPStr)] string lpWindowName,
-           int dwStyle,
-           int x,
-           int y,
-           int nWidth,
-           int nHeight,
-           IntPtr hWndParent,
-           IntPtr hMenu,
-           IntPtr hInstance,
-           IntPtr lpParam);
-
         // This helper static method is required because the 32-bit version of user32.dll does not contain this API
         // (on any versions of Windows), so linking the method will fail at run-time. The bridge dispatches the request
         // to the correct function (GetWindowLong in 32-bit mode and GetWindowLongPtr in 64-bit mode)
@@ -1091,6 +1077,12 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SetCursor(IntPtr hCursor);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SetMenuItemInfo(HandleRef hMenu, int uItem, bool fByPosition, MENUITEMINFO_T_RW lpmii);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool SetMenuInfo(HandleRef hMenu, MENUINFO lpcmi);
+
         [DllImport("gdi32.dll")]
         public static extern int SetBkMode(IntPtr hdc, int iBkMode);
 
@@ -1111,7 +1103,7 @@ namespace MyAPKapp.VistaUIFramework {
         public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType,
    int cxDesired, int cyDesired, uint fuLoad);
 
-        [DllImport("uxtheme.dll")]
+        [DllImport("uxtheme.dll", CharSet = CharSet.Auto)]
         public static extern int DrawThemeTextEx(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, string text, int length, int flags, ref RECT rect, ref DTTOPTS poptions);
 
         /// <summary>
@@ -1199,6 +1191,9 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("user32.dll")]
         public static extern IntPtr GetActiveWindow();
 
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern IntPtr SetActiveWindow(IntPtr hWnd);
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsWindow(IntPtr hWnd);
@@ -1231,6 +1226,71 @@ namespace MyAPKapp.VistaUIFramework {
         /// </remarks>
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern bool SetWindowText(IntPtr hwnd, [MarshalAs(UnmanagedType.LPWStr)] string lpString);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool LockWorkStation();
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool FlashWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.Bool)] bool bInvert);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool FlashWindowEx(ref FLASHWINFO pwfi);
+
+        /// <summary>
+        ///     Brings the thread that created the specified window into the foreground and activates the window. Keyboard input is
+        ///     directed to the window, and various visual cues are changed for the user. The system assigns a slightly higher
+        ///     priority to the thread that created the foreground window than it does to other threads.
+        ///     <para>See for https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539%28v=vs.85%29.aspx more information.</para>
+        /// </summary>
+        /// <param name="hWnd">
+        ///     C++ ( hWnd [in]. Type: HWND )<br />A handle to the window that should be activated and brought to the foreground.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> or nonzero if the window was brought to the foreground, <c>false</c> or zero If the window was not
+        ///     brought to the foreground.
+        /// </returns>
+        /// <remarks>
+        ///     The system restricts which processes can set the foreground window. A process can set the foreground window only if
+        ///     one of the following conditions is true:
+        ///     <list type="bullet">
+        ///     <listheader>
+        ///         <term>Conditions</term><description></description>
+        ///     </listheader>
+        ///     <item>The process is the foreground process.</item>
+        ///     <item>The process was started by the foreground process.</item>
+        ///     <item>The process received the last input event.</item>
+        ///     <item>There is no foreground process.</item>
+        ///     <item>The process is being debugged.</item>
+        ///     <item>The foreground process is not a Modern Application or the Start Screen.</item>
+        ///     <item>The foreground is not locked (see LockSetForegroundWindow).</item>
+        ///     <item>The foreground lock time-out has expired (see SPI_GETFOREGROUNDLOCKTIMEOUT in SystemParametersInfo).</item>
+        ///     <item>No menus are active.</item>
+        ///     </list>
+        ///     <para>
+        ///     An application cannot force a window to the foreground while the user is working with another window.
+        ///     Instead, Windows flashes the taskbar button of the window to notify the user.
+        ///     </para>
+        ///     <para>
+        ///     A process that can set the foreground window can enable another process to set the foreground window by
+        ///     calling the AllowSetForegroundWindow function. The process specified by dwProcessId loses the ability to set
+        ///     the foreground window the next time the user generates input, unless the input is directed at that process, or
+        ///     the next time a process calls AllowSetForegroundWindow, unless that process is specified.
+        ///     </para>
+        ///     <para>
+        ///     The foreground process can disable calls to SetForegroundWindow by calling the LockSetForegroundWindow
+        ///     function.
+        ///     </para>
+        /// </remarks>
+        // For Windows Mobile, replace user32.dll with coredll.dll 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("Shell32.dll", SetLastError = false)]
+        public static extern int SHGetStockIconInfo(StockIcon siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
 
         #endregion
 

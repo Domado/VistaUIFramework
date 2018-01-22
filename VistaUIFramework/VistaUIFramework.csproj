@@ -20,8 +20,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\VistaUIFramework.xml</DocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <DocumentationFile>
+    </DocumentationFile>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\VistaUIFramework.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -84,11 +87,13 @@
     <Compile Include="RadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Shortcut.cs" />
     <Compile Include="SplitButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="SplitClickEventArgs.cs" />
     <Compile Include="SplitClickEventHandler.cs" />
+    <Compile Include="StockIcon.cs" />
     <Compile Include="Taskbar\TaskbarHelper.cs" />
     <Compile Include="Taskbar\ThumbnailButton.cs" />
     <Compile Include="Taskbar\ThumbnailToolbar.cs" />
@@ -115,6 +120,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UnsupportedWindowsException.cs" />
+    <Compile Include="WindowsUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TaskDialog.bmp" />
