@@ -3,8 +3,6 @@ All possibilities of WinAPI into .NET Framework
 
 ![VistaUIFramework](https://www.myapkapp.com/files/images/vistaui_landscape.jpg)
 
-[Visit the official VistaUIFramework website](https://developer.myapkapp.com/frameworks/vistaui/)
-
 # What is VistaUIFramework
 VistaUI is a framework based on WinForms and .NET Framework for developing .NET Applications using Vista and 7 features, like arrow-splitted buttons, command links, vista-style controls and etc.
 
@@ -25,13 +23,18 @@ The source code is often under development and may be buggy. We recommend to che
 
 # Download the stable release
 Stable releases are available on .DLL files.<br>
-The only minimum requirement: .NET Framework 2.0 or later.
+Minimum requirements:
+* .NET Framework 2.0 or later.
+* Windows Vista or later
 
 [Click here to download the latest stable version](https://github.com/myapkapp/VistaUIFramework/releases)
 
 You can also download the framework as [NuGet package](https://www.nuget.org/packages/VistaUIFramework/).
 
-    PM >Install-Package VistaUIFramework
+    PM> Install-Package VistaUIFramework
 
 # Where's the documentation?
 The frameworks has its documentation. And you can also check out our [official documentation](https://github.com/myapkapp/VistaUIFramework/wiki).
+
+# Repository forking
+If you fork the VistaUIFramework repository, regardless of your purposes, you must tell the original repository belongs to myapkapp.
