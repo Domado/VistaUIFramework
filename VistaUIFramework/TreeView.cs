@@ -35,7 +35,6 @@ namespace MyAPKapp.VistaUIFramework {
             get {
                 return base.ContextMenuStrip;
             }
-
             set {
                 base.ContextMenuStrip = value;
                 if (value != null && ContextMenu != null) {

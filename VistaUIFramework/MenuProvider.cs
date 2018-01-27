@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace MyAPKapp.VistaUIFramework {
-    internal class Properties {
+    internal class Propertie {
         public Image Image;
         public IntPtr renderBmpHbitmap = IntPtr.Zero;
     }
@@ -18,7 +18,7 @@ namespace MyAPKapp.VistaUIFramework {
     public partial class MenuProvider : Component, IExtenderProvider, ISupportInitialize {
 
         Container components;
-        readonly Hashtable properties = new Hashtable();
+        readonly Hashtable Propertie = new Hashtable();
         readonly Hashtable menuParents = new Hashtable();
 
         bool formHasBeenIntialized;
@@ -38,9 +38,9 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override void Dispose(bool disposing) {
             if (disposing) {
-                foreach (DictionaryEntry de in properties) {
-                    if (((Properties)de.Value).renderBmpHbitmap != IntPtr.Zero)
-                        NativeMethods.DeleteObject(((Properties)de.Value).renderBmpHbitmap);
+                foreach (DictionaryEntry de in Propertie) {
+                    if (((Propertie)de.Value).renderBmpHbitmap != IntPtr.Zero)
+                        NativeMethods.DeleteObject(((Propertie)de.Value).renderBmpHbitmap);
                 }
 
 
@@ -65,11 +65,11 @@ namespace MyAPKapp.VistaUIFramework {
             return false;
         }
 
-        Properties EnsurePropertiesExists(MenuItem key) {
-            Properties p = (Properties)properties[key];
+        Propertie EnsurePropertieExists(MenuItem key) {
+            Propertie p = (Propertie)Propertie[key];
             if (p == null) {
-                p = new Properties();
-                properties[key] = p;
+                p = new Propertie();
+                Propertie[key] = p;
             }
             return p;
         }
@@ -78,12 +78,12 @@ namespace MyAPKapp.VistaUIFramework {
         [Description("The Image for the MenuItem")]
         [Category("Appearance")]
         public Image GetImage(MenuItem mnuItem) {
-            return EnsurePropertiesExists(mnuItem).Image;
+            return EnsurePropertieExists(mnuItem).Image;
         }
 
         [DefaultValue(null)]
         public void SetImage(MenuItem mnuItem, Image value) {
-            Properties prop = EnsurePropertiesExists(mnuItem);
+            Propertie prop = EnsurePropertieExists(mnuItem);
             prop.Image = value;
             if (!DesignMode && isVistaOrLater) {
                 if (prop.renderBmpHbitmap != IntPtr.Zero) {
@@ -138,7 +138,7 @@ namespace MyAPKapp.VistaUIFramework {
         void ISupportInitialize.EndInit() {
             if (!DesignMode) {
                 if (isVistaOrLater) {
-                    foreach (DictionaryEntry de in properties) {
+                    foreach (DictionaryEntry de in Propertie) {
                         AddMenuProviderItem((MenuItem)de.Key);
                     }
                 } else {
@@ -148,7 +148,7 @@ namespace MyAPKapp.VistaUIFramework {
                     if (ownerForm != null)
                         ownerForm.ChangeUICues += ownerForm_ChangeUICues;
 
-                    foreach (DictionaryEntry de in properties) {
+                    foreach (DictionaryEntry de in Propertie) {
                         AddPreMenuProviderItem((MenuItem)de.Key);
                     }
 
@@ -172,7 +172,7 @@ namespace MyAPKapp.VistaUIFramework {
             int miOn = 0;
             for (int i = 0; i < mi.Count; i++) {
                 if (mi[i].Visible) {
-                    Properties p = ((Properties)properties[mi[i]]);
+                    Propertie p = ((Propertie)Propertie[mi[i]]);
                     if (p != null) {
                         menuItemInfo.hbmpItem = p.renderBmpHbitmap;
                         NativeMethods.SetMenuItemInfo(new HandleRef(null, ((Menu)sender).Handle), miOn, true, menuItemInfo);

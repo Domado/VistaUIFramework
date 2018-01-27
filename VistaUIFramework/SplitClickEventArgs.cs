@@ -9,7 +9,7 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Set the split button's menu, set the SplitClick e.cancel to true to prevent the menu from showing
+        /// Get the split button's menu, set the SplitClick e.cancel to true to prevent the menu from showing
         /// </summary>
         public ContextMenu Menu {get;}
 

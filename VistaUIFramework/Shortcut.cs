@@ -25,7 +25,7 @@ namespace MyAPKapp.VistaUIFramework {
             file = (NativeMethods.IPersistFile) link;
         }
 
-        private Shortcut(string LnkSourcePath, bool loaded = false) {
+        private Shortcut(string LnkSourcePath, bool loaded = false) : this(LnkSourcePath) {
             if (loaded) {
                 int result = file.Load(LnkDestPath, NativeMethods.STGM_READWRITE);
                 if (!NativeMethods.Succeeded(result)) {
@@ -64,6 +64,9 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// The arguments for the path
+        /// </summary>
         public string Arguments {
             get {
                 StringBuilder builder = new StringBuilder(NativeMethods.MAX_PATH);
@@ -76,6 +79,9 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// The shortcut link description
+        /// </summary>
         public string Description {
             get {
                 StringBuilder builder = new StringBuilder(1024);
@@ -87,6 +93,9 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// The working directory (only directory)
+        /// </summary>
         public string WorkingDirectory {
             get {
                 StringBuilder builder = new StringBuilder(1024);

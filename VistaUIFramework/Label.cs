@@ -156,27 +156,28 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
-            bool DWMEnabled;
-            int DWMResult = NativeMethods.DwmIsCompositionEnabled(out DWMEnabled);
+            int DWMResult = NativeMethods.DwmIsCompositionEnabled(out bool DWMEnabled);
             if (NativeMethods.Succeeded(DWMResult) && DWMEnabled && Aero && Visible && !DesignMode) {
                 VisualStyleRenderer Renderer = new VisualStyleRenderer(VisualStyleElement.Window.Caption.Active);
                 IntPtr PrimaryHDC = e.Graphics.GetHdc();
                 IntPtr MemoryHDC = NativeMethods.CreateCompatibleDC(PrimaryHDC);
-                NativeMethods.BITMAPINFO Info = new NativeMethods.BITMAPINFO();
-                Info.biSize = Marshal.SizeOf(typeof(NativeMethods.BITMAPINFO));
-                Info.biWidth = Size.Width;
-                Info.biHeight = -Size.Height;
-                Info.biPlanes = 1;
-                Info.biBitCount = 32;
-                Info.biCompression = 0;
+                NativeMethods.BITMAPINFO Info = new NativeMethods.BITMAPINFO {
+                    biSize = Marshal.SizeOf(typeof(NativeMethods.BITMAPINFO)),
+                    biWidth = Size.Width,
+                    biHeight = -Size.Height,
+                    biPlanes = 1,
+                    biBitCount = 32,
+                    biCompression = 0
+                };
                 IntPtr PPVBits = IntPtr.Zero;
                 IntPtr DIBSection = NativeMethods.CreateDIBSection(PrimaryHDC, ref Info, 0, out PPVBits, IntPtr.Zero, 0);
                 NativeMethods.SelectObject(MemoryHDC, DIBSection);
                 IntPtr NativeFont = Font.ToHfont();
                 NativeMethods.SelectObject(MemoryHDC, NativeFont);
-                NativeMethods.DTTOPTS Opts = new NativeMethods.DTTOPTS();
-                Opts.dwSize = Marshal.SizeOf(typeof(NativeMethods.DTTOPTS));
-                Opts.dwFlags = NativeMethods.DTT.Composited | NativeMethods.DTT.TextColor;
+                NativeMethods.DTTOPTS Opts = new NativeMethods.DTTOPTS {
+                    dwSize = Marshal.SizeOf(typeof(NativeMethods.DTTOPTS)),
+                    dwFlags = NativeMethods.DTT.Composited | NativeMethods.DTT.TextColor
+                };
                 if (GlowSize > 0) {
                     Opts.dwFlags |= NativeMethods.DTT.GlowSize;
                     Opts.iGlowSize = GlowSize;

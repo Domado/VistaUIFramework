@@ -13,7 +13,7 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
     /// <summary>
     /// TaskDialog is a kind of Windows dialog introduced with Windows Vista.
     /// </summary>
-    [ToolboxBitmap("TaskDialog.bmp")]
+    [ToolboxBitmap(typeof(TaskDialog), "MyAPKapp.VistaUIFramework.TaskDialog.bmp")]
     [ToolboxItem(true)]
     [DefaultEvent("Created")]
     [DefaultProperty("CustomButtons")]
@@ -46,10 +46,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         /// Initializes a new instance of TaskDialog
         /// </summary>
         public TaskDialog() : base() {
-            NativeConfig = new NativeMethods.TASKDIALOGCONFIG();
-            NativeConfig.cbSize = Marshal.SizeOf(typeof(NativeMethods.TASKDIALOGCONFIG));
-            NativeConfig.hInstance = Process.GetCurrentProcess().Handle;
-            NativeConfig.pfCallback = new TaskDialogCallbackProc(DialogProc);
+            NativeConfig = new NativeMethods.TASKDIALOGCONFIG {
+                cbSize = Marshal.SizeOf(typeof(NativeMethods.TASKDIALOGCONFIG)),
+                hInstance = Process.GetCurrentProcess().Handle,
+                pfCallback = new TaskDialogCallbackProc(DialogProc)
+            };
             _CustomButtons = new Collection<TaskDialogButton>();
             _RadioButtons = new Collection<TaskDialogRadioButton>();
             _DefaultCommonButton = DialogResult.None;

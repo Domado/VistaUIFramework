@@ -6,7 +6,12 @@ using System.Windows.Forms;
 using System.ComponentModel.Design;
 
 namespace MyAPKapp.VistaUIFramework {
+
+    /// <summary>
+    /// CommandLink is a button with green arrow and a description (<code>Note</code> property)
+    /// </summary>
     [ToolboxBitmap(typeof(System.Windows.Forms.Button))]
+    [Description("CommandLink is a button with green arrow and a description")]
     public class CommandLink : Button {
 
         private string _Note;

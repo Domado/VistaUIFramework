@@ -9,7 +9,12 @@ namespace MyAPKapp.VistaUIFramework {
     /// <summary>
     /// The Windows Utilities contains multiple common features like move the window to top, flicker the window and taskbar, shutdown computer, etc.
     /// </summary>
-    public class WindowsUtils {
+    public sealed class WindowsUtils {
+
+        /// <summary>
+        /// It's not allowed to create this class
+        /// </summary>
+        private WindowsUtils() {}
 
         /// <summary>
         /// Make the window flash and flicker to get user's attention

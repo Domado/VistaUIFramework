@@ -16,29 +16,60 @@ namespace MyAPKapp.VistaUIFramework {
         private bool _Aero;
         private Padding _AeroMargin;
         private bool _AeroDrag;
+        private bool _AeroKey;
+        private bool _AeroBlur;
 
         public Form() : base() {
             base.DoubleBuffered = true;
-            base.BackColor = SystemColors.Window;
-            if (!DesignMode) {
-                Activated += Form_Activated;
-                Deactivate += Form_Deactivate;
-            }
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint
+            SetStyle(ControlStyles.AllPaintingInWmPaint
               | ControlStyles.OptimizedDoubleBuffer
               | ControlStyles.ResizeRedraw
               | ControlStyles.UserPaint
               , true);
         }
 
-        #region Inner events
+        #region Form events
 
-        private void Form_Activated(object sender, EventArgs e) {
+        /// <summary>
+        /// Fires when DWM composition changes (e.g.: Aero is enabled/disabled)
+        /// </summary>
+        /// <remarks>
+        /// As of Windows 8, DWM composition is always enabled, so this event is not fired regardless of video mode changes.
+        /// </remarks>
+        [Description("Fires when DWM composition changes")]
+        public event AeroCompChangedEventHandler AeroCompChanged;
+
+        /// <summary>
+        /// Fires when Aero glass color changes
+        /// </summary>
+        /// <remarks>
+        /// As of Windows 8, DWM composition is always enabled, so this event is not fired regardless of video mode changes.
+        /// </remarks>
+        [Description("Fires when Aero glass color changes")]
+        public event AeroColorChangedEventHandler AeroColorChanged;
+
+        #endregion
+
+        #region Overrided methods
+
+        protected override void OnActivated(EventArgs e) {
+            base.OnActivated(e);
             Invalidate();
         }
 
-        private void Form_Deactivate(object sender, EventArgs e) {
+        protected override void OnDeactivate(EventArgs e) {
+            base.OnDeactivate(e);
             Invalidate();
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual void OnAeroCompChanged(AeroCompChangedEventArgs e) {
+            AeroCompChanged(this, e);
+        }
+
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual void OnAeroColorChanged(AeroColorChangedEventArgs e) {
+            AeroColorChanged(this, e);
         }
 
         #endregion
@@ -69,12 +100,20 @@ namespace MyAPKapp.VistaUIFramework {
         [Description("Set the aero glass to the form")]
         public bool Aero {
             get {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
                 return _Aero;
             }
             set {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
                 if (_Aero != value) {
                     _Aero = value;
                     if (!value && AeroDrag) AeroDrag = false;
+                    if (!value && AeroKey) AeroKey = false;
+                    if (!value && AeroBlur) AeroBlur = false;
                     if (value && DoubleBuffered) {
                         DoubleBuffered = false;
                     }
@@ -113,11 +152,68 @@ namespace MyAPKapp.VistaUIFramework {
         [Description("Returns/sets if mouse is able to move the window by dragging the Aero glass")]
         public bool AeroDrag {
             get {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
                 return _AeroDrag;
             }
             set {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
                 if (_AeroDrag != value) {
                     _AeroDrag = value;
+                    if (value && !Aero) Aero = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns/sets if Aero glass is <code>TransparencyKey</code> compliant
+        /// </summary>
+        /// <remarks>
+        /// It's not recommended to use same-value RGB (eg. 255,255,255) or any shade of green, otherwise, you'd interacting with other windows behind your windows (possibly because window behaves like transparent). Modifying the transparency key can cause some issues with alpha channel (neither 0% nor 100%).
+        /// </remarks>
+        [Category("Behavior")]
+        [DefaultValue(false)]
+        [Description("Returns/sets if Aero glass is TransparencyKey compliant")]
+        public bool AeroKey {
+            get {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                return _AeroKey;
+            }
+            set {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                if (_AeroKey != value) {
+                    _AeroKey = value;
+                    if (value && !Aero) Aero = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns/sets if background color is Aero blur (different from Aero glass)
+        /// </summary>
+        [Category("Appearance")]
+        [DefaultValue(false)]
+        [Description("Returns/sets if background color is Aero blur (different from Aero glass)")]
+        public bool AeroBlur {
+            get {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                return _AeroBlur;
+            }
+            set {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                if (_AeroBlur != value) {
+                    _AeroBlur = value;
                     if (value && !Aero) Aero = true;
                 }
             }
@@ -175,7 +271,7 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         [Browsable(true)]
-        public new virtual MainMenu Menu {
+        public new MainMenu Menu {
             get {
                 return base.Menu;
             }
@@ -187,7 +283,7 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
-        public new virtual MenuStrip MainMenuStrip {
+        public new MenuStrip MainMenuStrip {
             get {
                 return base.MainMenuStrip;
             }
@@ -199,18 +295,46 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
-        [DefaultValue(typeof(Color), "Window")]
-        public override Color BackColor {
+        /// <summary>
+        /// Returns/sets if Aero glass DWM Composition is enabled
+        /// </summary>
+        [Browsable(false)]
+        public bool CompositionEnabled {
             get {
-                return base.BackColor;
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                int result = NativeMethods.DwmIsCompositionEnabled(out bool enabled);
+                return NativeMethods.Succeeded(result) && enabled;
             }
-
             set {
-                base.BackColor = value;
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                int result = NativeMethods.DwmEnableComposition(NativeMethods.BoolToNative(value));
+                if (!NativeMethods.Succeeded(result)) {
+                    Marshal.ThrowExceptionForHR(result);
+                }
+            }
+        }
+
+        [Browsable(false)]
+        public GlassColor GlassColor {
+            get {
+                if (Environment.OSVersion.Version.Major < 6) {
+                    throw new UnsupportedWindowsException("Windows Vista");
+                }
+                int result = NativeMethods.DwmGetColorizationColor(out int ColorizationColor, out bool ColorizationOpaqueBlend);
+                if (!NativeMethods.Succeeded(result)) {
+                    Marshal.ThrowExceptionForHR(result);
+                }
+                return new GlassColor(Color.FromArgb(ColorizationColor), ColorizationOpaqueBlend);
             }
         }
 
         #endregion
+
+        #region Private methods
 
         private void EnableCloseButton(bool enable) {
             IntPtr hMenu = NativeMethods.GetSystemMenu(Handle, false);
@@ -222,23 +346,40 @@ namespace MyAPKapp.VistaUIFramework {
         protected override void OnPaintBackground(PaintEventArgs e) {
             base.OnPaintBackground(e);
             if (Aero) {
-                bool isDWMEnabled;
-                int result = NativeMethods.DwmIsCompositionEnabled(out isDWMEnabled);
-                if (NativeMethods.Succeeded(result) && isDWMEnabled) {
+                if (CompositionEnabled) {
                     if (DesignMode) {
                         e.Graphics.Clear(ActiveCaption);
                     } else {
-                        e.Graphics.Clear(Color.Black);
+                        if (AeroKey) {
+                            e.Graphics.Clear(TransparencyKey);
+                        } else {
+                            e.Graphics.Clear(Color.Black);
+                        }
                     }
                     if (!IsAeroSheet) {
                         Rectangle clientArea = new Rectangle(
-                            _AeroMargin.Left,
-                            _AeroMargin.Top,
-                            this.ClientRectangle.Width - _AeroMargin.Left - _AeroMargin.Right,
-                            this.ClientRectangle.Height - _AeroMargin.Top - _AeroMargin.Bottom
-                        );
-                        Brush b = new SolidBrush(this.BackColor);
-                        e.Graphics.FillRectangle(b, clientArea);
+                                _AeroMargin.Left,
+                                _AeroMargin.Top,
+                                ClientRectangle.Width - _AeroMargin.Left - _AeroMargin.Right,
+                                ClientRectangle.Height - _AeroMargin.Top - _AeroMargin.Bottom
+                            );
+                        if (AeroBlur) {
+                            if (!DesignMode) {
+                                GraphicsPath path = new GraphicsPath();
+                                path.AddRectangle(clientArea);
+                                Region Reg = new Region(path);
+                                IntPtr hRgn = Reg.GetHrgn(Graphics.FromHwnd(Handle));
+                                NativeMethods.DWM_BLURBEHIND blur = new NativeMethods.DWM_BLURBEHIND {
+                                    dwFlags = NativeMethods.DWM_BB.Enable | NativeMethods.DWM_BB.BlurRegion | NativeMethods.DWM_BB.TransitionMaximized,
+                                    fEnable = true,
+                                    hRgnBlur = hRgn
+                                };
+                                NativeMethods.DwmEnableBlurBehindWindow(Handle, ref blur);
+                            }
+                        } else {
+                            Brush b = new SolidBrush(BackColor);
+                            e.Graphics.FillRectangle(b, clientArea);
+                        }
                     }
                 } else {
                     if (DesignMode) {
@@ -266,14 +407,14 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override void OnLoad(EventArgs e) {
             base.OnLoad(e);
-            bool isDWMEnabled;
-            int result = NativeMethods.DwmIsCompositionEnabled(out isDWMEnabled);
+            int result = NativeMethods.DwmIsCompositionEnabled(out bool isDWMEnabled);
             if (Aero && NativeMethods.Succeeded(result) && isDWMEnabled) {
-                NativeMethods.MARGINS margins = new NativeMethods.MARGINS();
-                margins.topHeight = _AeroMargin.Top;
-                margins.bottomHeight = _AeroMargin.Bottom;
-                margins.leftWidth = _AeroMargin.Left;
-                margins.rightWidth = _AeroMargin.Right;
+                NativeMethods.MARGINS margins = new NativeMethods.MARGINS {
+                    topHeight = _AeroMargin.Top,
+                    bottomHeight = _AeroMargin.Bottom,
+                    leftWidth = _AeroMargin.Left,
+                    rightWidth = _AeroMargin.Right
+                };
                 NativeMethods.DwmExtendFrameIntoClientArea(Handle, ref margins);
             }
         }
@@ -290,6 +431,16 @@ namespace MyAPKapp.VistaUIFramework {
                     if (IsOutside(_AeroMargin, ClientPoint, ClientSize)) {
                         m.Result = new IntPtr(NativeMethods.HTCAPTION);
                     }
+                }
+            } else if (m.Msg == NativeMethods.WM_DWMCOMPOSITIONCHANGED || m.Msg == NativeMethods.WM_DWMNCRENDERINGCHANGED) {
+                if (AeroCompChanged != null) {
+                    OnAeroCompChanged(new AeroCompChangedEventArgs(CompositionEnabled));
+                }
+            } else if (m.Msg == NativeMethods.WM_DWMCOLORIZATIONCOLORCHANGED) {
+                int NativeColor = (IntPtr.Size == 8) ? (int) m.WParam.ToInt64() : m.WParam.ToInt32();
+                bool Blend = NativeMethods.NativeToBool((IntPtr.Size == 8) ? (int) m.LParam.ToInt64() : m.LParam.ToInt32());
+                if (AeroColorChanged != null) {
+                    OnAeroColorChanged(new AeroColorChangedEventArgs(Color.FromArgb(NativeColor), Blend));
                 }
             }
         }
@@ -318,6 +469,8 @@ namespace MyAPKapp.VistaUIFramework {
                 return _AeroMargin.Left == -1 && _AeroMargin.Right == -1 && _AeroMargin.Top == -1 && _AeroMargin.Bottom == -1;
             }
         }
+
+        #endregion
 
     }
 }

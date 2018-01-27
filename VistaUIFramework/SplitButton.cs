@@ -44,13 +44,9 @@ namespace MyAPKapp.VistaUIFramework {
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case (NativeMethods.BCM_SETDROPDOWNSTATE):
-                    if (m.HWnd==Handle && m.WParam.ToInt32()==1) {
+                    if (m.HWnd==Handle && m.WParam.ToInt32()==NativeMethods.TRUE) {
                         if (SplitClick != null) {
-                            SplitClickEventArgs e = new SplitClickEventArgs(Menu);
-                            SplitClick(this, e);
-                            if (!e.Cancel && Menu != null) {
-                                Menu.Show(this, new Point(0, Height));
-                            }
+                            OnSplitClick(new SplitClickEventArgs(Menu));
                         } else if (Menu != null) {
                             Menu.Show(this, new Point(0, Height));
                         }
@@ -60,13 +56,19 @@ namespace MyAPKapp.VistaUIFramework {
             base.WndProc(ref m);
         }
 
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        protected virtual void OnSplitClick(SplitClickEventArgs e) {
+            SplitClick(this, e);
+            if (!e.Cancel && Menu != null) {
+                Menu.Show(this, new Point(0, Height));
+            }
+        }
+
         protected override Size DefaultSize {
             get {
                 return new Size(108, base.DefaultSize.Height);
             }
         }
-
-
 
     }
 }

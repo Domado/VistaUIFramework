@@ -9,14 +9,18 @@ namespace MyAPKapp.VistaUIFramework {
     public class TextBox : System.Windows.Forms.TextBox {
 
         private string _Hint;
+        private bool _HideHintOnFocus;
 
-        public TextBox() : base() {}
+        public TextBox() : base() {
+            _HideHintOnFocus = true;
+        }
 
         /// <summary>
         /// Set the TextBox's gray text when TextBox is empty
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(null)]
+        [Localizable(true)]
         [Description("Set the TextBox's gray text when TextBox is empty")]
         public string Hint {
             get {
@@ -24,7 +28,23 @@ namespace MyAPKapp.VistaUIFramework {
             }
             set {
                 _Hint = value;
-                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETCUEBANNER, IntPtr.Zero, value);
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETCUEBANNER, NativeMethods.BoolToNative(!_HideHintOnFocus), value);
+            }
+        }
+
+        /// <summary>
+        /// Set if TextBox's hint is hidden on focus, even if TextBox was empty
+        /// </summary>
+        [Category("Behavior")]
+        [DefaultValue(true)]
+        [Description("Set if TextBox's hint is hidden on focus, even if TextBox was empty")]
+        public bool HideHintOnFocus {
+            get {
+                return _HideHintOnFocus;
+            }
+            set {
+                _HideHintOnFocus = value;
+                NativeMethods.SendMessage(Handle, NativeMethods.EM_SETCUEBANNER, NativeMethods.BoolToNative(!value), _Hint);
             }
         }
 

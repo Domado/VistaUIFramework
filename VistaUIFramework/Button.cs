@@ -157,6 +157,8 @@ namespace MyAPKapp.VistaUIFramework {
 
         #endregion
 
+        #region Protected and private methods
+
         protected override CreateParams CreateParams {
             get {
                 if (_ImageOnly) {
@@ -189,6 +191,8 @@ namespace MyAPKapp.VistaUIFramework {
             int bin = shield ? 1 : 0;
             NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETSHIELD, 0, bin);
         }
+
+        #endregion
 
     }
 }

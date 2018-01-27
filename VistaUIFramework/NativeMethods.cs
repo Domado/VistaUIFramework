@@ -47,6 +47,10 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WM_CTLCOLORSTATIC = 0x0138;
         public const int WM_SETICON = 0x0080;
         public const int WM_NCHITTEST = 0x0084;
+        public const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
+        public const int WM_DWMNCRENDERINGCHANGED = 0x031F;
+        public const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
+        public const int WM_DWMWINDOWMAXIMIZEDCHANGE = 0x0321;
 
         /* WS VARIABLES */
         public const int WS_VISIBLE = 0x10000000;
@@ -81,6 +85,10 @@ namespace MyAPKapp.VistaUIFramework {
         /* EDIT VARIABLES */
         public const int ECM_FIRST = 0x1500;
         public const int EM_SETCUEBANNER = ECM_FIRST + 1;
+
+        /* COMBOBOX VARIABLES */
+        public const int CBM_FIRST = 0x1700;
+        public const int CB_SETCUEBANNER = CBM_FIRST + 3;
 
         /* CLASS VARIABLES */
         public const int CS_VREDRAW = 0x0001;
@@ -430,6 +438,13 @@ namespace MyAPKapp.VistaUIFramework {
             SLDF_PERSIST_VOLUME_ID_RELATIVE = 0x08000000,
             SLDF_VALID = 0x0FFFF7FF,
             SLDF_RESERVED = 0x8000000
+        }
+
+        [Flags]
+        public enum DWM_BB {
+            Enable = 1,
+            BlurRegion = 2,
+            TransitionMaximized = 4
         }
 
         #endregion
@@ -950,6 +965,16 @@ namespace MyAPKapp.VistaUIFramework {
             public string szwDarwinID;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public struct DWM_BLURBEHIND {
+            public DWM_BB dwFlags;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool fEnable;
+            public IntPtr hRgnBlur;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool fTransitionOnMaximized;
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public class MENUITEMINFO_T_RW {
             public int cbSize = Marshal.SizeOf(typeof(MENUITEMINFO_T_RW));
@@ -1035,10 +1060,19 @@ namespace MyAPKapp.VistaUIFramework {
         public static extern bool EnableMenuItem(IntPtr hMenu, int uIDEnableItem, int uEnable);
 
         [DllImport("dwmapi.dll")]
-        public static extern int DwmExtendFrameIntoClientArea(IntPtr hwnd, ref MARGINS margins);
+        public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS margins);
 
         [DllImport("dwmapi.dll")]
         public static extern int DwmIsCompositionEnabled(out bool enabled);
+
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmEnableComposition(int uCompositionAction);
+
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmEnableBlurBehindWindow(IntPtr hWnd, ref DWM_BLURBEHIND blurBehind);
+
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmGetColorizationColor(out int ColorizationColor, [MarshalAs(UnmanagedType.Bool)] out bool ColorizationOpaqueBlend);
 
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, string pszSubAppName, string pszSubIdList);
