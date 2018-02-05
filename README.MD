@@ -27,6 +27,9 @@ Minimum requirements:
 * .NET Framework 2.0 or later.
 * Windows Vista or later
 
+## Where do I find the 1.x versions
+Since 2016, VistaUIFrameowork 1.0 was launched in VB.NET with fewer features and p/invoke usage. C# had x1000 times more support than VB.NET so VistaUIFramework was rewritten from scratch using C# and the whole repository was deleted and re-created.
+
 [Click here to download the latest stable version](https://github.com/myapkapp/VistaUIFramework/releases)
 
 You can also download the framework as [NuGet package](https://www.nuget.org/packages/VistaUIFramework/).
