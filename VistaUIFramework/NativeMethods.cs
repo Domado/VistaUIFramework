@@ -63,6 +63,7 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WM_DWMNCRENDERINGCHANGED = 0x031F;
         public const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
         public const int WM_DWMWINDOWMAXIMIZEDCHANGE = 0x0321;
+        public const int WM_LBUTTONUP = 0x0202;
         public const int WM_LBUTTONDOWN = 0x0201;
         public const int WM_LBUTTONDBLCLK = 0x0203;
 
@@ -143,6 +144,11 @@ namespace MyAPKapp.VistaUIFramework {
         public const int LVM_FIRST = 0x1000;
         public const int LVM_SETEXTENDEDLISTVIEWSTYLE = LVM_FIRST + 54;
         public const int LVS_EX_DOUBLEBUFFER = 0x00010000;
+        public const int LVM_GETGROUPINFOBYINDEX = LVM_FIRST + 153;
+        public const int LVM_SETGROUPINFO = LVM_FIRST + 147;
+        public const int LVGS_COLLAPSIBLE = 0x00000008;
+        public const int LVGF_STATE = 0x00000004;
+        public const int LVGF_GROUPID = 0x00000010;
 
         /* TREEVIEW VARIABLES */
         public const int TV_FIRST = 0x1100;
@@ -1384,6 +1390,41 @@ namespace MyAPKapp.VistaUIFramework {
             public IntPtr pElems;
         }
 
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        public struct LVGROUP {
+            public int cbSize;
+            public int mask;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszHeader;
+            public int cchHeader;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszFooter;
+            public int cchFooter;
+            public int iGroupId;
+            public int stateMask;
+            public int state;
+            public int uAlign;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszSubtitle;
+            public int cchSubtitle;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszTask;
+            public int cchTask;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszDescriptionTop;
+            public int cchDescriptionTop;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszDescriptionBottom;
+            public int cchDescriptionBottom;
+            public int iTitleImage;
+            public int iExtendedImage;
+            public int iFirstItem;
+            public int cItems;
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string pszSubsetTitle;
+            public int cchSubsetTitle;
+        }
+
         #endregion
 
         #region Utilities
@@ -1441,6 +1482,12 @@ namespace MyAPKapp.VistaUIFramework {
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [Out] out RECT lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref LVGROUP lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, LVGROUP lParam);
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);

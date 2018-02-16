@@ -262,7 +262,7 @@ namespace MyAPKapp.VistaUIFramework {
             }
             set {
                 if (_ChildHeight != value) {
-                    if (value < -1 || value > MaximumChildHeight) throw new ArgumentOutOfRangeException("hildHeight", "Height out of bounds");
+                    if (value < -1 || (MaximumChildHeight != -1 && value > MaximumChildHeight)) throw new ArgumentOutOfRangeException("ChildHeight", "Height out of bounds");
                     _ChildHeight = value;
                     UpdateBand(false);
                 }
