@@ -1,6 +1,16 @@
-﻿using MyAPKapp.VistaUIFramework.TaskDialog;
+﻿//--------------------------------------------------------------------
+// <copyright file="NativeMethods.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using MyAPKapp.VistaUIFramework.TaskDialog;
 using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -18,7 +28,6 @@ namespace MyAPKapp.VistaUIFramework {
         public const int TRUE = 1;
         public const int FALSE = 0;
         public const int SC_CLOSE = 0xF060;
-        public const int CS_NOCLOSE = 0x0200;
         public const int IMAGE_BITMAP = 0;
         public const int IMAGE_ICON = 1;
         public const int ICON_BIG = 1;
@@ -26,6 +35,7 @@ namespace MyAPKapp.VistaUIFramework {
         public const int GWL_EXSTYLE = (-20);
         public const int S_OK = 0;
         public const int S_FALSE = 1;
+        public const int E_INVALIDARG = 0x8007005;
         public const int ERROR_INVALID_HANDLE = 6;
         public const int HTCLIENT = 1;
         public const int HTCAPTION = 2;
@@ -47,16 +57,21 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WM_CTLCOLORSTATIC = 0x0138;
         public const int WM_SETICON = 0x0080;
         public const int WM_NCHITTEST = 0x0084;
+        public const int WM_NOTIFY = 0x004E;
+        public const int WM_REFLECT = WM_USER + 0x1C00;
         public const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
         public const int WM_DWMNCRENDERINGCHANGED = 0x031F;
         public const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
         public const int WM_DWMWINDOWMAXIMIZEDCHANGE = 0x0321;
+        public const int WM_LBUTTONDOWN = 0x0201;
+        public const int WM_LBUTTONDBLCLK = 0x0203;
 
         /* WS VARIABLES */
         public const int WS_VISIBLE = 0x10000000;
         public const int WS_CHILD = 0x40000000;
         public const int WS_BORDER = 0x00800000;
         public const int WS_CLIPSIBLINGS = 0x04000000;
+        public const int WS_CLIPCHILDREN = 0x02000000;
         public const int WS_EX_CLIENTEDGE = 0x00000200;
         public const int WS_EX_TOOLWINDOW = 0x00000080;
         public const int WS_EX_NOPARENTNOTIFY = 0x00000004;
@@ -64,6 +79,19 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WS_EX_RIGHT = 0x00001000;
         public const int WS_EX_RTLREADING = 0x00002000;
         public const int WS_EX_LEFTSCROLLBAR = 0x00004000;
+
+        /* CS VARIABLES */
+        public const int CS_VREDRAW = 0x0001;
+        public const int CS_HREDRAW = 0x0002;
+        public const int CS_DBLCLKS = 0x0008;
+        public const int CS_OWNDC = 0x0020;
+        public const int CS_CLASSDC = 0x0040;
+        public const int CS_PARENTDC = 0x0080;
+        public const int CS_NOCLOSE = 0x0200;
+        public const int CS_SAVEBITS = 0x0800;
+        public const int CS_BYTEALIGNCLIENT = 0x1000;
+        public const int CS_BYTEALIGNWINDOW = 0x2000;
+        public const int CS_GLOBALCLASS = 0x4000;
 
         /* SW VARIABLES */
         public const int SW_HIDE = 0;
@@ -89,12 +117,6 @@ namespace MyAPKapp.VistaUIFramework {
         /* COMBOBOX VARIABLES */
         public const int CBM_FIRST = 0x1700;
         public const int CB_SETCUEBANNER = CBM_FIRST + 3;
-
-        /* CLASS VARIABLES */
-        public const int CS_VREDRAW = 0x0001;
-        public const int CS_HREDRAW = 0x0002;
-        public const int CS_DBLCLKS = 0x0008;
-        public const int CS_GLOBALCLASS = 0x4000;
 
         /* BUTTON VARIABLES */
         public const int BCM_FIRST = 0x1600;
@@ -169,19 +191,48 @@ namespace MyAPKapp.VistaUIFramework {
         public const int TDIE_ICON_MAIN = 0;
         public const int TDIE_ICON_FOOTER = 1;
 
-        /* REBAR VARIABLES */
-        public const int ICC_COOL_CLASSES = 0x00000400;
-        public const int ICC_BAR_CLASSES = 0x00000004;
+        /* CCS VARIABLES */
+        public const int CCS_TOP = 0x00000001;
+        public const int CCS_NOMOVEY = 0x00000002;
+        public const int CCS_BOTTOM = 0x00000003;
+        public const int CCS_NORESIZE = 0x00000004;
+        public const int CCS_NOPARENTALIGN = 0x00000008;
+        public const int CCS_ADJUSTABLE = 0x00000020;
         public const int CCS_NODIVIDER = 0x00000040;
+        public const int CCS_VERT = 0x00000080;
+        public const int CCS_LEFT = CCS_VERT | CCS_TOP;
+        public const int CCS_RIGHT = CCS_VERT | CCS_BOTTOM;
+        public const int CCS_NOMOVEX = CCS_VERT | CCS_NOMOVEY;
+
+        /* ICC VARIABLES */
+        public const int ICC_COOL_CLASSES = 0x00000400;
+        public const int ICC_INTERNET_CLASSES = 0x00000800;
+
+        /* RBS VARIABLES */
+        public const int RBS_TOOLTIPS = 0x00000100;
         public const int RBS_VARHEIGHT = 0x00000200;
         public const int RBS_BANDBORDERS = 0x00000400;
-        public const int RB_INSERTBANDA = WM_USER + 1;
+        public const int RBS_FIXEDORDER = 0x00000800;
+        public const int RBS_REGISTERDROP = 0x00001000;
+        public const int RBS_AUTOSIZE = 0x00002000;
+        public const int RBS_VERTICALGRIPPER = 0x00004000;
+        public const int RBS_DBLCLKTOGGLE = 0x00008000;
+
+        /* RB VARIABLES */
+        public const int RB_SETBARINFO = WM_USER + 4;
         public const int RB_DELETEBAND = WM_USER + 2;
+        public const int RB_HITTEST = WM_USER + 8;
+        public const int RB_GETRECT = WM_USER + 9;
+        public const int RB_GETBANDCOUNT = WM_USER + 12;
+        public const int RB_INSERTBANDA = WM_USER + 1;
         public const int RB_INSERTBANDW = WM_USER + 10;
         public const int RB_SETBANDINFOA = WM_USER + 6;
         public const int RB_SETBANDINFOW = WM_USER + 11;
         public static readonly int RB_INSERTBAND = (Marshal.SystemDefaultCharSize == 1) ? RB_INSERTBANDA : RB_INSERTBANDW;
         public static readonly int RB_SETBANDINFO = (Marshal.SystemDefaultCharSize == 1) ? RB_SETBANDINFOA : RB_SETBANDINFOW;
+
+        /* RBBIM VARIABLES */
+        public const int RBIM_IMAGELIST = 0x00000001;
         public const int RBBIM_STYLE = 0x00000001;
         public const int RBBIM_COLORS = 0x00000002;
         public const int RBBIM_TEXT = 0x00000004;
@@ -197,10 +248,96 @@ namespace MyAPKapp.VistaUIFramework {
         public const int RBBIM_CHEVRONLOCATION = 0x00001000;
         public const int RBBIM_CHEVRONSTATE = 0x00002000;
 
+        /* RBBS VARIABLES */
+        public const int RBBS_BREAK = 0x00000001;
+        public const int RBBS_FIXEDSIZE = 0x00000002;
+        public const int RBBS_CHILDEDGE = 0x00000004;
+        public const int RBBS_HIDDEN = 0x00000008;
+        public const int RBBS_NOVERT = 0x00000010;
+        public const int RBBS_FIXEDBMP = 0x00000020;
+        public const int RBBS_VARIABLEHEIGHT = 0x00000040;
+        public const int RBBS_GRIPPERALWAYS = 0x00000080;
+        public const int RBBS_NOGRIPPER = 0x00000100;
+        public const int RBBS_USECHEVRON = 0x00000200;
+        public const int RBBS_HIDETITLE = 0x00000400;
+        public const int RBBS_TOPALIGN = 0x00000800;
+
+        /* RBN VARIABLES */
+        public const int RBN_FIRST = 0 - 831;
+        public const int RBN_HEIGHTCHANGE = (RBN_FIRST - 0);
+        public const int RBN_GETOBJECT = (RBN_FIRST - 1);
+        public const int RBN_LAYOUTCHANGED = (RBN_FIRST - 2);
+        public const int RBN_AUTOSIZE = (RBN_FIRST - 3);
+        public const int RBN_BEGINDRAG = (RBN_FIRST - 4);
+        public const int RBN_ENDDRAG = (RBN_FIRST - 5);
+        public const int RBN_DELETINGBAND = (RBN_FIRST - 6);
+        public const int RBN_DELETEDBAND = (RBN_FIRST - 7);
+        public const int RBN_CHILDSIZE = (RBN_FIRST - 8);
+        public const int RBN_CHEVRONPUSHED = (RBN_FIRST - 10);
+        public const int RBN_SPLITTERDRAG = (RBN_FIRST - 11);
+        public const int RBN_MINMAX = (RBN_FIRST - 21);
+        public const int RBN_AUTOBREAK = (RBN_FIRST - 22);
+
+        /* NM VARIABLES */
+        public const int NM_FIRST = 0 - 0;
+        public const int NM_OUTOFMEMORY = NM_FIRST - 1;
+        public const int NM_CLICK = NM_FIRST - 2;
+        public const int NM_DBLCLK = NM_FIRST - 3;
+        public const int NM_RETURN = NM_FIRST - 4;
+        public const int NM_RCLICK = NM_FIRST - 5;
+        public const int NM_RDBLCLK = NM_FIRST - 6;
+        public const int NM_SETFOCUS = NM_FIRST - 7;
+        public const int NM_KILLFOCUS = NM_FIRST - 8;
+        public const int NM_CUSTOMDRAW = NM_FIRST - 12;
+        public const int NM_HOVER = NM_FIRST - 13;
+        public const int NM_NCHITTEST = NM_FIRST - 14;
+        public const int NM_KEYDOWN = NM_FIRST - 15;
+        public const int NM_RELEASEDCAPTURE = NM_FIRST - 16;
+        public const int NM_SETCURSOR = NM_FIRST - 17;
+        public const int NM_CHAR = NM_FIRST - 18;
+        public const int NM_TOOLTIPSCREATED = NM_FIRST - 19;
+        public const int NM_LDOWN = NM_FIRST - 20;
+        public const int NM_RDOWN = NM_FIRST - 21;
+        public const int NM_THEMECHANGED = NM_FIRST - 22;
+
         /* STGM VARIABLES */
         public const int STGM_READ = 0x00000000;
         public const int STGM_WRITE = 0x00000001;
         public const int STGM_READWRITE = 0x00000002;
+
+        /* STATE SYSTEM VARIABLES */
+        public const int STATE_SYSTEM_UNAVAILABLE = 0x00000001;
+        public const int STATE_SYSTEM_SELECTED = 0x00000002;
+        public const int STATE_SYSTEM_FOCUSED = 0x00000004;
+        public const int STATE_SYSTEM_PRESSED = 0x00000008;
+        public const int STATE_SYSTEM_CHECKED = 0x00000010;
+        public const int STATE_SYSTEM_MIXED = 0x00000020;
+        public const int STATE_SYSTEM_INDETERMINATE = STATE_SYSTEM_MIXED;
+        public const int STATE_SYSTEM_READONLY = 0x00000040;
+        public const int STATE_SYSTEM_HOTTRACKED = 0x00000080;
+        public const int STATE_SYSTEM_DEFAULT = 0x00000100;
+        public const int STATE_SYSTEM_EXPANDED = 0x00000200;
+        public const int STATE_SYSTEM_COLLAPSED = 0x00000400;
+        public const int STATE_SYSTEM_BUSY = 0x00000800;
+        public const int STATE_SYSTEM_FLOATING = 0x00001000;
+        public const int STATE_SYSTEM_MARQUEED = 0x00002000;
+        public const int STATE_SYSTEM_ANIMATED = 0x00004000;
+        public const int STATE_SYSTEM_INVISIBLE = 0x00008000;
+        public const int STATE_SYSTEM_OFFSCREEN = 0x00010000;
+        public const int STATE_SYSTEM_SIZEABLE = 0x00020000;
+        public const int STATE_SYSTEM_MOVEABLE = 0x00040000;
+        public const int STATE_SYSTEM_SELFVOICING = 0x00080000;
+        public const int STATE_SYSTEM_FOCUSABLE = 0x00100000;
+        public const int STATE_SYSTEM_SELECTABLE = 0x00200000;
+        public const int STATE_SYSTEM_LINKED = 0x00400000;
+        public const int STATE_SYSTEM_TRAVERSED = 0x00800000;
+        public const int STATE_SYSTEM_MULTISELECTABLE = 0x01000000;
+        public const int STATE_SYSTEM_EXTSELECTABLE = 0x02000000;
+        public const int STATE_SYSTEM_ALERT_LOW = 0x04000000;
+        public const int STATE_SYSTEM_ALERT_MEDIUM = 0x08000000;
+        public const int STATE_SYSTEM_ALERT_HIGH = 0x10000000;
+        public const int STATE_SYSTEM_PROTECTED = 0x20000000;
+        public const int STATE_SYSTEM_VALID = 0x3FFFFFFF;
 
         #endregion
 
@@ -447,11 +584,25 @@ namespace MyAPKapp.VistaUIFramework {
             TransitionMaximized = 4
         }
 
+        public enum KNOWNDESTCATEGORY {
+            KDC_FREQUENT = 1,
+            KDC_RECENT = KDC_FREQUENT + 1
+        }
+
+        public enum SHARD {
+            SHARD_PIDL = 0x00000001,
+            SHARD_PATHA = 0x00000002,
+            SHARD_PATHW = 0x00000003,
+            SHARD_APPIDINFO = 0x00000004,
+            SHARD_APPIDINFOIDLIST = 0x00000005,
+            SHARD_LINK = 0x00000006,
+            SHARD_APPIDINFOLINK = 0x00000007,
+            SHARD_SHELLITEM = 0x00000008
+        }
+
         #endregion
 
         #region Containers
-
-        /* STRUCTURES, CLASSES AND INTERFACES */
 
         [StructLayout(LayoutKind.Sequential)]
         public struct MARGINS {
@@ -480,14 +631,15 @@ namespace MyAPKapp.VistaUIFramework {
             public uint dwICC;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public struct REBARBANDINFO {
             public int cbSize;
             public int fMask;
             public int fStyle;
             public int clrFore;
             public int clrBack;
-            public IntPtr lpText;
+            [MarshalAs(UnmanagedType.LPTStr)]
+            public string lpText;
             public int cch;
             public int iImage;
             public IntPtr hwndChild;
@@ -500,8 +652,16 @@ namespace MyAPKapp.VistaUIFramework {
             public int cyMaxChild;
             public int cyIntegral;
             public int cxIdeal;
-            public int lParam;
+            public IntPtr lParam;
             public int cxHeader;
+            public RECT rcChevronLocation;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct REBARINFO {
+            public int cbSize;
+            public int fMask;
+            public IntPtr himl;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -515,7 +675,7 @@ namespace MyAPKapp.VistaUIFramework {
                 Bottom = bottom;
             }
 
-            public RECT(System.Drawing.Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom) { }
+            public RECT(Rectangle r) : this(r.Left, r.Top, r.Right, r.Bottom) { }
 
             public int X {
                 get { return Left; }
@@ -537,21 +697,21 @@ namespace MyAPKapp.VistaUIFramework {
                 set { Right = value + Left; }
             }
 
-            public System.Drawing.Point Location {
-                get { return new System.Drawing.Point(Left, Top); }
+            public Point Location {
+                get { return new Point(Left, Top); }
                 set { X = value.X; Y = value.Y; }
             }
 
-            public System.Drawing.Size Size {
-                get { return new System.Drawing.Size(Width, Height); }
+            public Size Size {
+                get { return new Size(Width, Height); }
                 set { Width = value.Width; Height = value.Height; }
             }
 
-            public static implicit operator System.Drawing.Rectangle(RECT r) {
-                return new System.Drawing.Rectangle(r.Left, r.Top, r.Width, r.Height);
+            public static implicit operator Rectangle(RECT r) {
+                return new Rectangle(r.Left, r.Top, r.Width, r.Height);
             }
 
-            public static implicit operator RECT(System.Drawing.Rectangle r) {
+            public static implicit operator RECT(Rectangle r) {
                 return new RECT(r);
             }
 
@@ -567,16 +727,20 @@ namespace MyAPKapp.VistaUIFramework {
                 return r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
             }
 
+            public Rectangle Rect {
+                get { return new Rectangle(X, Y, Width, Height); }
+            }
+
             public override bool Equals(object obj) {
                 if (obj is RECT)
                     return Equals((RECT)obj);
-                else if (obj is System.Drawing.Rectangle)
-                    return Equals(new RECT((System.Drawing.Rectangle)obj));
+                else if (obj is Rectangle)
+                    return Equals(new RECT((Rectangle)obj));
                 return false;
             }
 
             public override int GetHashCode() {
-                return ((System.Drawing.Rectangle)this).GetHashCode();
+                return ((Rectangle)this).GetHashCode();
             }
 
             public override string ToString() {
@@ -799,68 +963,113 @@ namespace MyAPKapp.VistaUIFramework {
         /// <summary>The IShellLink interface allows Shell links to be created, modified, and resolved</summary>
         [Guid("000214F9-0000-0000-C000-000000000046")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [ComImport()]
+        [ComImport]
         public interface IShellLink {
             /// <summary>Retrieves the path and file name of a Shell link object</summary>
-            int GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, out WIN32_FIND_DATA pfd, SLGP_FLAGS fFlags);
+            void GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszFile, int cchMaxPath, out WIN32_FIND_DATA pfd, SLGP_FLAGS fFlags);
             /// <summary>Retrieves the list of item identifiers for a Shell link object</summary>
-            int GetIDList(out IntPtr ppidl);
+            void GetIDList(out IntPtr ppidl);
             /// <summary>Sets the pointer to an item identifier list (PIDL) for a Shell link object.</summary>
-            int SetIDList(IntPtr pidl);
+            void SetIDList(IntPtr pidl);
             /// <summary>Retrieves the description string for a Shell link object</summary>
-            int GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
+            void GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszName, int cchMaxName);
             /// <summary>Sets the description for a Shell link object. The description can be any application-defined string</summary>
-            int SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+            void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string pszName);
             /// <summary>Retrieves the name of the working directory for a Shell link object</summary>
-            int GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
+            void GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszDir, int cchMaxPath);
             /// <summary>Sets the name of the working directory for a Shell link object</summary>
-            int SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
+            void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string pszDir);
             /// <summary>Retrieves the command-line arguments associated with a Shell link object</summary>
-            int GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
+            void GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszArgs, int cchMaxPath);
             /// <summary>Sets the command-line arguments for a Shell link object</summary>
-            int SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
+            void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string pszArgs);
             /// <summary>Retrieves the hot key for a Shell link object</summary>
-            int GetHotkey(out short pwHotkey);
+            void GetHotkey(out short pwHotkey);
             /// <summary>Sets a hot key for a Shell link object</summary>
-            int SetHotkey(short wHotkey);
+            void SetHotkey(short wHotkey);
             /// <summary>Retrieves the show command for a Shell link object</summary>
-            int GetShowCmd(out int piShowCmd);
+            void GetShowCmd(out int piShowCmd);
             /// <summary>Sets the show command for a Shell link object. The show command sets the initial show state of the window.</summary>
-            int SetShowCmd(int iShowCmd);
+            void SetShowCmd(int iShowCmd);
             /// <summary>Retrieves the location (path and index) of the icon for a Shell link object</summary>
-            int GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
+            void GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder pszIconPath,
                 int cchIconPath, out int piIcon);
             /// <summary>Sets the location (path and index) of the icon for a Shell link object</summary>
-            int SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
+            void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string pszIconPath, int iIcon);
             /// <summary>Sets the relative path to the Shell link object</summary>
-            int SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, int dwReserved);
+            void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string pszPathRel, int dwReserved);
             /// <summary>Attempts to find the target of a Shell link, even if it has been moved or renamed</summary>
-            int Resolve(IntPtr hwnd, SLR_FLAGS fFlags);
+            void Resolve(IntPtr hwnd, SLR_FLAGS fFlags);
             /// <summary>Sets the path and file name of a Shell link object</summary>
-            int SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
+            void SetPath([MarshalAs(UnmanagedType.LPWStr)] string pszFile);
+        }
+
+        [Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport]
+        public interface IPropertyStore {
+            [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+            int GetCount([Out] out uint propertyCount);
+            [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+            int GetAt([In] uint propertyIndex, out PROPERTYKEY key);
+            [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+            int GetValue([In] ref PROPERTYKEY key, [Out] PROPVARIANT pv);
+            [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime), PreserveSig]
+            int SetValue([In] ref PROPERTYKEY key, [In] PROPVARIANT pv);
+            [PreserveSig]
+            [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
+            int Commit();
         }
 
         [Guid("45e2b4ae-b1c3-11d0-b92f-00a0c90312e1")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [ComImport()]
+        [ComImport]
         public interface IShellLinkDataList {
-            int AddDataBlock(IntPtr pDataBlock);
-            int CopyDataBlock(uint dwSig, out IntPtr ppDataBlock);
-            int RemoveDataBlock(uint dwSig);
-            int GetFlags(out SHELL_LINK_DATA_FLAGS pdwFlags);
-            int SetFlags(SHELL_LINK_DATA_FLAGS dwFlags);
+            void AddDataBlock(IntPtr pDataBlock);
+            void CopyDataBlock(uint dwSig, out IntPtr ppDataBlock);
+            void RemoveDataBlock(uint dwSig);
+            void GetFlags(out SHELL_LINK_DATA_FLAGS pdwFlags);
+            void SetFlags(SHELL_LINK_DATA_FLAGS dwFlags);
         }
 
-        [Guid("0000010b-0000-0000-C000-000000000046")]
+        [Guid("6332DEBF-87B5-4670-90C0-5E57B408A49E")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [ComImport()]
-        public interface IPersistFile {
-            int GetClassID(out Guid pClassID);
-            int IsDirty();
-            int Load([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName, uint dwMode);
-            int Save([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName, [In, MarshalAs(UnmanagedType.Bool)] bool fRemember);
-            int SaveCompleted([In, MarshalAs(UnmanagedType.LPWStr)] string pszFileName);
-            int GetCurFile([In, MarshalAs(UnmanagedType.LPWStr)] string ppszFileName);
+        [ComImport]
+        public interface ICustomDestinationList {
+            void SetAppID([MarshalAs(UnmanagedType.LPWStr)] string pszAppID);
+            [PreserveSig]
+            int BeginList(out uint cMaxSlots, ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
+            [PreserveSig]
+            int AppendCategory([MarshalAs(UnmanagedType.LPWStr)] string pszCategory, [MarshalAs(UnmanagedType.Interface)] IObjectArray poa);
+            void AppendKnownCategory(KNOWNDESTCATEGORY category);
+            [PreserveSig]
+            int AddUserTasks([MarshalAs(UnmanagedType.Interface)] IObjectArray poa);
+            void CommitList();
+            void GetRemovedDestinations(ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
+            void DeleteList([MarshalAs(UnmanagedType.LPWStr)] string pszAppID);
+            void AbortList();
+        }
+
+        [Guid("92CA9DCD-5622-4BBA-A805-5E9F541BD8C9")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport]
+        public interface IObjectArray {
+            void GetCount(out uint pcObjects);
+            void GetAt(uint uiIndex, ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
+        }
+
+        [Guid("5632B1A4-E38A-400A-928A-D4CD63230295")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+        [ComImport]
+        public interface IObjectCollection {
+            void AddObject([MarshalAs(UnmanagedType.Interface)] object punk);
+            void AddFromArray([MarshalAs(UnmanagedType.Interface)] IObjectArray poaSource);
+            [PreserveSig]
+            void GetCount(out uint pcObjects);
+            [PreserveSig]
+            void GetAt(uint uiIndex, ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
+            void RemoveObjectAt(uint uiIndex);
+            void Clear();
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
@@ -994,12 +1203,185 @@ namespace MyAPKapp.VistaUIFramework {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public class MENUINFO {
             public int cbSize = Marshal.SizeOf(typeof(MENUINFO));
-            public int fMask = 0x00000010; //MIM_STYLE;
-            public int dwStyle = 0x04000000; //MNS_CHECKORBMP;
+            public int fMask = 0x00000010;
+            public int dwStyle = 0x04000000;
             public uint cyMax;
             public IntPtr hbrBack = IntPtr.Zero;
             public int dwContextHelpID;
             public IntPtr dwMenuData = IntPtr.Zero;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMHDR {
+            public IntPtr hwndFrom;
+            public IntPtr idFrom;
+            public int code;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMREBARAUTOBREAK {
+            public NMHDR hdr;
+            public int uBand;
+            public uint wID;
+            public IntPtr lParam;
+            public uint uMsg;
+            public uint fStyleCurrent;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool fAutoBreak;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMRBAUTOSIZE {
+            public NMHDR hdr;
+            [MarshalAs(UnmanagedType.Bool)]
+            public bool fChanged;
+            public RECT rcTarget;
+            public RECT rcActual;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMREBAR {
+            public NMHDR hdr;
+            public uint dwMask;
+            public int uBand;
+            public uint fStyle;
+            public uint wID;
+            public IntPtr lParam;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMREBARCHEVRON {
+            public NMHDR hdr;
+            public int uBand;
+            public uint wID;
+            public IntPtr lParam;
+            public RECT rc;
+            public IntPtr lParamNM;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMREBARCHILDSIZE {
+            public NMHDR hdr;
+            public int uBand;
+            public uint wID;
+            public RECT rcChild;
+            public RECT rcBand;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMREBARSPLITTER {
+            public NMHDR hdr;
+            public RECT rcSizing;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NMMOUSE {
+            public NMHDR hdr;
+            public UIntPtr dwItemSpec;
+            public UIntPtr dwItemData;
+            public Point pt;
+            public IntPtr dwHitInfo;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RBHITTESTINFO {
+            public Point pt;
+            public RebarHitTest flags;
+            public int iBand;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct PROPERTYKEY {
+            public Guid fmtid;
+            public uint pid;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 0)]
+        public struct PROPVARIANT {
+            public VarEnum vt;
+            public ushort wReserved1;
+            public ushort wReserved2;
+            public ushort wReserved3;
+            public PropVariantUnion union;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct PropVariantUnion {
+            [FieldOffset(0)] public sbyte cVal;
+            [FieldOffset(0)] public byte bVal;
+            [FieldOffset(0)] public short iVal;
+            [FieldOffset(0)] public ushort uiVal;
+            [FieldOffset(0)] public int lVal;
+            [FieldOffset(0)] public uint ulVal;
+            [FieldOffset(0)] public int intVal;
+            [FieldOffset(0)] public uint uintVal;
+            [FieldOffset(0)] public long hVal;
+            [FieldOffset(0)] public long uhVal;
+            [FieldOffset(0)] public float fltVal;
+            [FieldOffset(0)] public double dlbVal;
+            [FieldOffset(0)] public short boolVal;
+            [FieldOffset(0)] public int scode;
+            [FieldOffset(0)] public CY cyVal;
+            [FieldOffset(0)] public double date;
+            [FieldOffset(0)] public System.Runtime.InteropServices.ComTypes.FILETIME filetime;
+            [FieldOffset(0)] public IntPtr puuid;
+            [FieldOffset(0)] public IntPtr pclipdata;
+            [FieldOffset(0)] public IntPtr bstrVal;
+            [FieldOffset(0)] public BSTRBLOB bstrblobVal;
+            [FieldOffset(0)] public BLOB blob;
+            [FieldOffset(0)] public IntPtr pszVal;
+            [FieldOffset(0)] public IntPtr pwszVal;
+            [FieldOffset(0)] public IntPtr punkVal;
+            [FieldOffset(0)] public IntPtr pdispVal;
+            [FieldOffset(0)] public IntPtr pStream;
+            [FieldOffset(0)] public IntPtr pStorage;
+            [FieldOffset(0)] public IntPtr pVersionedStream;
+            [FieldOffset(0)] public IntPtr pArray;
+            [FieldOffset(0)] public CArray cArray;
+            [FieldOffset(0)] public IntPtr pcVal;
+            [FieldOffset(0)] public IntPtr pbVal;
+            [FieldOffset(0)] public IntPtr piVal;
+            [FieldOffset(0)] public IntPtr puiVal;
+            [FieldOffset(0)] public IntPtr plVal;
+            [FieldOffset(0)] public IntPtr pulVal;
+            [FieldOffset(0)] public IntPtr pintVal;
+            [FieldOffset(0)] public IntPtr puintVal;
+            [FieldOffset(0)] public IntPtr pfltVal;
+            [FieldOffset(0)] public IntPtr pdblVal;
+            [FieldOffset(0)] public IntPtr pboolVal;
+            [FieldOffset(0)] public IntPtr pdecVal;
+            [FieldOffset(0)] public IntPtr pscode;
+            [FieldOffset(0)] public IntPtr pcyVal;
+            [FieldOffset(0)] public IntPtr pdate;
+            [FieldOffset(0)] public IntPtr pbstrVal;
+            [FieldOffset(0)] public IntPtr ppunkVal;
+            [FieldOffset(0)] public IntPtr ppdispVal;
+            [FieldOffset(0)] public IntPtr pparray;
+            [FieldOffset(0)] public IntPtr pvarVal;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 0)]
+        public struct CY {
+            public uint Lo;
+            public int Hi;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 0)]
+        public struct BSTRBLOB {
+            public int cbSize;
+            public IntPtr pData;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 0)]
+        public struct BLOB {
+            public int cbSize;
+            public IntPtr pBlobData;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 0)]
+        public struct CArray {
+            public uint cElems;
+            public IntPtr pElems;
         }
 
         #endregion
@@ -1022,7 +1404,7 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         public static bool NativeToBool(int NativeBool) {
-            return NativeBool == 1;
+            return NativeBool != FALSE;
         }
 
         public static bool NativeToBool(IntPtr NativeBool) {
@@ -1032,8 +1414,6 @@ namespace MyAPKapp.VistaUIFramework {
         #endregion
 
         #region Methods
-
-        /* METHODS */
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, IntPtr wParam, StringBuilder lParam);
@@ -1049,6 +1429,18 @@ namespace MyAPKapp.VistaUIFramework {
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref REBARBANDINFO lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref REBARINFO lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, ref RBHITTESTINFO lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, [Out] out RECT lParam);
 
         [DllImport("user32.dll")]
         public static extern IntPtr SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
@@ -1086,23 +1478,8 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("uxtheme.dll", ExactSpelling = true, CharSet = CharSet.Auto)]
         public static extern int SetWindowTheme(IntPtr hWnd, int pszSubAppName, int pszSubIdList);
 
-        // This helper static method is required because the 32-bit version of user32.dll does not contain this API
-        // (on any versions of Windows), so linking the method will fail at run-time. The bridge dispatches the request
-        // to the correct function (GetWindowLong in 32-bit mode and GetWindowLongPtr in 64-bit mode)
-        public static IntPtr SetWindowLongPtr(HandleRef hWnd, int nIndex, IntPtr dwNewLong) {
-            if (IntPtr.Size == 8)
-                return SetWindowLongPtr64(hWnd, nIndex, dwNewLong);
-            else
-                return new IntPtr(SetWindowLong32(hWnd, nIndex, dwNewLong.ToInt32()));
-        }
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
-        private static extern int SetWindowLong32(HandleRef hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
-        private static extern IntPtr SetWindowLongPtr64(HandleRef hWnd, int nIndex, IntPtr dwNewLong);
-
         [DllImport("comctl32.dll", EntryPoint = "InitCommonControlsEx", CallingConvention = CallingConvention.StdCall)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool InitCommonControlsEx(ref INITCOMMONCONTROLSEX iccex);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -1326,11 +1703,24 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("Shell32.dll", SetLastError = false)]
         public static extern int SHGetStockIconInfo(StockIcon siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
 
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern void SHAddToRecentDocs(SHARD flag, [MarshalAs(UnmanagedType.LPWStr)] string path);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern void SHAddToRecentDocs(SHARD flag, IntPtr pidl);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern void SHAddToRecentDocs(SHARD flag, IShellLink pidl);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern int GetCurrentProcessExplicitAppUserModelID([Out, MarshalAs(UnmanagedType.LPWStr)] out string AppId);
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        public static extern int SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppId);
+
         #endregion
 
         #region Macros
-
-        /* WINDOWS API ELEMENTS */
 
         public static int GetHiWord(long value, int size) {
             return (short)(value >> size);
@@ -1345,7 +1735,11 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         public static bool Succeeded(int hr) {
-            return hr == S_OK;
+            return hr >= S_OK;
+        }
+
+        public static bool Failed(int hr) {
+            return hr < S_OK;
         }
 
         public static int MakeIntResource(int resource) {

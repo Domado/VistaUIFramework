@@ -11,6 +11,7 @@
     <AssemblyName>VistaUIFramework</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,10 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AeroColorChangedEventArgs.cs" />
-    <Compile Include="AeroColorChangedEventHandler.cs" />
-    <Compile Include="AeroCompChangedEventArgs.cs" />
-    <Compile Include="AeroCompChangedEventHandler.cs" />
+    <Compile Include="AeroEventArgs.cs" />
+    <Compile Include="AeroEventHandlers.cs" />
+    <Compile Include="ArraySubsetEnumerator.cs" />
     <Compile Include="Button.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -92,6 +92,16 @@
     <Compile Include="RadioButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Rebar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RebarBand.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="RebarDesigner.cs" />
+    <Compile Include="RebarEventArgs.cs" />
+    <Compile Include="RebarEventHandlers.cs" />
+    <Compile Include="RebarHitTest.cs" />
     <Compile Include="Separator.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -101,6 +111,7 @@
     </Compile>
     <Compile Include="SplitClickEventArgs.cs" />
     <Compile Include="SplitClickEventHandler.cs" />
+    <Compile Include="SR.CS" />
     <Compile Include="StockIcon.cs" />
     <Compile Include="Taskbar\TaskbarHelper.cs" />
     <Compile Include="Taskbar\ThumbnailButton.cs" />

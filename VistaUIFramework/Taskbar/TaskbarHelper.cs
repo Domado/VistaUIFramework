@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections;
+﻿//--------------------------------------------------------------------
+// <copyright file="TaskbarHelper.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
 
 namespace MyAPKapp.VistaUIFramework.Taskbar {
 
     /// <summary>
-    /// The TaskbarHelper is the class for Windows 7 taskbar features
+    /// The <see cref="TaskbarHelper"/> is the class for Windows 7 taskbar features
     /// </summary>
     public sealed class TaskbarHelper {
 
@@ -21,7 +25,7 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         private static TaskbarHelper helper;
 
         private TaskbarHelper() {
-            taskbar = (NativeMethods.ITaskbarList3)new TaskbarInstance();
+            taskbar = (NativeMethods.ITaskbarList3) new TaskbarInstance();
             taskbar.HrInit();
         }
 
@@ -120,14 +124,14 @@ namespace MyAPKapp.VistaUIFramework.Taskbar {
         private class TaskbarInstance {}
 
         /// <summary>
-        /// Get the instance of the taskbar, if Windows version is earlier than Windows 7, an exception will be throwed. Call <code>isSupported</code> property to check if version is Windows 7 or later
+        /// Gets the instance of the taskbar, if Windows version is earlier than Windows 7, an exception will be throwed. Call <see cref="IsSupported"/> property to check if version is Windows 7 or later
         /// </summary>
         public static TaskbarHelper Instance {
             get {
                 if (!IsSupported) {
                     throw new UnsupportedWindowsException("Windows 7");
                 }
-                if (helper == null) new TaskbarHelper();
+                if (helper == null) helper = new TaskbarHelper();
                 return helper;
             }
         }

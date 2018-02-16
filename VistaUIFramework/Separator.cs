@@ -1,16 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="Separator.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 
 namespace MyAPKapp.VistaUIFramework {
 
+    /// <summary>
+    /// Separator are controls that separates
+    /// </summary>
     [Designer(typeof(SeparatorDesigner))]
     [ToolboxBitmap(typeof(Separator), "MyAPKapp.VistaUIFramework.Separator.bmp")]
+    [Description("Separator are controls that separates")]
     public class Separator : System.Windows.Forms.Label {
 
         public Separator() : base() {
@@ -71,7 +81,37 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
-        private class SeparatorDesigner : ControlDesigner {
+        [Browsable(true)]
+        public override ContextMenu ContextMenu {
+            get {
+                return base.ContextMenu;
+            }
+            set {
+                base.ContextMenu = value;
+                if (value != null && ContextMenuStrip != null) {
+                    ContextMenuStrip = null;
+                }
+            }
+        }
+
+        public override ContextMenuStrip ContextMenuStrip {
+            get {
+                return base.ContextMenuStrip;
+            }
+
+            set {
+                base.ContextMenuStrip = value;
+                if (value != null && ContextMenu != null) {
+                    ContextMenu = null;
+                }
+            }
+        }
+
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
+
+        public class SeparatorDesigner : ControlDesigner {
             public SeparatorDesigner() {
                 AutoResizeHandles = true;
             }

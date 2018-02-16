@@ -1,4 +1,11 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="SplitButton.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -44,12 +51,8 @@ namespace MyAPKapp.VistaUIFramework {
         protected override void WndProc(ref Message m) {
             switch (m.Msg) {
                 case (NativeMethods.BCM_SETDROPDOWNSTATE):
-                    if (m.HWnd==Handle && m.WParam.ToInt32()==NativeMethods.TRUE) {
-                        if (SplitClick != null) {
-                            OnSplitClick(new SplitClickEventArgs(Menu));
-                        } else if (Menu != null) {
-                            Menu.Show(this, new Point(0, Height));
-                        }
+                    if (m.HWnd == Handle && NativeMethods.NativeToBool(m.WParam)) {
+                        OnSplitClick(new SplitClickEventArgs(Menu));
                     }
                     break;
             }
@@ -58,8 +61,12 @@ namespace MyAPKapp.VistaUIFramework {
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         protected virtual void OnSplitClick(SplitClickEventArgs e) {
-            SplitClick(this, e);
-            if (!e.Cancel && Menu != null) {
+            if (SplitClick != null) {
+                SplitClick(this, e);
+                if (!e.Cancel && Menu != null) {
+                    Menu.Show(this, new Point(0, Height));
+                }
+            } else if (Menu != null) {
                 Menu.Show(this, new Point(0, Height));
             }
         }

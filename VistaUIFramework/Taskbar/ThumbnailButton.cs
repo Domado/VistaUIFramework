@@ -1,7 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="ThumbnailButton.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+
+using System;
 using System.Drawing;
-using System.Text;
 
 namespace MyAPKapp.VistaUIFramework.Taskbar {
 

@@ -1,9 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="TaskDialogRadioButton.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
 using System.ComponentModel;
-using System.ComponentModel.Design;
 using System.Drawing.Design;
-using System.Text;
 
 namespace MyAPKapp.VistaUIFramework.TaskDialog {
 

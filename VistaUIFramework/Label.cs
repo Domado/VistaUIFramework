@@ -1,4 +1,12 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="Label.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
@@ -44,11 +52,11 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Returns/sets if label should be compatible with Aero glass
+        /// Gets or sets if label should be compatible with Aero glass
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if label should be compatible with Aero glass")]
+        [Description("Gets or sets if label should be compatible with Aero glass")]
         public bool Aero {
             get {
                 return _Aero;
@@ -105,6 +113,11 @@ namespace MyAPKapp.VistaUIFramework {
                 }
             }
         }
+
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
+
         private void changeLabelStyle(LabelStyle labelStyle) {
             FontChanged -= LabelStyle_FontChanged;
             ForeColorChanged -= LabelStyle_ForeColorChanged;
@@ -185,7 +198,7 @@ namespace MyAPKapp.VistaUIFramework {
                 Opts.crText = ColorTranslator.ToWin32(ForeColor);
                 NativeMethods.RECT PaddingRect = new NativeMethods.RECT(Padding.Left, Padding.Top, Width - Padding.Right, Height - Padding.Bottom);
                 int Result = NativeMethods.DrawThemeTextEx(Renderer.Handle, MemoryHDC, 0, 0, Text, -1, (int) BuildTextFormatFlags(), ref PaddingRect, ref Opts);
-                if (!NativeMethods.Succeeded(Result)) {
+                if (NativeMethods.Failed(Result)) {
                     Marshal.ThrowExceptionForHR(Result);
                 }
                 NativeMethods.BitBlt(PrimaryHDC, 0, 0, Size.Width, Size.Height, MemoryHDC, 0, 0, NativeMethods.TernaryRasterOperations.SRCCOPY);

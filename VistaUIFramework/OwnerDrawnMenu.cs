@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="OWnerDrawnMenu.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Text;
 using System.Windows.Forms;
 
 namespace MyAPKapp.VistaUIFramework {
     public partial class MenuProvider {
         ContainerControl ownerForm;
-
-        //conditionally draw the little lines under menu items with keyboard accelators on Win 2000+
         private bool isUsingKeyboardAccel;
-
-
         static Font menuBoldFont;
-
-        public MenuProvider(ContainerControl parentControl)
-            : this() {
+        public MenuProvider(ContainerControl parentControl) : this() {
             ownerForm = parentControl;
         }
         public ContainerControl ContainerControl {
@@ -27,7 +26,6 @@ namespace MyAPKapp.VistaUIFramework {
         }
         public override ISite Site {
             set {
-                // Runs at design time, ensures designer initializes ContainerControl
                 base.Site = value;
                 if (value == null) return;
                 IDesignerHost service = value.GetService(typeof(IDesignerHost)) as IDesignerHost;
@@ -53,26 +51,16 @@ namespace MyAPKapp.VistaUIFramework {
 
 
         static void MenuItem_MeasureItem(object sender, MeasureItemEventArgs e) {
-            Font font = ((MenuItem)sender).DefaultItem
-                            ? menuBoldFont
-                            : SystemFonts.MenuFont;
-
+            Font font = ((MenuItem)sender).DefaultItem ? menuBoldFont : SystemFonts.MenuFont;
             if (((MenuItem)sender).Text == "-")
                 e.ItemHeight = SEPARATOR_HEIGHT;
             else {
                 e.ItemHeight = ((SystemFonts.MenuFont.Height > ICON_SIZE) ? SystemFonts.MenuFont.Height : ICON_SIZE)
                                 + BORDER_VERTICAL;
-
                 e.ItemWidth = LEFT_MARGIN + ICON_SIZE + RIGHT_MARGIN
-
-                    //item text width
                     + TextRenderer.MeasureText(((MenuItem)sender).Text, font, Size.Empty, TextFormatFlags.SingleLine | TextFormatFlags.NoClipping).Width
                     + SHORTCUT_MARGIN
-
-                    //shortcut text width
                     + TextRenderer.MeasureText(ShortcutToString(((MenuItem)sender).Shortcut), font, Size.Empty, TextFormatFlags.SingleLine | TextFormatFlags.NoClipping).Width
-
-                    //arrow width
                     + ((((MenuItem)sender).IsParent) ? ARROW_MARGIN : 0);
             }
         }
@@ -80,28 +68,19 @@ namespace MyAPKapp.VistaUIFramework {
         void MenuItem_DrawItem(object sender, DrawItemEventArgs e) {
             e.Graphics.CompositingQuality = CompositingQuality.HighSpeed;
             e.Graphics.InterpolationMode = InterpolationMode.Low;
-
             bool menuSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
-
             if (menuSelected)
                 e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
             else
                 e.Graphics.FillRectangle(SystemBrushes.Menu, e.Bounds);
-
             if (((MenuItem)sender).Text == "-") {
-                //draw the separator
                 int yCenter = e.Bounds.Top + (e.Bounds.Height / 2) - 1;
-
                 e.Graphics.DrawLine(SystemPens.ControlDark, e.Bounds.Left + 1, yCenter, (e.Bounds.Left + e.Bounds.Width - 2), yCenter);
                 e.Graphics.DrawLine(SystemPens.ControlLightLight, e.Bounds.Left + 1, yCenter + 1, (e.Bounds.Left + e.Bounds.Width - 2), yCenter + 1);
-            } else //regular menu items
-              {
-                //draw the item text
+            } else {
                 DrawText(sender, e, menuSelected);
-
                 if (((MenuItem)sender).Checked) {
                     if (((MenuItem)sender).RadioCheck) {
-                        //draw the bullet
                         ControlPaint.DrawMenuGlyph(e.Graphics,
                             e.Bounds.Left + (LEFT_MARGIN + ICON_SIZE + RIGHT_MARGIN - SystemInformation.MenuCheckSize.Width) / 2,
                             e.Bounds.Top + (e.Bounds.Height - SystemInformation.MenuCheckSize.Height) / 2 + 1,
@@ -111,7 +90,6 @@ namespace MyAPKapp.VistaUIFramework {
                             menuSelected ? SystemColors.HighlightText : SystemColors.MenuText,
                             menuSelected ? SystemColors.Highlight : SystemColors.Menu);
                     } else {
-                        //draw the check mark
                         ControlPaint.DrawMenuGlyph(e.Graphics,
                             e.Bounds.Left + (LEFT_MARGIN + ICON_SIZE + RIGHT_MARGIN - SystemInformation.MenuCheckSize.Width) / 2,
                             e.Bounds.Top + (e.Bounds.Height - SystemInformation.MenuCheckSize.Height) / 2 + 1,
@@ -123,9 +101,7 @@ namespace MyAPKapp.VistaUIFramework {
                     }
                 } else {
                     Image drawImg = GetImage(((MenuItem)sender));
-
                     if (drawImg != null) {
-                        //draw the image
                         if (((MenuItem)sender).Enabled)
                             e.Graphics.DrawImage(drawImg, e.Bounds.Left + LEFT_MARGIN,
                                 e.Bounds.Top + ((e.Bounds.Height - ICON_SIZE) / 2),
@@ -139,7 +115,6 @@ namespace MyAPKapp.VistaUIFramework {
                 }
             }
         }
-
 
         private static string ShortcutToString(System.Windows.Forms.Shortcut shortcut) {
             if (shortcut != System.Windows.Forms.Shortcut.None) {

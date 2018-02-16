@@ -1,4 +1,12 @@
-﻿using System.ComponentModel;
+﻿//--------------------------------------------------------------------
+// <copyright file="SplitClickEventArgs.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace MyAPKapp.VistaUIFramework {

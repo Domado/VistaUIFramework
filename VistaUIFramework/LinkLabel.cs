@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="LinkLabel.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
@@ -75,11 +80,11 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Returns/sets if label should be compatible with Aero glass
+        /// Gets or sets if label should be compatible with Aero glass
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if label should be compatible with Aero glass")]
+        [Description("Gets or sets if label should be compatible with Aero glass")]
         public bool Aero {
             get {
                 return _Aero;
@@ -177,31 +182,36 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
+
         #endregion
 
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
-            bool DWMEnabled;
-            int DWMResult = NativeMethods.DwmIsCompositionEnabled(out DWMEnabled);
+            int DWMResult = NativeMethods.DwmIsCompositionEnabled(out bool DWMEnabled);
             if (NativeMethods.Succeeded(DWMResult) && DWMEnabled && Aero && Visible && !DesignMode) {
                 VisualStyleRenderer Renderer = new VisualStyleRenderer(VisualStyleElement.Window.Caption.Active);
                 IntPtr PrimaryHDC = e.Graphics.GetHdc();
                 IntPtr MemoryHDC = NativeMethods.CreateCompatibleDC(PrimaryHDC);
-                NativeMethods.BITMAPINFO Info = new NativeMethods.BITMAPINFO();
-                Info.biSize = Marshal.SizeOf(typeof(NativeMethods.BITMAPINFO));
-                Info.biWidth = Size.Width;
-                Info.biHeight = -Size.Height;
-                Info.biPlanes = 1;
-                Info.biBitCount = 32;
-                Info.biCompression = 0;
+                NativeMethods.BITMAPINFO Info = new NativeMethods.BITMAPINFO {
+                    biSize = Marshal.SizeOf(typeof(NativeMethods.BITMAPINFO)),
+                    biWidth = Size.Width,
+                    biHeight = -Size.Height,
+                    biPlanes = 1,
+                    biBitCount = 32,
+                    biCompression = 0
+                };
                 IntPtr PPVBits = IntPtr.Zero;
                 IntPtr DIBSection = NativeMethods.CreateDIBSection(PrimaryHDC, ref Info, 0, out PPVBits, IntPtr.Zero, 0);
                 NativeMethods.SelectObject(MemoryHDC, DIBSection);
                 IntPtr NativeFont = Font.ToHfont();
                 NativeMethods.SelectObject(MemoryHDC, NativeFont);
-                NativeMethods.DTTOPTS Opts = new NativeMethods.DTTOPTS();
-                Opts.dwSize = Marshal.SizeOf(typeof(NativeMethods.DTTOPTS));
-                Opts.dwFlags = NativeMethods.DTT.Composited | NativeMethods.DTT.TextColor;
+                NativeMethods.DTTOPTS Opts = new NativeMethods.DTTOPTS {
+                    dwSize = Marshal.SizeOf(typeof(NativeMethods.DTTOPTS)),
+                    dwFlags = NativeMethods.DTT.Composited | NativeMethods.DTT.TextColor
+                };
                 if (GlowSize > 0) {
                     Opts.dwFlags |= NativeMethods.DTT.GlowSize;
                     Opts.iGlowSize = GlowSize;
@@ -215,7 +225,7 @@ namespace MyAPKapp.VistaUIFramework {
                 }
                 NativeMethods.RECT PaddingRect = new NativeMethods.RECT(Padding.Left, Padding.Top, Width - Padding.Right, Height - Padding.Bottom);
                 int Result = NativeMethods.DrawThemeTextEx(Renderer.Handle, MemoryHDC, 0, 0, Text, -1, (int)BuildTextFormatFlags(), ref PaddingRect, ref Opts);
-                if (!NativeMethods.Succeeded(Result)) {
+                if (NativeMethods.Failed(Result)) {
                     Marshal.ThrowExceptionForHR(Result);
                 }
                 NativeMethods.BitBlt(PrimaryHDC, 0, 0, Size.Width, Size.Height, MemoryHDC, 0, 0, NativeMethods.TernaryRasterOperations.SRCCOPY);

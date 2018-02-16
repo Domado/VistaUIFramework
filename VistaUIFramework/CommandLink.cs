@@ -1,7 +1,14 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="CommandLink.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.ComponentModel.Design;
 
@@ -34,8 +41,10 @@ namespace MyAPKapp.VistaUIFramework {
                 return _Note;
             }
             set {
-                _Note = value;
-                NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETNOTE, IntPtr.Zero, value);
+                if (_Note != value) {
+                    _Note = value;
+                    UpdateButton();
+                }
             }
         }
 
@@ -58,7 +67,11 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override void OnHandleCreated(EventArgs e) {
             base.OnHandleCreated(e);
-            if (_Note != null) Note = _Note;
+            UpdateButton();
+        }
+
+        private void UpdateButton() {
+            NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETNOTE, IntPtr.Zero, _Note);
         }
 
     }

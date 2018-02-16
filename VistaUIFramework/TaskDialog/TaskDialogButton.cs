@@ -1,9 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="TaskDialogButton.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
-using System.Text;
 
 namespace MyAPKapp.VistaUIFramework.TaskDialog {
 
@@ -50,11 +55,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets if button is enabled or disabled
+        /// Gets or sets if button is enabled or disabled
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(true)]
-        [Description("Returns/sets if button is enabled or disabled")]
+        [Description("Gets or sets if button is enabled or disabled")]
         public new bool Enabled {
             get {
                 return _Enabled;
@@ -70,11 +75,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets if button has the UAC Shield
+        /// Gets or sets if button has the UAC Shield
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(false)]
-        [Description("Returns/sets if button has the UAC Shield")]
+        [Description("Gets or sets if button has the UAC Shield")]
         public bool Shield { get; set; }
 
         #endregion

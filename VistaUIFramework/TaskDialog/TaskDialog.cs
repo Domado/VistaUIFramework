@@ -1,4 +1,12 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="TaskDialog.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Design;
@@ -235,11 +243,8 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
             if (RightToLeft) NativeConfig.dwFlags |= NativeMethods.TaskDialogFlags.TDF_RTL_LAYOUT;
             if (Minimizable) NativeConfig.dwFlags |= NativeMethods.TaskDialogFlags.TDF_CAN_BE_MINIMIZED;
             if (Width == 0) NativeConfig.dwFlags |= NativeMethods.TaskDialogFlags.TDF_SIZE_TO_CONTENT;
-            int buttonID;
-            int radioButtonID;
-            bool check;
-            int result = NativeMethods.TaskDialogIndirect(NativeConfig, out buttonID, out radioButtonID, out check);
-            if (!NativeMethods.Succeeded(result)) {
+            int result = NativeMethods.TaskDialogIndirect(NativeConfig, out int buttonID, out int radioButtonID, out bool check);
+            if (NativeMethods.Failed(result)) {
                 Marshal.ThrowExceptionForHR(result);
             }
             TaskDialogResult Result;
@@ -493,11 +498,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's content
+        /// Gets or sets the dialog's content
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the dialog's content")]
+        [Description("Gets or sets the dialog's content")]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         [Localizable(true)]
         public string Content {
@@ -513,11 +518,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's footer text
+        /// Gets or sets the dialog's footer text
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the dialog's footer text")]
+        [Description("Gets or sets the dialog's footer text")]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         [Localizable(true)]
         public string FooterText {
@@ -533,11 +538,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the additional information to show if Show Details is clicked
+        /// Gets or sets the additional information to show if Show Details is clicked
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the additional information to show if Show Details is clicked")]
+        [Description("Gets or sets the additional information to show if Show Details is clicked")]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
         [Localizable(true)]
         public string ExpandedInformation {
@@ -553,14 +558,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets a text that replaces the classic Show Details
+        /// Gets or sets a text that replaces the classic Show Details
         /// </summary>
         /// <remarks>
         /// If null or empty, the classic Show Details text will be used
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets a text that replaces the classic Show Details. If null or empty, the classic Show Details text will be used")]
+        [Description("Gets or sets a text that replaces the classic Show Details. If null or empty, the classic Show Details text will be used")]
         [Localizable(true)]
         public string ShowDetailsText {
             get {
@@ -572,14 +577,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets a text that replaces the classic Hide Details
+        /// Gets or sets a text that replaces the classic Hide Details
         /// </summary>
         /// <remarks>
         /// If null or empty, the classic Hide Details text will be used
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets a text that replaces the classic Hide Details. If null or empty, the classic Hide Details text will be used")]
+        [Description("Gets or sets a text that replaces the classic Hide Details. If null or empty, the classic Hide Details text will be used")]
         [Localizable(true)]
         public string HideDetailsText {
             get {
@@ -591,14 +596,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's common buttons like OK, Cancel, Retry, Yes, No and Close.
+        /// Gets or sets the dialog's common buttons like OK, Cancel, Retry, Yes, No and Close.
         /// </summary>
         /// <remarks>
         /// These buttons are not affected by UseCommandLinks property.
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(TaskDialogCommonButton.None)]
-        [Description("Returns/sets the dialog's common buttons like OK, Cancel, Retry, Yes, No and Close. These buttons are not affected by UseCommandLinks property")]
+        [Description("Gets or sets the dialog's common buttons like OK, Cancel, Retry, Yes, No and Close. These buttons are not affected by UseCommandLinks property")]
         [Editor(typeof(FlagEnumUIEditor), typeof(UITypeEditor))]
         public TaskDialogCommonButton CommonButtons {
             get {
@@ -612,14 +617,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's icon using standard icons with/without header
+        /// Gets or sets the dialog's icon using standard icons with/without header
         /// </summary>
         /// <remarks>
         /// This property will be unset if Icon is set
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(TaskDialogIcon.None)]
-        [Description("Returns/sets the dialog's icon using standard icons with/without header. This property will be unset if Icon is set")]
+        [Description("Gets or sets the dialog's icon using standard icons with/without header. This property will be unset if Icon is set")]
         public TaskDialogIcon StandardIcon {
             get {
                 return _StandardIcon;
@@ -637,14 +642,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's icon using a custom icon
+        /// Gets or sets the dialog's icon using a custom icon
         /// </summary>
         /// <remarks>
         /// This property will be unset if StandardIcon is set
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the dialog's icon using a custom icon. This property will be unset if StandardIcon is set")]
+        [Description("Gets or sets the dialog's icon using a custom icon. This property will be unset if StandardIcon is set")]
         public Icon Icon {
             get {
                 return _Icon;
@@ -662,14 +667,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's footer icon using standard icons with/without header
+        /// Gets or sets the dialog's footer icon using standard icons with/without header
         /// </summary>
         /// <remarks>
         /// This property will be unset if FooterIcon is set
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(TaskDialogIcon.None)]
-        [Description("Returns/sets the dialog's footer icon using standard icons with/without header. This property will be unset if FooterIcon is set")]
+        [Description("Gets or sets the dialog's footer icon using standard icons with/without header. This property will be unset if FooterIcon is set")]
         public TaskDialogIcon StandardFooterIcon {
             get {
                 return _StandardFooterIcon;
@@ -687,14 +692,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's footer icon using a custom icon
+        /// Gets or sets the dialog's footer icon using a custom icon
         /// </summary>
         /// <remarks>
         /// This property will be unset if StandardFooterIcon is set
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the dialog's footer icon using a custom icon. This property will be unset if StandardFooterIcon is set")]
+        [Description("Gets or sets the dialog's footer icon using a custom icon. This property will be unset if StandardFooterIcon is set")]
         public Icon FooterIcon {
             get {
                 return _FooterIcon;
@@ -712,11 +717,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the icon next to window text
+        /// Gets or sets the icon next to window text
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the icon next to window text")]
+        [Description("Gets or sets the icon next to window text")]
         public Icon WindowIcon {
             get {
                 return _WindowIcon;
@@ -767,14 +772,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the default button to be focused
+        /// Gets or sets the default button to be focused
         /// </summary>
         /// <remarks>
         /// This property will be unset if DefaultCommonButton is set
         /// </remarks>
         [Category("Behavior")]
         [DefaultValue(null)]
-        [Description("Returns/sets the default button to be focused. This property will be unset if DefaultCommonButton is set")]
+        [Description("Gets or sets the default button to be focused. This property will be unset if DefaultCommonButton is set")]
         public TaskDialogButton DefaultButton {
             get {
                 return _DefaultButton;
@@ -802,14 +807,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the default button to be focused
+        /// Gets or sets the default button to be focused
         /// </summary>
         /// <remarks>
         /// This property will be unset if DefaultButton is set
         /// </remarks>
         [Category("Behavior")]
         [DefaultValue(DialogResult.None)]
-        [Description("Returns/sets the default button to be focused. This property will be unset if DefaultButton is set")]
+        [Description("Gets or sets the default button to be focused. This property will be unset if DefaultButton is set")]
         public DialogResult DefaultCommonButton {
             get {
                 return _DefaultCommonButton;
@@ -823,11 +828,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the radio button that is selected by default
+        /// Gets or sets the radio button that is selected by default
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(null)]
-        [Description("Returns/sets the radio button that is selected by default")]
+        [Description("Gets or sets the radio button that is selected by default")]
         public TaskDialogRadioButton SelectedRadioButton {
             get {
                 return _DefaultRadioButton;
@@ -848,14 +853,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's checkbox text
+        /// Gets or sets the dialog's checkbox text
         /// </summary>
         /// <remarks>
         /// If null or empty, no checkbox will be shown
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(null)]
-        [Description("Returns/sets the dialog's checkbox text. If null or empty, no checkbox will be shown")]
+        [Description("Gets or sets the dialog's checkbox text. If null or empty, no checkbox will be shown")]
         [Localizable(true)]
         public string CheckboxText {
             get {
@@ -867,14 +872,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets the dialog's width
+        /// Gets or sets the dialog's width
         /// </summary>
         /// <remarks>
         /// If value is 0, the dialog width is auto
         /// </remarks>
         [Category("WindowStyle")]
         [DefaultValue(0)]
-        [Description("Returns/sets the dialog's width, if value is 0, the dialog width is auto")]
+        [Description("Gets or sets the dialog's width, if value is 0, the dialog width is auto")]
         public int Width {
             get {
                 return NativeConfig.cxWidth;
@@ -1009,38 +1014,38 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets if progress bar will be used in the dialog
+        /// Gets or sets if progress bar will be used in the dialog
         /// </summary>
         [Category("ProgressBar")]
         [DefaultValue(false)]
-        [Description("Returns/sets if progress bar will be used in the dialog")]
+        [Description("Gets or sets if progress bar will be used in the dialog")]
         public bool UseProgressBar { get; set; }
 
         /// <summary>
-        /// Returns/sets if &lt;a&gt; tags will be converted into hyperlinks
+        /// Gets or sets if &lt;a&gt; tags will be converted into hyperlinks
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if <a> tags will be converted into hyperlinks")]
+        [Description("Gets or sets if <a> tags will be converted into hyperlinks")]
         public bool EnableHyperlinks { get; set; }
 
         /// <summary>
-        /// Returns/sets if custom buttons will be CommandLinks
+        /// Gets or sets if custom buttons will be CommandLinks
         /// </summary>
         /// <remarks>
         /// Common buttons are not altered by this property
         /// </remarks>
         [Category("Appearance")]
         [DefaultValue(false)]
-        [Description("Returns/sets if custom buttons will be CommandLinks. Common buttons are not altered by this property")]
+        [Description("Gets or sets if custom buttons will be CommandLinks. Common buttons are not altered by this property")]
         public bool UseCommandLinks { get; set; }
 
         /// <summary>
-        /// Returns/sets if dialog can be cancelled by close button or Alt+F4
+        /// Gets or sets if dialog can be cancelled by close button or Alt+F4
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if dialog can be cancelled by close button or Alt+F4")]
+        [Description("Gets or sets if dialog can be cancelled by close button or Alt+F4")]
         public bool AllowDialogCancelation {
             get {
                 return _AllowDialogCancelation;
@@ -1052,11 +1057,11 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets if expanded information will be displayed at the bottom of footer instead of immediately after the content
+        /// Gets or sets if expanded information will be displayed at the bottom of footer instead of immediately after the content
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(false)]
-        [Description("Returns/sets if expanded information will be displayed at the bottom of footer instead of immediately after the content")]
+        [Description("Gets or sets if expanded information will be displayed at the bottom of footer instead of immediately after the content")]
         public bool ExpandedInFooterArea { get; set; }
 
         /// <summary>
@@ -1064,15 +1069,15 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if expanded information is expanded by default")]
+        [Description("Gets or sets if expanded information is expanded by default")]
         public bool ExpandedByDefault { get; set; }
 
         /// <summary>
-        /// Returns/sets if checkbox is checked by default
+        /// Gets or sets if checkbox is checked by default
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(false)]
-        [Description("Returns/sets if checkbox is checked by default")]
+        [Description("Gets or sets if checkbox is checked by default")]
         public bool CheckboxChecked {
             get {
                 return _CheckboxChecked;
@@ -1086,46 +1091,46 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Returns/sets if TimerTick event is fired approximately every 200 milliseconds
+        /// Gets or sets if TimerTick event is fired approximately every 200 milliseconds
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if TimerTick event is fired approximately every 200 milliseconds")]
+        [Description("Gets or sets if TimerTick event is fired approximately every 200 milliseconds")]
         public bool TimerEnabled { get; set; }
 
         /// <summary>
-        /// Returns/sets if dialog is positioned (centered) relative to parent window instead of relative to monitor
+        /// Gets or sets if dialog is positioned (centered) relative to parent window instead of relative to monitor
         /// </summary>
         [Category("Design")]
         [DefaultValue(false)]
-        [Description("Returns/sets if dialog is positioned (centered) relative to parent window instead of relative to monitor")]
+        [Description("Gets or sets if dialog is positioned (centered) relative to parent window instead of relative to monitor")]
         public bool PositionRelativeToWindow { get; set; }
 
         /// <summary>
-        /// Returns/sets if dialog's layout is Right-To-Left instead of Left-To-Right
+        /// Gets or sets if dialog's layout is Right-To-Left instead of Left-To-Right
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(false)]
-        [Description("Returns/sets if dialog's layout is Right-To-Left instead of Left-To-Right")]
+        [Description("Gets or sets if dialog's layout is Right-To-Left instead of Left-To-Right")]
         public bool RightToLeft { get; set; }
 
         /// <summary>
-        /// Returns/sets if dialog can be minimized
+        /// Gets or sets if dialog can be minimized
         /// </summary>
         [Category("WindowStyle")]
         [DefaultValue(false)]
-        [Description("Returns/sets if dialog can be minimized")]
+        [Description("Gets or sets if dialog can be minimized")]
         public bool Minimizable { get; set; }
 
         /// <summary>
-        /// Returns/sets if dialog's clsoe button is enabled
+        /// Gets or sets if dialog's clsoe button is enabled
         /// </summary>
         /// <remarks>
         /// This property is ignored if AllowDialogCancelation is false
         /// </remarks>
         [Category("WindowStyle")]
         [DefaultValue(true)]
-        [Description("Returns/sets if dialog's clsoe button is enabled")]
+        [Description("Gets or sets if dialog's clsoe button is enabled")]
         public bool CloseEnabled {
             get {
                 return _CloseEnabled;

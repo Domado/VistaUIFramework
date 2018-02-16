@@ -1,6 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="Shortcut.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace MyAPKapp.VistaUIFramework {
@@ -12,7 +20,7 @@ namespace MyAPKapp.VistaUIFramework {
 
         private NativeMethods.IShellLink link;
         private NativeMethods.IShellLinkDataList list;
-        private NativeMethods.IPersistFile file;
+        private IPersistFile file;
 
         /// <summary>
         /// Creates a new Shortcut instance, recommended for new .lnk files
@@ -22,15 +30,24 @@ namespace MyAPKapp.VistaUIFramework {
             this.LnkDestPath = LnkDestPath;
             link = (NativeMethods.IShellLink) new ShellLink();
             list = (NativeMethods.IShellLinkDataList) link;
-            file = (NativeMethods.IPersistFile) link;
+            file = (IPersistFile) link;
+        }
+
+        /// <summary>
+        /// For Jumplists only
+        /// </summary>
+        /// <param name="DestPath">JumpList destination</param>
+        internal Shortcut(bool JumpList, string DestPath) {
+            if (JumpList) {
+                link = (NativeMethods.IShellLink) new ShellLink();
+                list = (NativeMethods.IShellLinkDataList)link;
+                DestinationPath = DestPath;
+            }
         }
 
         private Shortcut(string LnkSourcePath, bool loaded = false) : this(LnkSourcePath) {
-            if (loaded) {
-                int result = file.Load(LnkDestPath, NativeMethods.STGM_READWRITE);
-                if (!NativeMethods.Succeeded(result)) {
-                    Marshal.ThrowExceptionForHR(result);
-                }
+            if (loaded && file != null) {
+                file.Load(LnkDestPath, NativeMethods.STGM_READWRITE);
             }
         }
 
@@ -42,6 +59,12 @@ namespace MyAPKapp.VistaUIFramework {
         public static Shortcut Load(string LnkSourcePath) {
             Shortcut shortcut = new Shortcut(LnkSourcePath, true);
             return shortcut;
+        }
+
+        internal NativeMethods.IShellLink NativeInterface {
+            get {
+                return link;
+            }
         }
 
         /// <summary>
@@ -196,14 +219,9 @@ namespace MyAPKapp.VistaUIFramework {
         /// Once the properties are set, you can save the shortcut .lnk file
         /// </summary>
         public void Save() {
-            int saveResult = file.Save(LnkDestPath, true);
-            if (NativeMethods.Succeeded(saveResult)) {
-                int completedResult = file.SaveCompleted(LnkDestPath);
-                if (!NativeMethods.Succeeded(completedResult)) {
-                    Marshal.ThrowExceptionForHR(completedResult);
-                }
-            } else {
-                Marshal.ThrowExceptionForHR(saveResult);
+            if (file != null) {
+                file.Save(LnkDestPath, true);
+                file.SaveCompleted(LnkDestPath);
             }
         }
 

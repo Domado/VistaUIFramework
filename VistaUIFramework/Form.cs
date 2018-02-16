@@ -1,12 +1,17 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="Form.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 
 namespace MyAPKapp.VistaUIFramework {
 
@@ -21,11 +26,8 @@ namespace MyAPKapp.VistaUIFramework {
 
         public Form() : base() {
             base.DoubleBuffered = true;
-            SetStyle(ControlStyles.AllPaintingInWmPaint
-              | ControlStyles.OptimizedDoubleBuffer
-              | ControlStyles.ResizeRedraw
-              | ControlStyles.UserPaint
-              , true);
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            AutoScaleMode = AutoScaleMode.Dpi;
         }
 
         #region Form events
@@ -36,6 +38,7 @@ namespace MyAPKapp.VistaUIFramework {
         /// <remarks>
         /// As of Windows 8, DWM composition is always enabled, so this event is not fired regardless of video mode changes.
         /// </remarks>
+        [PropertyChangedCategory]
         [Description("Fires when DWM composition changes")]
         public event AeroCompChangedEventHandler AeroCompChanged;
 
@@ -45,6 +48,7 @@ namespace MyAPKapp.VistaUIFramework {
         /// <remarks>
         /// As of Windows 8, DWM composition is always enabled, so this event is not fired regardless of video mode changes.
         /// </remarks>
+        [PropertyChangedCategory]
         [Description("Fires when Aero glass color changes")]
         public event AeroColorChangedEventHandler AeroColorChanged;
 
@@ -64,12 +68,12 @@ namespace MyAPKapp.VistaUIFramework {
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         protected virtual void OnAeroCompChanged(AeroCompChangedEventArgs e) {
-            AeroCompChanged(this, e);
+            AeroCompChanged?.Invoke(this, e);
         }
 
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         protected virtual void OnAeroColorChanged(AeroColorChangedEventArgs e) {
-            AeroColorChanged(this, e);
+            AeroColorChanged?.Invoke(this, e);
         }
 
         #endregion
@@ -145,11 +149,11 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Returns/sets if mouse is able to move the window by dragging the Aero glass
+        /// Gets or sets if mouse is able to move the window by dragging the Aero glass
         /// </summary>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if mouse is able to move the window by dragging the Aero glass")]
+        [Description("Gets or sets if mouse is able to move the window by dragging the Aero glass")]
         public bool AeroDrag {
             get {
                 if (Environment.OSVersion.Version.Major < 6) {
@@ -169,14 +173,14 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Returns/sets if Aero glass is <code>TransparencyKey</code> compliant
+        /// Gets or sets if Aero glass is <code>TransparencyKey</code> compliant
         /// </summary>
         /// <remarks>
         /// It's not recommended to use same-value RGB (eg. 255,255,255) or any shade of green, otherwise, you'd interacting with other windows behind your windows (possibly because window behaves like transparent). Modifying the transparency key can cause some issues with alpha channel (neither 0% nor 100%).
         /// </remarks>
         [Category("Behavior")]
         [DefaultValue(false)]
-        [Description("Returns/sets if Aero glass is TransparencyKey compliant")]
+        [Description("Gets or sets if Aero glass is TransparencyKey compliant")]
         public bool AeroKey {
             get {
                 if (Environment.OSVersion.Version.Major < 6) {
@@ -196,11 +200,11 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Returns/sets if background color is Aero blur (different from Aero glass)
+        /// Gets or sets if background color is Aero blur (different from Aero glass)
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(false)]
-        [Description("Returns/sets if background color is Aero blur (different from Aero glass)")]
+        [Description("Gets or sets if background color is Aero blur (different from Aero glass)")]
         public bool AeroBlur {
             get {
                 if (Environment.OSVersion.Version.Major < 6) {
@@ -271,6 +275,10 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
+
+        [Browsable(true)]
         public new MainMenu Menu {
             get {
                 return base.Menu;
@@ -296,7 +304,7 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         /// <summary>
-        /// Returns/sets if Aero glass DWM Composition is enabled
+        /// Gets or sets if Aero glass DWM Composition is enabled
         /// </summary>
         [Browsable(false)]
         public bool CompositionEnabled {
@@ -312,7 +320,7 @@ namespace MyAPKapp.VistaUIFramework {
                     throw new UnsupportedWindowsException("Windows Vista");
                 }
                 int result = NativeMethods.DwmEnableComposition(NativeMethods.BoolToNative(value));
-                if (!NativeMethods.Succeeded(result)) {
+                if (NativeMethods.Failed(result)) {
                     Marshal.ThrowExceptionForHR(result);
                 }
             }
@@ -325,7 +333,7 @@ namespace MyAPKapp.VistaUIFramework {
                     throw new UnsupportedWindowsException("Windows Vista");
                 }
                 int result = NativeMethods.DwmGetColorizationColor(out int ColorizationColor, out bool ColorizationOpaqueBlend);
-                if (!NativeMethods.Succeeded(result)) {
+                if (NativeMethods.Failed(result)) {
                     Marshal.ThrowExceptionForHR(result);
                 }
                 return new GlassColor(Color.FromArgb(ColorizationColor), ColorizationOpaqueBlend);
@@ -433,15 +441,11 @@ namespace MyAPKapp.VistaUIFramework {
                     }
                 }
             } else if (m.Msg == NativeMethods.WM_DWMCOMPOSITIONCHANGED || m.Msg == NativeMethods.WM_DWMNCRENDERINGCHANGED) {
-                if (AeroCompChanged != null) {
-                    OnAeroCompChanged(new AeroCompChangedEventArgs(CompositionEnabled));
-                }
+                OnAeroCompChanged(new AeroCompChangedEventArgs(CompositionEnabled));
             } else if (m.Msg == NativeMethods.WM_DWMCOLORIZATIONCOLORCHANGED) {
                 int NativeColor = (IntPtr.Size == 8) ? (int) m.WParam.ToInt64() : m.WParam.ToInt32();
                 bool Blend = NativeMethods.NativeToBool((IntPtr.Size == 8) ? (int) m.LParam.ToInt64() : m.LParam.ToInt32());
-                if (AeroColorChanged != null) {
-                    OnAeroColorChanged(new AeroColorChangedEventArgs(Color.FromArgb(NativeColor), Blend));
-                }
+                OnAeroColorChanged(new AeroColorChangedEventArgs(Color.FromArgb(NativeColor), Blend));
             }
         }
 

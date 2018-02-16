@@ -1,4 +1,12 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="TreeView.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -11,10 +19,10 @@ namespace MyAPKapp.VistaUIFramework {
 
         protected override void OnHandleCreated(EventArgs e) {
             base.OnHandleCreated(e);
-            NativeMethods.SetWindowTheme(base.Handle, "explorer", null);
-            int extended = NativeMethods.SendMessage(base.Handle, NativeMethods.TVM_GETEXTENDEDSTYLE, 0, 0).ToInt32();
+            NativeMethods.SetWindowTheme(Handle, "explorer", null);
+            int extended = NativeMethods.SendMessage(Handle, NativeMethods.TVM_GETEXTENDEDSTYLE, 0, 0).ToInt32();
             extended |= (NativeMethods.TVS_EX_AUTOHSCROLL | NativeMethods.TVS_EX_FADEINOUTEXPANDOS | NativeMethods.TVS_EX_DOUBLEBUFFER);
-            NativeMethods.SendMessage(base.Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, 0, extended);
+            NativeMethods.SendMessage(Handle, NativeMethods.TVM_SETEXTENDEDSTYLE, 0, extended);
         }
 
         [Browsable(true)]
@@ -42,6 +50,10 @@ namespace MyAPKapp.VistaUIFramework {
                 }
             }
         }
+
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
 
     }
 }

@@ -1,4 +1,12 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="Button.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -117,12 +125,11 @@ namespace MyAPKapp.VistaUIFramework {
                     if (_Icon != null) {
                         _Icon = null;
                         RemoveIcon();
-                        if (_Image != null) {
-                            _Image = null;
-                            RemoveImage();
-                        }
                     }
-
+                    if (_Image != null) {
+                        _Image = null;
+                        RemoveImage();
+                    }
                 }
                 SetShield(value);
             }
@@ -154,6 +161,10 @@ namespace MyAPKapp.VistaUIFramework {
                 }
             }
         }
+
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
 
         #endregion
 
@@ -190,6 +201,18 @@ namespace MyAPKapp.VistaUIFramework {
         private void SetShield(bool shield) {
             int bin = shield ? 1 : 0;
             NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETSHIELD, 0, bin);
+        }
+
+        protected override void OnHandleCreated(EventArgs e) {
+            base.OnHandleCreated(e);
+
+            if (_Icon != null) {
+                SetIcon(_Icon);
+            } else if (_Image != null) {
+                SetImage(_Image);
+            } else if (_Shield) {
+                SetShield(_Shield);
+            }
         }
 
         #endregion

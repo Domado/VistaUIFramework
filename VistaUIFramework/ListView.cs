@@ -1,6 +1,13 @@
-﻿using System;
+﻿//--------------------------------------------------------------------
+// <copyright file="ListView.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -66,6 +73,10 @@ namespace MyAPKapp.VistaUIFramework {
                 }
             }
         }
+
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
 
         /// <summary>
         /// Set if ListView is not allowed to have zero selected items

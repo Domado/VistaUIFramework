@@ -1,6 +1,15 @@
-﻿using System.Drawing;
+﻿//--------------------------------------------------------------------
+// <copyright file="ProgressBar.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System.Drawing;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System;
 
 namespace MyAPKapp.VistaUIFramework {
     [ToolboxBitmap(typeof(System.Windows.Forms.ProgressBar))]
@@ -89,6 +98,10 @@ namespace MyAPKapp.VistaUIFramework {
                 }
             }
         }
+
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
 
     }
 }

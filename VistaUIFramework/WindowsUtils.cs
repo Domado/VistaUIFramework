@@ -1,8 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//--------------------------------------------------------------------
+// <copyright file="WindowsUtils.cs" company="myapkapp">
+//     Copyright (c) myapkapp. All rights reserved.
+// </copyright>                                                                
+//--------------------------------------------------------------------
+// This open-source project is licensed under Apache License 2.0
+//--------------------------------------------------------------------
+
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace MyAPKapp.VistaUIFramework {
 
@@ -101,7 +107,7 @@ namespace MyAPKapp.VistaUIFramework {
             NativeMethods.SHGSI Flags = NativeMethods.SHGSI.SHGSI_ICON;
             if (!Large) Flags |= NativeMethods.SHGSI.SHGSI_SMALLICON;
             int Result = NativeMethods.SHGetStockIconInfo(StockIcon, Flags, ref info);
-            if (!NativeMethods.Succeeded(Result)) {
+            if (NativeMethods.Failed(Result)) {
                 Marshal.ThrowExceptionForHR(Result);
             }
             return Icon.FromHandle(info.hIcon);
