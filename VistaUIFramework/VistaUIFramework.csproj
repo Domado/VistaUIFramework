@@ -113,6 +113,8 @@
     <Compile Include="SplitClickEventHandler.cs" />
     <Compile Include="SR.CS" />
     <Compile Include="StockIcon.cs" />
+    <Compile Include="Taskbar\JumpList.cs" />
+    <Compile Include="Taskbar\JumpListLink.cs" />
     <Compile Include="Taskbar\TaskbarHelper.cs" />
     <Compile Include="Taskbar\ThumbnailButton.cs" />
     <Compile Include="Taskbar\ThumbnailToolbar.cs" />
@@ -147,6 +149,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Separator.bmp" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

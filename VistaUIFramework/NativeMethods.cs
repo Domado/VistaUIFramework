@@ -1068,13 +1068,13 @@ namespace MyAPKapp.VistaUIFramework {
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
         [ComImport]
         public interface IObjectCollection {
-            void AddObject([MarshalAs(UnmanagedType.Interface)] object punk);
+            [PreserveSig]
+            void GetCount(out uint cObjects);
+            [PreserveSig]
+            void GetAt(uint iIndex, ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out object ppvObject);
+            void AddObject([MarshalAs(UnmanagedType.Interface)] object pvObject);
             void AddFromArray([MarshalAs(UnmanagedType.Interface)] IObjectArray poaSource);
-            [PreserveSig]
-            void GetCount(out uint pcObjects);
-            [PreserveSig]
-            void GetAt(uint uiIndex, ref Guid riid, [Out, MarshalAs(UnmanagedType.Interface)] out object ppv);
-            void RemoveObjectAt(uint uiIndex);
+            void RemoveObject(uint uiIndex);
             void Clear();
         }
 
@@ -1304,66 +1304,12 @@ namespace MyAPKapp.VistaUIFramework {
 
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
         public struct PROPVARIANT {
-            public VarEnum vt;
+            public ushort vt;
             public ushort wReserved1;
             public ushort wReserved2;
             public ushort wReserved3;
-            public PropVariantUnion union;
-        }
-
-        [StructLayout(LayoutKind.Explicit)]
-        public struct PropVariantUnion {
-            [FieldOffset(0)] public sbyte cVal;
-            [FieldOffset(0)] public byte bVal;
-            [FieldOffset(0)] public short iVal;
-            [FieldOffset(0)] public ushort uiVal;
-            [FieldOffset(0)] public int lVal;
-            [FieldOffset(0)] public uint ulVal;
-            [FieldOffset(0)] public int intVal;
-            [FieldOffset(0)] public uint uintVal;
-            [FieldOffset(0)] public long hVal;
-            [FieldOffset(0)] public long uhVal;
-            [FieldOffset(0)] public float fltVal;
-            [FieldOffset(0)] public double dlbVal;
-            [FieldOffset(0)] public short boolVal;
-            [FieldOffset(0)] public int scode;
-            [FieldOffset(0)] public CY cyVal;
-            [FieldOffset(0)] public double date;
-            [FieldOffset(0)] public System.Runtime.InteropServices.ComTypes.FILETIME filetime;
-            [FieldOffset(0)] public IntPtr puuid;
-            [FieldOffset(0)] public IntPtr pclipdata;
-            [FieldOffset(0)] public IntPtr bstrVal;
-            [FieldOffset(0)] public BSTRBLOB bstrblobVal;
-            [FieldOffset(0)] public BLOB blob;
-            [FieldOffset(0)] public IntPtr pszVal;
-            [FieldOffset(0)] public IntPtr pwszVal;
-            [FieldOffset(0)] public IntPtr punkVal;
-            [FieldOffset(0)] public IntPtr pdispVal;
-            [FieldOffset(0)] public IntPtr pStream;
-            [FieldOffset(0)] public IntPtr pStorage;
-            [FieldOffset(0)] public IntPtr pVersionedStream;
-            [FieldOffset(0)] public IntPtr pArray;
-            [FieldOffset(0)] public CArray cArray;
-            [FieldOffset(0)] public IntPtr pcVal;
-            [FieldOffset(0)] public IntPtr pbVal;
-            [FieldOffset(0)] public IntPtr piVal;
-            [FieldOffset(0)] public IntPtr puiVal;
-            [FieldOffset(0)] public IntPtr plVal;
-            [FieldOffset(0)] public IntPtr pulVal;
-            [FieldOffset(0)] public IntPtr pintVal;
-            [FieldOffset(0)] public IntPtr puintVal;
-            [FieldOffset(0)] public IntPtr pfltVal;
-            [FieldOffset(0)] public IntPtr pdblVal;
-            [FieldOffset(0)] public IntPtr pboolVal;
-            [FieldOffset(0)] public IntPtr pdecVal;
-            [FieldOffset(0)] public IntPtr pscode;
-            [FieldOffset(0)] public IntPtr pcyVal;
-            [FieldOffset(0)] public IntPtr pdate;
-            [FieldOffset(0)] public IntPtr pbstrVal;
-            [FieldOffset(0)] public IntPtr ppunkVal;
-            [FieldOffset(0)] public IntPtr ppdispVal;
-            [FieldOffset(0)] public IntPtr pparray;
-            [FieldOffset(0)] public IntPtr pvarVal;
+            public IntPtr p;
+            public int p2;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
@@ -1750,7 +1696,7 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("Shell32.dll", SetLastError = false)]
         public static extern int SHGetStockIconInfo(StockIcon siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        [DllImport("shell32.dll")]
         public static extern void SHAddToRecentDocs(SHARD flag, [MarshalAs(UnmanagedType.LPWStr)] string path);
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]

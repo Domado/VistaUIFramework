@@ -8,10 +8,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("VistaUIFramework")]
 [assembly: AssemblyDescription("VistaUIFramework")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("myapkapp")]
+[assembly: AssemblyCompany("MyAPKapp")]
 [assembly: AssemblyProduct("VistaUIFramework")]
-[assembly: AssemblyCopyright("Copyright © myapkapp 2018")]
-[assembly: AssemblyTrademark("myapkapp")]
+[assembly: AssemblyCopyright("Copyright © MyAPKapp 2018")]
+[assembly: AssemblyTrademark("MyAPKapp")]
 [assembly: AssemblyCulture("")]
 
 // Si establece ComVisible en false, los tipos de este ensamblado no estarán visibles 
@@ -32,7 +32,7 @@ using System.Runtime.InteropServices;
 // Puede especificar todos los valores o usar los valores predeterminados de número de compilación y de revisión 
 // mediante el carácter '*', como se muestra a continuación:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.8.1.0")]
-[assembly: AssemblyFileVersion("2.8.1.0")]
+[assembly: AssemblyVersion("2.9.0.0")]
+[assembly: AssemblyFileVersion("2.9.0.0")]
 [assembly: NeutralResourcesLanguage("")]
 
