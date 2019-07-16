@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="NativeMethods.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="NativeMethods.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -16,12 +16,25 @@ using System.Text;
 
 namespace MyAPKapp.VistaUIFramework {
 
+    #region Delegate callback procedures
+
     internal delegate int TaskDialogCallbackProc(IntPtr hWnd, uint message, IntPtr wParam, IntPtr lParam, IntPtr referenceData);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal delegate bool EnumResTypeProc(IntPtr hModule, IntPtr lpszType, IntPtr lParam);
+    [return: MarshalAs(UnmanagedType.Bool)]
+    internal delegate bool EnumResNameProc(IntPtr hModule, IntPtr lpszType, IntPtr lpszName, IntPtr lParam);
+
+    #endregion
 
     /// <summary>
     /// NativeMethods is an internal class that contains all unmanaged native classes, interfaces, enums, structs, methods, macros, etc.
     /// </summary>
-    internal class NativeMethods {
+    internal sealed class NativeMethods {
+
+        /// <summary>
+        /// No constructors allowed, <see cref="NativeMethods"/> is a container of static elements
+        /// </summary>
+        private NativeMethods() {}
 
         #region Native constants
 
@@ -32,7 +45,6 @@ namespace MyAPKapp.VistaUIFramework {
         public const int IMAGE_ICON = 1;
         public const int ICON_BIG = 1;
         public const int ICON_SMALL = 0;
-        public const int GWL_EXSTYLE = (-20);
         public const int S_OK = 0;
         public const int S_FALSE = 1;
         public const int E_INVALIDARG = 0x8007005;
@@ -48,6 +60,10 @@ namespace MyAPKapp.VistaUIFramework {
         public const int MF_ENABLED = 0x0000;
         public const int MF_DISABLED = 0x0002;
         public const int MF_GRAYED = 0x0001;
+
+        /* GWL VARIABLES */
+        public const int GWL_EXSTYLE = -20;
+        public const int GWL_STYLE = -16;
 
         /* WM VARIABLES */
         public const int WM_USER = 0x0400;
@@ -80,6 +96,7 @@ namespace MyAPKapp.VistaUIFramework {
         public const int WS_EX_RIGHT = 0x00001000;
         public const int WS_EX_RTLREADING = 0x00002000;
         public const int WS_EX_LEFTSCROLLBAR = 0x00004000;
+        public const int WS_EX_TOPMOST = 0x00000008;
 
         /* CS VARIABLES */
         public const int CS_VREDRAW = 0x0001;
@@ -234,8 +251,8 @@ namespace MyAPKapp.VistaUIFramework {
         public const int RB_INSERTBANDW = WM_USER + 10;
         public const int RB_SETBANDINFOA = WM_USER + 6;
         public const int RB_SETBANDINFOW = WM_USER + 11;
-        public static readonly int RB_INSERTBAND = (Marshal.SystemDefaultCharSize == 1) ? RB_INSERTBANDA : RB_INSERTBANDW;
-        public static readonly int RB_SETBANDINFO = (Marshal.SystemDefaultCharSize == 1) ? RB_SETBANDINFOA : RB_SETBANDINFOW;
+        public static readonly int RB_INSERTBAND = IsAnsi ? RB_INSERTBANDA : RB_INSERTBANDW;
+        public static readonly int RB_SETBANDINFO = IsAnsi ? RB_SETBANDINFOA : RB_SETBANDINFOW;
 
         /* RBBIM VARIABLES */
         public const int RBIM_IMAGELIST = 0x00000001;
@@ -411,21 +428,80 @@ namespace MyAPKapp.VistaUIFramework {
             LOAD_WITH_ALTERED_SEARCH_PATH = 0x00000008
         }
 
+        /// <summary>
+        /// The flags for the <see cref="DTTOPTS.dwFlags"/> parameter
+        /// </summary>
         [Flags]
         public enum DTT : uint {
+
+            /// <summary>
+            /// The crText member value is valid.
+            /// </summary>
             TextColor = (1 << 0),
+
+            /// <summary>
+            /// The crBorder member value is valid.
+            /// </summary>
             BorderColor = (1 << 1),
+
+            /// <summary>
+            /// The crShadow member value is valid.
+            /// </summary>
             ShadowColor = (1 << 2),
+
+            /// <summary>
+            /// The iTextShadowType member value is valid.
+            /// </summary>
             ShadowType = (1 << 3),
+
+            /// <summary>
+            /// The ptShadowOffset member value is valid.
+            /// </summary>
             ShadowOffset = (1 << 4),
+
+            /// <summary>
+            /// The iBorderSize member value is valid.
+            /// </summary>
             BorderSize = (1 << 5),
+
+            /// <summary>
+            /// The iFontPropId member value is valid.
+            /// </summary>
             FontProp = (1 << 6),
+
+            /// <summary>
+            /// The iColorPropId member value is valid.
+            /// </summary>
             ColorProp = (1 << 7),
+
+            /// <summary>
+            /// The iStateId member value is valid.
+            /// </summary>
             StateID = (1 << 8),
+
+            /// <summary>
+            /// The pRect parameter of the DrawThemeTextEx function that uses this structure will be used as both an in and an out parameter. After the function returns, the pRect parameter will contain the rectangle that corresponds to the region calculated to be drawn.
+            /// </summary>
             CalcRect = (1 << 9),
+
+            /// <summary>
+            /// The fApplyOverlay member value is valid.
+            /// </summary>
             ApplyOverlay = (1 << 10),
+
+            /// <summary>
+            /// The iGlowSize member value is valid.
+            /// </summary>
             GlowSize = (1 << 11),
+
+            /// <summary>
+            /// The pfnDrawTextCallback member value is valid.
+            /// </summary>
             Callback = (1 << 12),
+
+            /// <summary>
+            /// Draws text with antialiased alpha. Use of this flag requires a top-down DIB section. This flag works only if the HDC passed to function DrawThemeTextEx has a top-down DIB section currently selected in it. For more information, see Device-Independent Bitmaps.
+            /// </summary>
             Composited = (1 << 13)
         }
 
@@ -754,38 +830,155 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// Defines the options for the DrawThemeTextEx function.
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct DTTOPTS {
+
+            /// <summary>
+            /// Size of the structure.
+            /// </summary>
             public int dwSize;
+
+            /// <summary>
+            /// A combination of flags that specify whether certain values of the DTTOPTS structure have been specified, and how to interpret these values. This member can be a combination of the following.
+            /// </summary>
             public DTT dwFlags;
+
+            /// <summary>
+            /// Specifies the color of the text that will be drawn.
+            /// </summary>
             public int crText;
+
+            /// <summary>
+            /// Specifies the color of the outline that will be drawn around the text.
+            /// </summary>
             public int crBorder;
+
+            /// <summary>
+            /// Specifies the color of the shadow that will be drawn behind the text.
+            /// </summary>
             public int crShadow;
+
+            /// <summary>
+            /// Specifies the type of the shadow that will be drawn behind the text. This member can have one of the following values.
+            /// </summary>
             public TEXTSHADOWTYPE iTextShadowType;
-            public System.Drawing.Point ptShadowOffset;
+
+            /// <summary>
+            /// Specifies the amount of offset, in logical coordinates, between the shadow and the text.
+            /// </summary>
+            public Point ptShadowOffset;
+
+            /// <summary>
+            /// Specifies the radius of the outline that will be drawn around the text.
+            /// </summary>
             public int iBorderSize;
+
+            /// <summary>
+            /// Specifies an alternate font property to use when drawing text. For a list of possible values, see GetThemeSysFont.
+            /// </summary>
             public int iFontPropId;
+
+            /// <summary>
+            /// Specifies an alternate color property to use when drawing text. If this value is valid and the corresponding flag is set in dwFlags, this value will override the value of crText. See the values listed in GetSysColor for the nIndex parameter.
+            /// </summary>
             public int iColorPropId;
+
+            /// <summary>
+            /// Specifies an alternate state to use. This member is not used by DrawThemeTextEx.
+            /// </summary>
             public int iStateId;
+
+            /// <summary>
+            /// If true, text will be drawn on top of the shadow and outline effects. If false, just the shadow and outline effects will be drawn.
+            /// </summary>
             [MarshalAs(UnmanagedType.Bool)]
             public bool fApplyOverlay;
+
+            /// <summary>
+            /// Specifies the size of a glow that will be drawn on the background prior to any text being drawn.
+            /// </summary>
             public int iGlowSize;
+
+            /// <summary>
+            /// Pointer to callback function for DrawThemeTextEx.
+            /// </summary>
             public int pfnDrawTextCallback;
+
+            /// <summary>
+            /// Parameter for callback back function specified by pfnDrawTextCallback.
+            /// </summary>
             public IntPtr lParam;
         }
 
+        /// <summary>
+        /// The <b>BITMAPINFO</b> structure contains information about the dimensions and color format of a device-independent bitmap (DIB).
+        /// </summary>
         [StructLayout(LayoutKind.Sequential)]
         public struct BITMAPINFO {
+
+            /// <summary>
+            /// Specifies the number of bytes required by the structure. This value does not include the size of the color table or the size of the color masks, if they are appended to the end of structure.
+            /// </summary>
+            /// <remarks>
+            /// </remarks>
             public int biSize;
+
+            /// <summary>
+            /// Specifies the width of the bitmap, in pixels. For information about calculating the stride of the bitmap.
+            /// </summary>
             public int biWidth;
+
+            /// <summary>
+            /// <para>Specifies the height of the bitmap, in pixels.</para>
+            /// <list type="bullet">
+            /// <item><description>For uncompressed RGB bitmaps, if <see cref="BITMAPINFO.biHeight"/> is positive, the bitmap is a bottom-up DIB with the origin at the lower left corner. If <see cref="BITMAPINFO.biHeight"/> is negative, the bitmap is a top-down DIB with the origin at the upper left corner.</description></item>
+            /// <item><description>For YUV bitmaps, the bitmap is always top-down, regardless of the sign of <see cref="BITMAPINFO.biHeight"/>. Decoders should offer YUV formats with postive <see cref="BITMAPINFO.biHeight"/>, but for backward compatibility they should accept YUV formats with either positive or negative <see cref="BITMAPINFO.biHeight"/>.</description></item>
+            /// <item><description>For compressed formats, <see cref="BITMAPINFO.biHeight"/> must be positive, regardless of image orientation.</description></item>
+            /// </list>
+            /// </summary>
             public int biHeight;
+
+            /// <summary>
+            /// Specifies the number of planes for the target device. This value must be set to 1.
+            /// </summary>
             public ushort biPlanes;
+
+            /// <summary>
+            /// Specifies the number of bits per pixel (bpp). For uncompressed formats, this value is the average number of bits per pixel. For compressed formats, this value is the implied bit depth of the uncompressed image, after the image has been decoded.
+            /// </summary>
             public ushort biBitCount;
+
+            /// <summary>
+            /// For compressed video and YUV formats, this member is a FOURCC code, specified as a DWORD in little-endian order. For example, YUYV video has the FOURCC 'VYUY' or 0x56595559. For more information, see FOURCC Codes.
+            /// </summary>
             public BitmapCompressionMode biCompression;
+
+            /// <summary>
+            /// Specifies the size, in bytes, of the image. This can be set to 0 for uncompressed RGB bitmaps.
+            /// </summary>
             public uint biSizeImage;
+
+            /// <summary>
+            /// Specifies the horizontal resolution, in pixels per meter, of the target device for the bitmap.
+            /// </summary>
             public int biXPelsPerMeter;
+
+            /// <summary>
+            /// Specifies the vertical resolution, in pixels per meter, of the target device for the bitmap.
+            /// </summary>
             public int biYPelsPerMeter;
+
+            /// <summary>
+            /// Specifies the number of color indices in the color table that are actually used by the bitmap. See Remarks for more information.
+            /// </summary>
             public uint biClrUsed;
+
+            /// <summary>
+            /// Specifies the number of color indices that are considered important for displaying the bitmap. If this value is zero, all colors are important.
+            /// </summary>
             public uint biClrImportant;
         }
 
@@ -1375,6 +1568,12 @@ namespace MyAPKapp.VistaUIFramework {
 
         #region Utilities
 
+        /// <summary>
+        /// Converts multiple structures into a single handle
+        /// </summary>
+        /// <param name="structs">Source structures</param>
+        /// <param name="deleteOld">Would it delete the old memory?</param>
+        /// <returns>Destination handle (IntPtr)</returns>
         public static IntPtr StructArrayToPtr(TASKDIALOG_BUTTON[] structs, bool deleteOld) {
             IntPtr initialPtr = Marshal.AllocHGlobal(
                 Marshal.SizeOf(typeof(TASKDIALOG_BUTTON)) * structs.Length);
@@ -1386,16 +1585,93 @@ namespace MyAPKapp.VistaUIFramework {
             return initialPtr;
         }
 
+        /// <summary>
+        /// Convert a managed bool into an unmanaged BOOL
+        /// </summary>
+        /// <param name="boolean">Self-explanatory (true or false)</param>
+        /// <returns>TRUE (1) for true and FALSE (0) for false</returns>
         public static int BoolToNative(bool boolean) {
             return boolean ? TRUE : FALSE;
         }
 
+        /// <summary>
+        /// Convert an unmanaged BOOL into a managed bool
+        /// </summary>
+        /// <param name="NativeBool">TRUE (1 or non-zero) or FALSE (0)</param>
+        /// <returns>A managed bool data type</returns>
         public static bool NativeToBool(int NativeBool) {
             return NativeBool != FALSE;
         }
 
+        /// <summary>
+        /// Convert an unmanaged BOOL into a managed bool
+        /// </summary>
+        /// <param name="NativeBool">TRUE (1 or non-zero) or FALSE (0)</param>
+        /// <returns>A managed bool data type</returns>
         public static bool NativeToBool(IntPtr NativeBool) {
             return NativeToBool(NativeBool.ToInt32());
+        }
+
+        /// <summary>
+        /// It detects if system is 32 (x86) or 64 (x64) bits before using GetWindowLong/GetWindowLongPtr
+        /// </summary>
+        /// <param name="hWnd">The handle of a window (HWND)</param>
+        /// <param name="nIndex">The index of the property to change</param>
+        /// <returns>It returns the requested value</returns>
+        public static IntPtr GetWindowLongBits(IntPtr hWnd, int nIndex) {
+            if (Is64Bits) {
+                return GetWindowLongPtr(hWnd, nIndex);
+            } else {
+                return new IntPtr(GetWindowLong(hWnd, nIndex));
+            }
+        }
+
+        /// <summary>
+        /// It detects if system is 32 (x86) or 64 (x64) bits before using SetWindowLong/SetWindowLongPtr
+        /// </summary>
+        /// <param name="hWnd">The handle of a window (HWND)</param>
+        /// <param name="nIndex">The index of the property to change</param>
+        /// <param name="dwNewLong">The handle of the new value</param>
+        /// <returns>It returns the previous value</returns>
+        public static IntPtr SetWindowLongBits(IntPtr hWnd, int nIndex, IntPtr dwNewLong) {
+            if (Is64Bits) {
+                return SetWindowLongPtr(hWnd, nIndex, dwNewLong);
+            } else {
+                return new IntPtr(SetWindowLong(hWnd, nIndex, dwNewLong.ToInt32()));
+            }
+        }
+
+        /// <summary>
+        /// It detects if system is 32 (x86) or 64 (x64) bits before using SetWindowLong/SetWindowLongPtr
+        /// </summary>
+        /// <param name="hWnd">The handle of a window (HWND)</param>
+        /// <param name="nIndex">The index of the property to change</param>
+        /// <param name="dwNewLong">The new value</param>
+        /// <returns>It returns the previous value</returns>
+        public static int SetWindowLongBits(IntPtr hWnd, int nIndex, int dwNewLong) {
+            if (Is64Bits) {
+                return SetWindowLongPtr(hWnd, nIndex, new IntPtr(dwNewLong)).ToInt32();
+            } else {
+                return SetWindowLong(hWnd, nIndex, dwNewLong);
+            }
+        }
+
+        /// <summary>
+        /// Check if the system is x64 (64-bits) or x86 (32-bits)
+        /// </summary>
+        public static bool Is64Bits {
+            get {
+                return IntPtr.Size == 8;
+            }
+        }
+
+        /// <summary>
+        /// Check if the system uses Ansi or Unicode (Wide multi-byte characters)
+        /// </summary>
+        public static bool IsAnsi {
+            get {
+                return Marshal.SystemDefaultCharSize == 1;
+            }
         }
 
         #endregion
@@ -1493,11 +1769,11 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("gdi32.dll")]
         public static extern IntPtr GetStockObject(StockObjects fnObject);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr LoadLibrary(string dllToLoad);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr LoadLibraryEx(string lpFileName, IntPtr hReservedNull, LoadLibraryFlags dwFlags);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr LoadLibraryEx([MarshalAs(UnmanagedType.LPWStr)] string lpFileName, IntPtr hReservedNull, LoadLibraryFlags dwFlags);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -1507,6 +1783,19 @@ namespace MyAPKapp.VistaUIFramework {
         public static extern IntPtr LoadImage(IntPtr hinst, string lpszName, uint uType,
    int cxDesired, int cyDesired, uint fuLoad);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hTheme"></param>
+        /// <param name="hdc"></param>
+        /// <param name="iPartId"></param>
+        /// <param name="iStateId"></param>
+        /// <param name="text"></param>
+        /// <param name="length"></param>
+        /// <param name="flags"></param>
+        /// <param name="rect"></param>
+        /// <param name="poptions"></param>
+        /// <returns></returns>
         [DllImport("uxtheme.dll", CharSet = CharSet.Auto)]
         public static extern int DrawThemeTextEx(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, string text, int length, int flags, ref RECT rect, ref DTTOPTS poptions);
 
@@ -1522,9 +1811,33 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("gdi32.dll", EntryPoint = "CreateCompatibleDC", SetLastError = true)]
         public static extern IntPtr CreateCompatibleDC([In] IntPtr hdc);
 
+        /// <summary>
+        /// The <see cref="CreateDIBSection(IntPtr, ref BITMAPINFO, uint, out IntPtr, IntPtr, uint)"/> method creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values. You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.
+        /// </summary>
+        /// <param name="hdc">A handle to a device context. If the value of iUsage is DIB_PAL_COLORS, the function uses this device context's logical palette to initialize the DIB colors.</param>
+        /// <param name="pbmi">A pointer to a <see cref="BITMAPINFO"/> structure that specifies various attributes of the DIB, including the bitmap dimensions and colors.</param>
+        /// <param name="usage">The type of data contained in the bmiColors array member of the BITMAPINFO structure pointed to by pbmi (either logical palette indexes or literal RGB values). The following values are defined.</param>
+        /// <param name="ppvBits">A pointer to a variable that receives a pointer to the location of the DIB bit values.</param>
+        /// <param name="hSection">
+        /// <para>A handle to a file-mapping object that the function will use to create the DIB. This parameter can be NULL.</para>
+        /// <para>If hSection is not NULL, it must be a handle to a file-mapping object created by calling the CreateFileMapping function with the PAGE_READWRITE or PAGE_WRITECOPY flag. Read-only DIB sections are not supported. Handles created by other means will cause CreateDIBSection to fail.</para>
+        /// <para>If hSection is not NULL, the CreateDIBSection function locates the bitmap bit values at offset dwOffset in the file-mapping object referred to by hSection. An application can later retrieve the hSection handle by calling the GetObject function with the HBITMAP returned by CreateDIBSection.</para>
+        /// <para>If hSection is NULL, the system allocates memory for the DIB. In this case, the CreateDIBSection function ignores the dwOffset parameter. An application cannot later obtain a handle to this memory. The dshSection member of the DIBSECTION structure filled in by calling the GetObject function will be NULL.</para>
+        /// </param>
+        /// <param name="dwOffset">The offset from the beginning of the file-mapping object referenced by hSection where storage for the bitmap bit values is to begin. This value is ignored if hSection is NULL. The bitmap bit values are aligned on doubleword boundaries, so dwOffset must be a multiple of the size of a DWORD.</param>
+        /// <returns>
+        /// <para>If the method succeeds, the return value is a handle to the newly created DIB, and *ppvBits points to the bitmap bit values.</para>
+        /// <para>If the function fails, the return value is NULL, and *ppvBits is NULL.</para>
+        /// </returns>
+        /// <remarks>
+        /// <para>As noted above, if hSection is NULL, the system allocates memory for the DIB. The system closes the handle to that memory when you later delete the DIB by calling the <see cref="DeleteObject(IntPtr)"/> function. If hSection is not NULL, you must close the hSection memory handle yourself after calling <see cref="DeleteObject(IntPtr)"/> to delete the bitmap.</para>
+        /// <para>You cannot paste a DIB section from one application into another application.</para>
+        /// <para>CreateDIBSection does not use the BITMAPINFOHEADER parameters biXPelsPerMeter or biYPelsPerMeter and will not provide resolution information in the BITMAPINFO structure.</para>
+        /// <para>You need to guarantee that the GDI subsystem has completed any drawing to a bitmap created by CreateDIBSection before you draw to the bitmap yourself. Access to the bitmap must be synchronized. Do this by calling the GdiFlush function. This applies to any use of the pointer to the bitmap bit values, including passing the pointer in calls to functions such as SetDIBits.</para>
+        /// <para><b>ICM:</b> No color management is done.</para>
+        /// </remarks>
         [DllImport("gdi32.dll")]
-        public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BITMAPINFO pbmi,
-   uint pila, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
+        public static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BITMAPINFO pbmi, uint usage, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
 
         /// <summary>Selects an object into the specified device context (DC). The new object replaces the previous object of the same type.</summary>
         /// <param name="hdc">A handle to the DC.</param>
@@ -1696,13 +2009,13 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("Shell32.dll", SetLastError = false)]
         public static extern int SHGetStockIconInfo(StockIcon siid, SHGSI uFlags, ref SHSTOCKICONINFO psii);
 
-        [DllImport("shell32.dll")]
+        [DllImport("Shell32.dll", BestFitMapping = false, ThrowOnUnmappableChar = true)]
         public static extern void SHAddToRecentDocs(SHARD flag, [MarshalAs(UnmanagedType.LPWStr)] string path);
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        [DllImport("Shell32.dll", BestFitMapping = false, ThrowOnUnmappableChar = true)]
         public static extern void SHAddToRecentDocs(SHARD flag, IntPtr pidl);
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto)]
+        [DllImport("Shell32.dll", BestFitMapping = false, ThrowOnUnmappableChar = true)]
         public static extern void SHAddToRecentDocs(SHARD flag, IShellLink pidl);
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
@@ -1711,34 +2024,105 @@ namespace MyAPKapp.VistaUIFramework {
         [DllImport("shell32.dll", CharSet = CharSet.Auto)]
         public static extern int SetCurrentProcessExplicitAppUserModelID([MarshalAs(UnmanagedType.LPWStr)] string AppId);
 
+        [DllImport("user32.dll")]
+        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowLongPtr(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumResourceTypes(IntPtr hModule, EnumResTypeProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool EnumResourceNames(IntPtr hModule, string lpszType, EnumResNameProc lpEnumFunc, IntPtr lParam);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool EnumResourceNames(IntPtr hModule, int dwID, EnumResNameProc lpEnumFunc, IntPtr lParam);
+
         #endregion
 
         #region Macros
 
+        /// <summary>
+        /// In a packed int/dword, it gets the high integer value
+        /// </summary>
+        /// <param name="value">The packed integer/long</param>
+        /// <param name="size">The size of the packed integer</param>
+        /// <returns>Gets the high integer value of a packed integer</returns>
         public static int GetHiWord(long value, int size) {
             return (short)(value >> size);
         }
 
+        /// <summary>
+        /// In a packed int/dword, it gets the low integer value
+        /// </summary>
+        /// <param name="value">The packed integer/long</param>
+        /// <returns>Gets the low integer value of a packed integer</returns>
         public static int GetLoWord(long value) {
             return (short)(value & 0xFFFF);
         }
 
+        /// <summary>
+        /// Makes a number by merging the low and high value into a packed int/long
+        /// </summary>
+        /// <param name="low">The low value</param>
+        /// <param name="high">The high value</param>
+        /// <returns></returns>
         public static long MakeLParam(int low, int high) {
             return (high << 16) + low;
         }
-
+        
+        /// <summary>
+        /// Check if a result has been successful
+        /// </summary>
+        /// <param name="hr">HResult number</param>
+        /// <returns>Success</returns>
         public static bool Succeeded(int hr) {
             return hr >= S_OK;
         }
 
+        /// <summary>
+        /// Check if a result has been failed
+        /// </summary>
+        /// <param name="hr">HResult number</param>
+        /// <returns>Failure</returns>
         public static bool Failed(int hr) {
             return hr < S_OK;
         }
 
+        /// <summary>
+        /// Check if a resource is int or string
+        /// </summary>
+        /// <param name="value">UINT or LPCTSTR</param>
+        /// <returns>Resource is int or string</returns>
+        public static bool IsIntResource(IntPtr value) {
+            if (((uint)value) > ushort.MaxValue)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// Make a resource based on a integer
+        /// </summary>
+        /// <param name="resource">Int resource</param>
+        /// <returns>Returns a managed int</returns>
         public static int MakeIntResource(int resource) {
             return (ushort) resource;
         }
 
+        /// <summary>
+        /// Make a resource based on a integer
+        /// </summary>
+        /// <param name="resource">Int resource</param>
+        /// <param name="sharpMode">Return a #int or a processed int</param>
+        /// <returns></returns>
         public static string MakeIntResource(int resource, bool sharpMode) {
             if (sharpMode) {
                 return "#" + resource;
@@ -1747,6 +2131,10 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// Returns a native exception for a last win32 error
+        /// </summary>
+        /// <returns></returns>
         public static Win32Exception NativeException() {
             return new Win32Exception(Marshal.GetLastWin32Error());
         }

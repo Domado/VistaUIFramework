@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="Label.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="Label.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms.VisualStyles;
 
 namespace MyAPKapp.VistaUIFramework {
+
     [ToolboxBitmap(typeof(System.Windows.Forms.Label))]
     public class Label : System.Windows.Forms.Label {
 
@@ -23,10 +24,29 @@ namespace MyAPKapp.VistaUIFramework {
         private bool _Aero;
         private int _GlowSize = 8;
 
+        [DllImport("dwmapi.dll", EntryPoint = "#127", PreserveSig = false)]
+        private static extern void DwmGetColorizationParameters(out DWM_COLORIZATION_PARAMS parameters);
+
+        private struct DWM_COLORIZATION_PARAMS {
+            public int clrColor;
+            public uint clrAfterGlow;
+            public uint nIntensity;
+            public uint clrAfterGlowBalance;
+            public uint clrBlurBalance;
+            public uint clrGlassReflectionIntensity;
+            public bool fOpaque;
+        }
+
         public Label() : base() {
+
+            //Make the Control act the native way
             base.FlatStyle = FlatStyle.System;
+
+            //Add temporary events for design time
             FontChanged += LabelStyle_FontChanged;
             ForeColorChanged += LabelStyle_ForeColorChanged;
+
+            //Set the required styles to make the Control work the native way
             SetStyle(ControlStyles.SupportsTransparentBackColor |
                 ControlStyles.OptimizedDoubleBuffer |
                 ControlStyles.AllPaintingInWmPaint |
@@ -87,6 +107,8 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        // ContextMenu and ContextMenuStrip overrides were made to avoid any conflict between both properties
+
         [Browsable(true)]
         public override ContextMenu ContextMenu {
             get {
@@ -118,6 +140,10 @@ namespace MyAPKapp.VistaUIFramework {
         [EditorBrowsable(EditorBrowsableState.Always)]
         public new event EventHandler ContextMenuChanged { add => base.ContextMenuChanged += value; remove => base.ContextMenuChanged -= value; }
 
+        /// <summary>
+        /// Update the basic <see cref="Label"/> style
+        /// </summary>
+        /// <param name="labelStyle">The chosen style</param>
         private void changeLabelStyle(LabelStyle labelStyle) {
             FontChanged -= LabelStyle_FontChanged;
             ForeColorChanged -= LabelStyle_ForeColorChanged;
@@ -128,12 +154,12 @@ namespace MyAPKapp.VistaUIFramework {
                 defaultFont = base.Font;
                 defaultColor = base.ForeColor;
                 Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-                ForeColor = Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
+                ForeColor = Color.FromArgb(0, 51, 15);
             } else if (LabelStyle == LabelStyle.GroupHeader) {
                 defaultFont = base.Font;
                 defaultColor = base.ForeColor;
                 Font = new Font("Segoe UI", 11F, FontStyle.Regular);
-                ForeColor = Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(51)))), ((int)(((byte)(153)))));
+                ForeColor = Color.FromArgb(0, 51, 15);
             }
             FontChanged += LabelStyle_FontChanged;
             ForeColorChanged += LabelStyle_ForeColorChanged;
@@ -170,23 +196,30 @@ namespace MyAPKapp.VistaUIFramework {
         protected override void OnPaint(PaintEventArgs e) {
             base.OnPaint(e);
             int DWMResult = NativeMethods.DwmIsCompositionEnabled(out bool DWMEnabled);
+
+            //Check if the computer and the control meets the requirements for a Vista-style glowed text
             if (NativeMethods.Succeeded(DWMResult) && DWMEnabled && Aero && Visible && !DesignMode) {
+
+                //The procedure is based on on the title bar because there's where Aero is displayed
                 VisualStyleRenderer Renderer = new VisualStyleRenderer(VisualStyleElement.Window.Caption.Active);
                 IntPtr PrimaryHDC = e.Graphics.GetHdc();
                 IntPtr MemoryHDC = NativeMethods.CreateCompatibleDC(PrimaryHDC);
+
+                //Declaring the properties of the bitmap
                 NativeMethods.BITMAPINFO Info = new NativeMethods.BITMAPINFO {
-                    biSize = Marshal.SizeOf(typeof(NativeMethods.BITMAPINFO)),
-                    biWidth = Size.Width,
-                    biHeight = -Size.Height,
-                    biPlanes = 1,
-                    biBitCount = 32,
-                    biCompression = 0
+                    biSize = Marshal.SizeOf(typeof(NativeMethods.BITMAPINFO)), //Structure size
+                    biWidth = Size.Width,     //DIB width based on 
+                    biHeight = -Size.Height,  //DIB use top-down ref system, thus we set negative height
+                    biPlanes = 1,             //Always 1
+                    biBitCount = 32,          //32-bit depth bitmap
+                    biCompression = 0         //Avoid compression for labels
                 };
-                IntPtr PPVBits = IntPtr.Zero;
-                IntPtr DIBSection = NativeMethods.CreateDIBSection(PrimaryHDC, ref Info, 0, out PPVBits, IntPtr.Zero, 0);
+                IntPtr DIBSection = NativeMethods.CreateDIBSection(PrimaryHDC, ref Info, 0, out IntPtr PPVBits, IntPtr.Zero, 0);
                 NativeMethods.SelectObject(MemoryHDC, DIBSection);
                 IntPtr NativeFont = Font.ToHfont();
                 NativeMethods.SelectObject(MemoryHDC, NativeFont);
+
+                //Set the options for the text bitmap
                 NativeMethods.DTTOPTS Opts = new NativeMethods.DTTOPTS {
                     dwSize = Marshal.SizeOf(typeof(NativeMethods.DTTOPTS)),
                     dwFlags = NativeMethods.DTT.Composited | NativeMethods.DTT.TextColor
@@ -196,11 +229,17 @@ namespace MyAPKapp.VistaUIFramework {
                     Opts.iGlowSize = GlowSize;
                 }
                 Opts.crText = ColorTranslator.ToWin32(ForeColor);
+
+                //Constructing the padding
                 NativeMethods.RECT PaddingRect = new NativeMethods.RECT(Padding.Left, Padding.Top, Width - Padding.Right, Height - Padding.Bottom);
                 int Result = NativeMethods.DrawThemeTextEx(Renderer.Handle, MemoryHDC, 0, 0, Text, -1, (int) BuildTextFormatFlags(), ref PaddingRect, ref Opts);
+
+                //Throw an exception to the runtime debugger if the procedure somehow fails
                 if (NativeMethods.Failed(Result)) {
                     Marshal.ThrowExceptionForHR(Result);
                 }
+
+                //Blocks the bitmap and delete the objects to free-up memory
                 NativeMethods.BitBlt(PrimaryHDC, 0, 0, Size.Width, Size.Height, MemoryHDC, 0, 0, NativeMethods.TernaryRasterOperations.SRCCOPY);
                 NativeMethods.DeleteObject(NativeFont);
                 NativeMethods.DeleteObject(DIBSection);
@@ -209,6 +248,10 @@ namespace MyAPKapp.VistaUIFramework {
             }
         }
 
+        /// <summary>
+        /// Build the <see cref="TextFormatFlags"/> based on the <see cref="Label"/>'s properties
+        /// </summary>
+        /// <returns>Self-explanatory</returns>
         private TextFormatFlags BuildTextFormatFlags() {
             TextFormatFlags Flags = TextFormatFlags.Default;
             bool Left = TextAlign == System.Drawing.ContentAlignment.TopLeft || TextAlign == System.Drawing.ContentAlignment.MiddleLeft || TextAlign == System.Drawing.ContentAlignment.BottomLeft;
@@ -231,10 +274,9 @@ namespace MyAPKapp.VistaUIFramework {
             } else if (Bottom) {
                 Flags |= TextFormatFlags.Bottom;
             }
-            if (Text.Split('\n').Length <= 1) {
+            if (AutoSize && Text.Split('\n').Length <= 1) {
                 Flags |= TextFormatFlags.SingleLine;
-            }
-            if (!AutoSize) {
+            } else {
                 Flags |= TextFormatFlags.WordBreak;
             }
             if (AutoEllipsis) {
@@ -245,6 +287,11 @@ namespace MyAPKapp.VistaUIFramework {
             }
             if (Padding == Padding.Empty) {
                 Flags |= TextFormatFlags.NoPadding;
+            }
+            if (!UseMnemonic) {
+                Flags |= TextFormatFlags.NoPrefix;
+            } else if (!ShowKeyboardCues) {
+                Flags |= TextFormatFlags.HidePrefix;
             }
             return Flags;
         }

@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="Rebar.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="Rebar.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -21,7 +21,7 @@ namespace MyAPKapp.VistaUIFramework {
     /// Rebar is a bar that acts as a container of bands
     /// </summary>
     /// <remarks>
-    /// Rebar is a beta feature and some glitches could occurk
+    /// Rebar is a beta feature and some glitches could occur
     /// </remarks>
     [ComVisible(true)]
     [ClassInterface(ClassInterfaceType.AutoDispatch)]
@@ -308,20 +308,6 @@ namespace MyAPKapp.VistaUIFramework {
         public event BandCancelEventHandler BandBeginDrag;
 
         /// <summary>
-        /// Fires when an user pushes the chevron button
-        /// </summary>
-        [Category("Action")]
-        [Description("Fires when an user pushes the chevron button")]
-        public event ChevronPushedEventHandler ChevronPushed;
-
-        /// <summary>
-        /// Fires when child size of a <see cref="RebarBand"/> changes
-        /// </summary>
-        [PropertyChangedCategory]
-        [Description("Fires when child size of a band changes")]
-        public event ChildSizeChangedEventHandler ChildSizeChanged;
-
-        /// <summary>
         /// Fires after a <see cref="RebarBand"/> has been deleted
         /// </summary>
         /// <param name="e"></param>
@@ -342,6 +328,20 @@ namespace MyAPKapp.VistaUIFramework {
         [Category("DragDrop")]
         [Description("Fires when an user stops dragging a band")]
         public event BandEventHandler BandEndDrag;
+
+        /// <summary>
+        /// Fires when an user pushes the chevron button
+        /// </summary>
+        [Category("Action")]
+        [Description("Fires when an user pushes the chevron button")]
+        public event ChevronPushedEventHandler ChevronPushed;
+
+        /// <summary>
+        /// Fires when child size of a <see cref="RebarBand"/> changes
+        /// </summary>
+        [PropertyChangedCategory]
+        [Description("Fires when child size of a band changes")]
+        public event ChildSizeChangedEventHandler ChildSizeChanged;
 
         /// <summary>
         /// Fires when an user changes the layout of the <see cref="Rebar"/>

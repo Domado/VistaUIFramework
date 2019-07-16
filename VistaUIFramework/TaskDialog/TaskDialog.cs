@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="TaskDialog.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="TaskDialog.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -21,7 +21,7 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
     /// <summary>
     /// TaskDialog is a kind of Windows dialog introduced with Windows Vista.
     /// </summary>
-    [ToolboxBitmap(typeof(TaskDialog), "MyAPKapp.VistaUIFramework.TaskDialog.bmp")]
+    [ToolboxBitmap("MyAPKapp.VistaUIFramework.TaskDialog.bmp")]
     [ToolboxItem(true)]
     [DefaultEvent("Created")]
     [DefaultProperty("CustomButtons")]
@@ -439,6 +439,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
             }
         }
 
+        [Category("Data")]
+        [DefaultValue(null)]
+        [Localizable(false)]
+        [Bindable(true)]
+        [TypeConverter(typeof(StringConverter))]
+        [Description("Gets or sets the object that contains data about the component")]
+        public object Tag { get; set; }
+
         private TaskDialogButton FindButtonByID(int ID) {
             foreach (TaskDialogButton Btn in _CustomButtons) {
                 if (Btn.ID == ID) {
@@ -727,14 +735,16 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
                 return _WindowIcon;
             }
             set {
-                _WindowIcon = value;
-                if (IsShown) {
-                    if (value != null) {
-                        NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_BIG, value.Handle);
-                        NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_SMALL, value.Handle);
-                    } else {
-                        NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_BIG, IntPtr.Zero);
-                        NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_SMALL, IntPtr.Zero);
+                if (_WindowIcon != null) {
+                    _WindowIcon = value;
+                    if (IsShown) {
+                        if (value != null) {
+                            NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_BIG, value.Handle);
+                            NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_SMALL, value.Handle);
+                        } else {
+                            NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_BIG, IntPtr.Zero);
+                            NativeMethods.SendMessage(_Handle, NativeMethods.WM_SETICON, NativeMethods.ICON_SMALL, IntPtr.Zero);
+                        }
                     }
                 }
             }
@@ -1145,7 +1155,7 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
         }
 
         /// <summary>
-        /// Get the TaskDialog native handle
+        /// Get the <see cref="TaskDialog"/> native handle
         /// </summary>
         /// <remarks>
         /// The handle is not null when dialog is shown

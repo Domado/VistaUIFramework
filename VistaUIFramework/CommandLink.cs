@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="CommandLink.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="CommandLink.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -15,21 +15,21 @@ using System.ComponentModel.Design;
 namespace MyAPKapp.VistaUIFramework {
 
     /// <summary>
-    /// CommandLink is a button with green arrow and a description (<code>Note</code> property)
+    /// <see cref="CommandLink"/> is a button with green arrow and a description (<code>Note</code> property)
     /// </summary>
     [ToolboxBitmap(typeof(System.Windows.Forms.Button))]
     [Description("CommandLink is a button with green arrow and a description")]
     public class CommandLink : Button {
 
-        private string _Note;
+        private string note;
 
         /// <summary>
-        /// CommandLink is a button with green arrow and a description (<code>Note</code> property)
+        /// <see cref="CommandLink"/> is a button with green arrow and a description (<code>Note</code> property)
         /// </summary>
         public CommandLink() : base() {}
 
         /// <summary>
-        /// The CommandLink summary
+        /// The <see cref="CommandLink"/> summary
         /// </summary>
         [Category("Appearance")]
         [DefaultValue(null)]
@@ -38,11 +38,11 @@ namespace MyAPKapp.VistaUIFramework {
         [Localizable(true)]
         public string Note {
             get {
-                return _Note;
+                return note;
             }
             set {
-                if (_Note != value) {
-                    _Note = value;
+                if (note != value) {
+                    note = value;
                     UpdateButton();
                 }
             }
@@ -71,7 +71,7 @@ namespace MyAPKapp.VistaUIFramework {
         }
 
         private void UpdateButton() {
-            NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETNOTE, IntPtr.Zero, _Note);
+            NativeMethods.SendMessage(Handle, NativeMethods.BCM_SETNOTE, IntPtr.Zero, note);
         }
 
     }

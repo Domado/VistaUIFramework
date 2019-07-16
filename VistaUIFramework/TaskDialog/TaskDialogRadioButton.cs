@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="TaskDialogRadioButton.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="TaskDialogRadioButton.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -96,6 +96,14 @@ namespace MyAPKapp.VistaUIFramework.TaskDialog {
                 }
             }
         }
+
+        [Category("Data")]
+        [DefaultValue(null)]
+        [Localizable(false)]
+        [Bindable(true)]
+        [TypeConverter(typeof(StringConverter))]
+        [Description("Gets or sets the object that contains data about the component")]
+        public object Tag { get; set; }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]

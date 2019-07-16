@@ -1,6 +1,6 @@
 ﻿//--------------------------------------------------------------------
-// <copyright file="Shortcut.cs" company="myapkapp">
-//     Copyright (c) myapkapp. All rights reserved.
+// <copyright file="Shortcut.cs" company="MyAPKapp">
+//     Copyright (c) MyAPKapp. All rights reserved.
 // </copyright>                                                                
 //--------------------------------------------------------------------
 // This open-source project is licensed under Apache License 2.0
@@ -47,7 +47,7 @@ namespace MyAPKapp.VistaUIFramework {
 
         private Shortcut(string LnkSourcePath, bool loaded = false) : this(LnkSourcePath) {
             if (loaded && file != null) {
-                file.Load(LnkDestPath, NativeMethods.STGM_READWRITE);
+                file.Load(LnkDestPath, NativeMethods.STGM_READ);
             }
         }
 
@@ -55,7 +55,7 @@ namespace MyAPKapp.VistaUIFramework {
         /// Open an existing .lnk shortcut
         /// </summary>
         /// <param name="LnkSourcePath">The path of the .lnk file</param>
-        /// <returns>Creates a new istance of Shortcut with the properties of the .lnk file</returns>
+        /// <returns>Creates a new instance of Shortcut with the properties of the .lnk file</returns>
         public static Shortcut Load(string LnkSourcePath) {
             Shortcut shortcut = new Shortcut(LnkSourcePath, true);
             return shortcut;
