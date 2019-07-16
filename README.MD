@@ -1,7 +1,7 @@
 # VistaUIFramework
 All possibilities of WinAPI into .NET Framework
 
-![VistaUIFramework](https://www.myapkapp.com/files/images/vistaui_landscape.jpg)
+![VistaUIFramework](https://www.myapkapp.com/files/images/vistaui/vistaui_landscape.jpg)
 
 # What is VistaUIFramework
 VistaUI is a framework based on WinForms and .NET Framework for developing .NET Applications using Vista and 7 features, like arrow-splitted buttons, command links, vista-style controls and etc.
