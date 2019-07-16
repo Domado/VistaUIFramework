@@ -154,12 +154,12 @@ namespace MyAPKapp.VistaUIFramework {
                 defaultFont = base.Font;
                 defaultColor = base.ForeColor;
                 Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-                ForeColor = Color.FromArgb(0, 51, 15);
+                ForeColor = Color.FromArgb(0, 51, 153);
             } else if (LabelStyle == LabelStyle.GroupHeader) {
                 defaultFont = base.Font;
                 defaultColor = base.ForeColor;
                 Font = new Font("Segoe UI", 11F, FontStyle.Regular);
-                ForeColor = Color.FromArgb(0, 51, 15);
+                ForeColor = Color.FromArgb(0, 51, 153);
             }
             FontChanged += LabelStyle_FontChanged;
             ForeColorChanged += LabelStyle_ForeColorChanged;
