@@ -2,11 +2,12 @@
 # VistaUIFramework will be archived on January 14 2020.
 VistaUI was a framework designed to add Win7/Vista support to Windows program, the core of the VistaUI was the skeuomorphic visuals of the UI components.
 
-Why I'm ending VistaUI? Windows 7 is the last Windows version that uses skeuomorphism for the user interface and icons, and VistaUIFramework was designed to help developers to add the Aero look to their software. But, unfortunately Microsoft will end Windows 7 support on January 14 2020 and then the Wuindows 7 market share will drop, so VistaUIFramework will become pretty useless.
+Why I'm ending VistaUI? Windows 7 is the last Windows version that uses skeuomorphism for the user interface and icons, and VistaUIFramework was designed to help developers to add the Aero look to their software. But, unfortunately Microsoft will end Windows 7 support on January 14 2020 and then the Windows 7 market share will drop, so VistaUIFramework will become pretty useless.
 
 However, the framework WON'T be deleted, it will be archived, so you can still use VistaUI in your programs, but it won't be supported so I won't solve any issues and there won't be any updates.
 
-Now the good news! I'm working on a project that will help developers (web, software, mobile, etc.) to make their programs look good with fully customizable UI components (skeuomorphism, flat, material, custom, etc.) for websites, software, mobile apps, etc.
+## Now the good news!
+I'm working on a project that will help developers (web, software, mobile, etc.) to make their programs look good with fully customizable UI components (skeuomorphism, flat, material, custom, etc.) for websites, software, mobile apps, etc.
 
 # VistaUIFramework
 All possibilities of WinAPI into .NET Framework
